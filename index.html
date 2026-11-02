@@ -1,0 +1,440 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>UK Landlord Compliance Checker</title>
+<!--
+  TEST VERSION (fake-door).
+  - No data leaves the browser. Emails and click events are stored in localStorage only.
+  - Admin view: open index.html#admin
+  - For a real deploy: replace the fake-door handler (joinWaitlist) with a Lemon Squeezy
+    checkout link/overlay for the £6/month plan, and send emails/events to a form backend
+    (e.g. a serverless endpoint or form service) with a proper privacy notice and consent.
+  - Rules and copy follow checker-spec.md (sources checked 31 October 2026).
+-->
+<style>
+  :root{
+    --bg:#f6f7f5; --card:#ffffff; --ink:#1f2a2e; --muted:#5b6770; --line:#dfe3e1;
+    --brand:#1d4f5c; --brand-2:#2c6b7a; --focus:#ffbf47;
+    --red:#b3261e; --red-bg:#fdecea; --amber:#a15c00; --amber-bg:#fff4e0;
+    --green:#1e7a46; --green-bg:#e8f5ec; --info:#4a5560; --info-bg:#eef1f3;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;padding:0}
+  body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+       background:var(--bg);color:var(--ink);line-height:1.5;font-size:17px}
+  a{color:var(--brand-2)}
+  a:focus,button:focus,input:focus,label:focus-within{outline:3px solid var(--focus);outline-offset:2px}
+  header.top{background:var(--brand);color:#fff;padding:14px 20px}
+  header.top .wrap{display:flex;align-items:center;gap:10px}
+  .logo{width:28px;height:28px;border-radius:7px;background:#fff;display:grid;place-items:center;color:var(--brand);font-weight:800}
+  .wrap{max-width:720px;margin:0 auto;padding:0 4px}
+  main{padding:24px 16px 40px}
+  .panel{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:28px 24px;box-shadow:0 1px 2px rgba(0,0,0,.03)}
+  h1{font-size:1.9rem;line-height:1.2;margin:0 0 12px}
+  h2{font-size:1.4rem;margin:0 0 8px}
+  p.lead{font-size:1.1rem;color:var(--muted);margin:0 0 20px}
+  .btn{appearance:none;border:0;border-radius:10px;padding:13px 22px;font-size:1rem;font-weight:600;cursor:pointer}
+  .btn-primary{background:var(--brand);color:#fff}
+  .btn-primary:hover{background:var(--brand-2)}
+  .btn-primary:disabled{background:#9fb3b8;cursor:not-allowed}
+  .btn-link{background:none;color:var(--brand-2);padding:13px 6px;text-decoration:underline}
+  .ticks{list-style:none;padding:0;margin:18px 0 24px}
+  .ticks li{padding-left:28px;position:relative;margin:6px 0;color:var(--muted)}
+  .ticks li::before{content:"✓";position:absolute;left:4px;color:var(--green);font-weight:700}
+  .progress{height:8px;background:#e4e8e6;border-radius:99px;overflow:hidden;margin-bottom:8px}
+  .progress > div{height:100%;background:var(--brand-2);width:0;transition:width .25s}
+  .step{font-size:.9rem;color:var(--muted);margin-bottom:18px}
+  .hint{color:var(--muted);font-size:.95rem;margin:-2px 0 16px}
+  .opts{display:grid;gap:10px;margin-bottom:22px}
+  .opt{display:flex;align-items:center;gap:12px;border:1.5px solid var(--line);border-radius:10px;padding:13px 14px;cursor:pointer;background:#fff}
+  .opt:hover{border-color:var(--brand-2)}
+  .opt input{width:20px;height:20px;accent-color:var(--brand);margin:0}
+  .opt.sel{border-color:var(--brand);background:#f0f6f7}
+  .nav{display:flex;justify-content:space-between;align-items:center;gap:10px}
+  .cards{display:grid;gap:14px;margin:18px 0}
+  .card{border-radius:12px;border:1px solid var(--line);border-left:6px solid var(--info);background:#fff;padding:16px 18px}
+  .card.red{border-left-color:var(--red)} .card.amber{border-left-color:var(--amber)}
+  .card.green{border-left-color:var(--green)} .card.info{border-left-color:var(--info)}
+  .card h3{margin:0 0 6px;font-size:1.08rem;display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+  .pill{font-size:.75rem;font-weight:700;padding:2px 9px;border-radius:99px;letter-spacing:.02em;text-transform:uppercase}
+  .red .pill{background:var(--red-bg);color:var(--red)} .amber .pill{background:var(--amber-bg);color:var(--amber)}
+  .green .pill{background:var(--green-bg);color:var(--green)} .info .pill{background:var(--info-bg);color:var(--info)}
+  .card p{margin:6px 0}
+  .card .dl{font-weight:600}
+  .card .todo b{color:var(--ink)}
+  .card .disc{font-size:.85rem;color:var(--muted);font-style:italic;margin-top:8px}
+  .card table{border-collapse:collapse;width:100%;font-size:.9rem;margin:8px 0}
+  .card td,.card th{border-bottom:1px solid var(--line);padding:5px 4px;text-align:left}
+  .section-title{margin:26px 0 4px;font-size:1.05rem;color:var(--muted);text-transform:uppercase;letter-spacing:.05em}
+  .summary{display:flex;gap:10px;flex-wrap:wrap;margin:6px 0 4px}
+  .summary span{font-size:.9rem;padding:4px 10px;border-radius:99px;font-weight:600}
+  .s-red{background:var(--red-bg);color:var(--red)} .s-amber{background:var(--amber-bg);color:var(--amber)}
+  .s-green{background:var(--green-bg);color:var(--green)} .s-info{background:var(--info-bg);color:var(--info)}
+  .pitch{background:#10363f;color:#fff;border-radius:14px;padding:24px;margin-top:26px}
+  .pitch h2{color:#fff}
+  .pitch ul{padding-left:20px;margin:10px 0 16px}
+  .pitch .row{display:flex;gap:10px;flex-wrap:wrap}
+  .pitch input[type=email]{flex:1 1 220px;padding:13px 14px;border-radius:10px;border:0;font-size:1rem}
+  .pitch .btn-primary{background:#ffbf47;color:#10363f}
+  .pitch .small{font-size:.85rem;opacity:.85;margin-top:10px}
+  .thanks{background:#e8f5ec;color:#14532d;border-radius:10px;padding:14px;margin-top:12px;font-weight:600}
+  .err{color:#ffd2cc;font-size:.9rem;margin-top:8px}
+  footer{color:var(--muted);font-size:.85rem;text-align:center;padding:10px 16px 30px}
+  .admin table{width:100%;border-collapse:collapse;font-size:.9rem}
+  .admin td,.admin th{border-bottom:1px solid var(--line);padding:6px;text-align:left;vertical-align:top}
+  @media (max-width:520px){ body{font-size:16px} h1{font-size:1.55rem} .panel{padding:22px 16px} }
+</style>
+</head>
+<body>
+<header class="top"><div class="wrap"><div class="logo">✓</div><strong>UK Landlord Checker</strong><span style="opacity:.75;font-size:.9rem">· test version</span></div></header>
+<main><div class="wrap" id="app" aria-live="polite"></div></main>
+<footer>
+  <div><strong>Privacy:</strong> this test version sends no data anywhere. Your answers and any email you enter stay in this browser only.</div>
+  <div>Rules and links checked against official UK government sources on 31 October 2026. General guidance, not legal or tax advice.</div>
+</footer>
+
+<script>
+(function(){
+"use strict";
+var DISC = "General guidance, not legal or tax advice.";
+var STORE = "ukl_checker_events_v1";
+var TODAY = new Date();
+
+/* ---------- Official links (from checker-spec.md) ---------- */
+var L = {
+  mtdWhen:"https://www.gov.uk/guidance/find-out-if-and-when-you-need-to-use-making-tax-digital-for-income-tax",
+  mtdIncome:"https://www.gov.uk/guidance/work-out-your-qualifying-income-for-making-tax-digital-for-income-tax",
+  mtdPenalties:"https://www.gov.uk/guidance/penalties-for-making-tax-digital-for-income-tax",
+  mtdExempt:"https://www.gov.uk/guidance/find-out-if-you-can-get-an-exemption-from-making-tax-digital-for-income-tax",
+  mtdSoftware:"https://www.gov.uk/guidance/find-software-that-works-with-making-tax-digital-for-income-tax",
+  infoSheet:"https://www.gov.uk/government/publications/the-renters-rights-act-information-sheet-2026",
+  rraOverview:"https://www.gov.uk/guidance/renters-rights-act-an-overview-for-landlords",
+  register:"https://www.gov.uk/guidance/register-your-rental-property-service-guidance-for-landlords",
+  roadmap:"https://www.gov.uk/government/publications/renters-rights-act-2025-implementation-roadmap/implementing-the-renters-rights-act-2025-our-roadmap-for-reforming-the-private-rented-sector",
+  gas:"https://www.gov.uk/private-renting/your-landlords-safety-responsibilities",
+  eicr:"https://www.gov.uk/government/publications/electrical-safety-standards-in-the-private-rented-sector-guidance-for-landlords-tenants-and-local-authorities/guide-for-landlords-electrical-safety-standards-in-the-private-rented-sector",
+  epc:"https://www.gov.uk/guidance/domestic-private-rented-property-minimum-energy-efficiency-standard-landlord-guidance",
+  deposit:"https://www.gov.uk/tenancy-deposit-protection",
+  alarms:"https://www.gov.uk/government/publications/smoke-and-carbon-monoxide-alarms-explanatory-booklet-for-landlords/the-smoke-and-carbon-monoxide-alarm-england-regulations-2015-qa-booklet-for-the-private-rented-sector-landlords-and-tenants",
+  rtr:"https://www.gov.uk/landlord-immigration-check",
+  rswReg:"https://rentsmart.gov.wales/en/landlord/landlord-registration/",
+  rswLic:"https://rentsmart.gov.wales/en/licensing/",
+  walesContract:"https://www.gov.wales/renting-homes-frequently-asked-questions-landlords",
+  scotReg:"https://www.mygov.scot/landlord-registration",
+  scotFees:"https://landlordregistrationscotland.gov.uk/fees-information",
+  ni:"https://www.nidirect.gov.uk/articles/landlord-registration-process"
+};
+
+/* ---------- Database regional windows (gov.uk guidance) ---------- */
+var REGIONS = [
+  ["wm","West Midlands","2026-12-15","2027-03-14"],
+  ["ee","East of England","2027-01-15","2027-04-14"],
+  ["em","East Midlands","2027-02-15","2027-05-14"],
+  ["se","South East","2027-03-15","2027-06-14"],
+  ["yh","Yorkshire and Humber","2027-04-15","2027-07-14"],
+  ["nw","North West","2027-05-15","2027-08-14"],
+  ["ne","North East","2027-06-15","2027-09-14"],
+  ["ld","London","2027-07-15","2027-10-14"],
+  ["sw","South West","2027-08-15","2027-11-14"]
+];
+function fmt(iso){var d=new Date(iso+"T00:00:00");return d.toLocaleDateString("en-GB",{day:"numeric",month:"long",year:"numeric"});}
+function onOrAfter(iso){var d=new Date(iso+"T00:00:00");return TODAY>=d;}
+function after(iso){var d=new Date(iso+"T23:59:59");return TODAY>d;}
+
+/* ---------- Questions (spec Part 2) ---------- */
+var A = {};
+function has(n){return (A.nation||[]).indexOf(n)>=0;}
+function lodgerOnly(){return A.lodger==="lodger";}
+var Q = [
+  {id:"nation",multi:true,title:"Where are your rental properties?",hint:"Choose all that apply.",
+   opts:[["england","England"],["wales","Wales"],["scotland","Scotland"],["ni","Northern Ireland"]]},
+  {id:"lodger",title:"Do you rent out whole homes, or a room in the home you live in?",
+   opts:[["whole","Whole homes"],["lodger","Only a room in my own home (a lodger)"],["both","Both"]]},
+  {id:"region",title:"Which region of England are your properties in?",hint:"This sets your deadline for the new property register. If you have properties in several regions, pick the one with the earliest window (West Midlands is first).",
+   show:function(){return has("england")&&!lodgerOnly();},
+   opts:REGIONS.map(function(r){return [r[0],r[1]];}).concat([["unsure","Not sure"]])},
+  {id:"count",title:"How many properties do you let?",opts:[["1","1"],["2-3","2–3"],["4-5","4–5"],["6+","6 or more"]]},
+  {id:"manage",title:"Who manages the letting day to day?",hint:"For example, collecting rent, arranging repairs and being the tenant's main contact.",
+   show:function(){return has("wales")&&!lodgerOnly();},
+   opts:[["me","I do"],["agent","A letting agent does everything"],["mixed","Mixed"]]},
+  {id:"sa",title:"Do you file a Self Assessment tax return?",opts:[["yes","Yes"],["no","No"],["unsure","Not sure"]]},
+  {id:"income",title:"Your share of rental and self-employment income for the 2025-26 tax year",
+   hint:"6 April 2025 to 5 April 2026. Use the total before expenses. If you own a property jointly, count only your share. Don't include salary, pensions or dividends.",
+   show:function(){return A.sa!=="no";},
+   opts:[["u20","Under £20,000"],["20-30","£20,000 to £30,000"],["30-50","£30,000 to £50,000"],["o50","Over £50,000"],["unsure","Not sure"]]},
+  {id:"mtd",title:"Have you signed up for Making Tax Digital, or had a letter from HMRC about it?",
+   show:function(){return A.sa!=="no";},
+   opts:[["yes","Yes"],["no","No"],["unsure","Not sure"]]},
+  {id:"records",title:"How do you keep your rent and expense records?",opts:[["paper","Paper"],["sheet","Spreadsheet"],["software","Software"]]},
+  {id:"infosheet",title:"For tenancies that existed before 1 May 2026, did you give tenants the Information Sheet (or written key terms) by 31 May 2026?",
+   show:function(){return has("england")&&!lodgerOnly();},
+   opts:[["yes","Yes"],["no","No"],["unsure","Not sure"],["none","I had no tenancies then"]]},
+  {id:"registered",title:"Have you registered on the government's “Register your rental property” service?",
+   show:function(){return has("england")&&!lodgerOnly();},
+   opts:[["yes","Yes"],["notyet","Not yet"],["never","I haven't heard of it"]]},
+  {id:"safety",multi:true,optional:true,title:"Which of these are up to date right now?",hint:"Tick everything that applies. You can leave this blank.",
+   show:function(){return has("england")&&!lodgerOnly();},
+   opts:[["gas","Gas safety record (checked in the last 12 months)"],["eicr","Electrical safety report (EICR) within 5 years"],["epc","EPC rated E or above"],["deposit","Deposit protected within 30 days"],["alarms","Smoke and carbon monoxide alarms checked"],["rtr","Right to rent checks done"],["nogas","No gas supply at my properties"]]}
+];
+function visible(){return Q.filter(function(q){return !q.show||q.show();});}
+
+/* ---------- Events (localStorage; fake-door test) ---------- */
+function logEvent(type,data){
+  try{var arr=JSON.parse(localStorage.getItem(STORE)||"[]");
+    arr.push({t:new Date().toISOString(),type:type,data:data||null});
+    localStorage.setItem(STORE,JSON.stringify(arr));}catch(e){}
+}
+
+/* ---------- Rendering helpers ---------- */
+var app=document.getElementById("app");
+function esc(s){return String(s).replace(/[&<>"]/g,function(c){return{"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c];});}
+function link(url,label){return '<a href="'+url+'" target="_blank" rel="noopener">'+(label||"Official guidance")+" ↗</a>";}
+var LABEL={red:"Action needed",amber:"Check this",green:"Looks fine",info:"Good to know"};
+function card(c){
+  return '<div class="card '+c.s+'" data-status="'+c.s+'" data-rule="'+esc(c.id)+'"><h3><span class="pill">'+LABEL[c.s]+"</span>"+esc(c.title)+"</h3>"+
+    (c.body?"<p>"+c.body+"</p>":"")+
+    (c.deadline?'<p class="dl">Deadline: '+c.deadline+"</p>":"")+
+    (c.extra||"")+
+    (c.todo?'<p class="todo"><b>What to do:</b> '+c.todo+"</p>":"")+
+    (c.links?"<p>"+c.links.map(function(l){return link(l[0],l[1]);}).join(" &nbsp;·&nbsp; ")+"</p>":"")+
+    '<p class="disc">'+DISC+"</p></div>";
+}
+
+/* ---------- Start ---------- */
+function start(){
+  app.innerHTML='<div class="panel"><h1>Are your rentals ready for the 2026–2028 changes?</h1>'+
+   '<p class="lead">Answer up to 12 quick questions and get a clear red, amber or green check for each rule that applies to you, with the deadline and the official link.</p>'+
+   '<ul class="ticks"><li>Renters\u2019 Rights Act and the new property register (England)</li><li>Making Tax Digital for Income Tax (UK-wide)</li><li>Registration rules in Wales, Scotland and Northern Ireland</li><li>Takes about 2 minutes. Nothing is sent anywhere.</li></ul>'+
+   '<button class="btn btn-primary" id="go">Check my status</button></div>';
+  document.getElementById("go").onclick=function(){A={};logEvent("start");ask(0);};
+}
+
+/* ---------- Questions ---------- */
+function ask(i){
+  var vs=visible(); if(i>=vs.length){return results();}
+  var q=vs[i], cur=A[q.id];
+  var pct=Math.round((i)/vs.length*100);
+  var html='<div class="panel"><div class="progress" aria-hidden="true"><div style="width:'+pct+'%"></div></div>'+
+    '<div class="step">Question '+(i+1)+" of "+vs.length+"</div>"+
+    '<h2 id="qt">'+esc(q.title)+"</h2>"+(q.hint?'<p class="hint">'+esc(q.hint)+"</p>":"")+
+    '<div class="opts" role="'+(q.multi?"group":"radiogroup")+'" aria-labelledby="qt">';
+  q.opts.forEach(function(o){
+    var checked=q.multi?((cur||[]).indexOf(o[0])>=0):(cur===o[0]);
+    html+='<label class="opt'+(checked?" sel":"")+'"><input type="'+(q.multi?"checkbox":"radio")+'" name="a" value="'+o[0]+'"'+(checked?" checked":"")+"> <span>"+esc(o[1])+"</span></label>";
+  });
+  html+='</div><div class="nav"><button class="btn btn-link" id="back">'+(i===0?"← Start":"← Back")+'</button><button class="btn btn-primary" id="next">'+(i===vs.length-1?"See my results":"Continue")+"</button></div></div>";
+  app.innerHTML=html;
+  var next=document.getElementById("next");
+  function sync(){
+    var ins=[].slice.call(app.querySelectorAll("input"));
+    ins.forEach(function(x){x.parentNode.classList.toggle("sel",x.checked);});
+    var sel=ins.filter(function(x){return x.checked;}).map(function(x){return x.value;});
+    if(q.multi){
+      // "No gas supply" and "gas record" are mutually exclusive
+      A[q.id]=sel;
+      next.disabled=!q.optional&&sel.length===0;
+    } else { A[q.id]=sel[0]; next.disabled=!sel.length; }
+  }
+  app.querySelectorAll("input").forEach(function(x){x.onchange=sync;});
+  if(q.multi&&!cur){A[q.id]=[];} next.disabled=q.multi?(!q.optional&&!(A[q.id]||[]).length):!cur;
+  next.onclick=function(){ cleanup(); var vs2=visible(); var idx=vs2.indexOf(q); ask(idx+1); };
+  document.getElementById("back").onclick=function(){ if(i===0){start();} else {ask(i-1);} };
+  window.scrollTo(0,0);
+}
+// drop answers to questions that are no longer shown (e.g. user went back and changed nation)
+function cleanup(){Q.forEach(function(q){if(q.show&&!q.show()){delete A[q.id];}});}
+
+/* ---------- Result logic (spec Part 3) ---------- */
+function mtdCards(){
+  var out=[];
+  if(A.sa==="no"){
+    out.push({id:"mtd",s:"green",title:"Making Tax Digital for Income Tax",
+      body:"MTD applies to landlords registered for Self Assessment. If you need to file a return, register first.",
+      links:[[L.mtdWhen,"Check if and when you need MTD"]]});
+    return out;
+  }
+  var inc=A.income, signed=A.mtd, c={id:"mtd",title:"Making Tax Digital for Income Tax",links:[[L.mtdIncome,"Work out your qualifying income"],[L.mtdWhen,"HMRC: when you need MTD"]]};
+  if(inc==="o50"){
+    if(signed==="yes"){
+      c.s="green"; c.body="You\u2019re signed up. Keep sending quarterly updates by 7 August, 7 November, 7 February and 7 May. There are no penalty points for late updates in 2026-27; points start from 2027-28 (4 points means a £200 penalty).";
+      c.links.push([L.mtdPenalties,"MTD penalties"]);
+    } else {
+      c.s=(signed==="no")?"red":"amber";
+      c.body="Your 2025-26 income means MTD from 6 April 2027 at the latest. If your 2024-25 income was also over £50,000, you should already have started on 6 April 2026.";
+      c.deadline="6 April 2027 at the latest (possibly already from 6 April 2026)";
+      c.todo="Check with HMRC\u2019s tool, choose HMRC-recognised software and sign up. The next quarterly deadlines are 7 February and 7 May.";
+    }
+  } else if(inc==="30-50"){
+    if(signed==="yes"){ c.s="green"; c.body="You\u2019re signed up. Based on your 2025-26 income, MTD applies from 6 April 2027. Quarterly updates are due 7 August, 7 November, 7 February and 7 May."; }
+    else { c.s="amber"; c.body="You\u2019ll likely need MTD from 6 April 2027, based on your 2025-26 income (your share, before expenses)."; c.deadline="6 April 2027";
+      c.todo="Choose HMRC-recognised software (or bridging software if you use spreadsheets) and sign up before April 2027."; }
+  } else if(inc==="20-30"){
+    c.s="amber"; c.body="Not from 2027 on these figures, but if your 2026-27 income is over £20,000 you\u2019ll need MTD from 6 April 2028."; c.deadline="6 April 2028 (if 2026-27 income is over £20,000)";
+    c.todo="Start keeping digital records now so the switch is easy.";
+  } else if(inc==="u20"){
+    c.s="green"; c.body="On current figures MTD doesn\u2019t apply yet. HMRC checks each year; the lowest threshold is £20,000 (2026-27 income, from April 2028).";
+  } else {
+    c.s="amber"; c.body="Add up your share of rent and any self-employment income before expenses for 2025-26. If it\u2019s over £30,000, MTD starts on 6 April 2027.";
+    c.todo="Use HMRC\u2019s qualifying income guidance or its online checker.";
+  }
+  var heavy=(inc==="o50"||inc==="30-50"||inc==="20-30"||inc==="unsure");
+  if(A.records==="paper"&&heavy){
+    c.extra='<p>Paper records won\u2019t meet MTD rules unless HMRC grants an exemption. Exemptions are for digital exclusion (for example age, disability or location), not cost or unfamiliarity.</p>';
+    c.links.push([L.mtdExempt,"MTD exemptions"]);
+  } else if(A.records==="sheet"&&inc!=="u20"){
+    c.extra='<p>Spreadsheets are fine if they\u2019re linked to HMRC-recognised bridging software, with no retyping.</p>';
+    c.links.push([L.mtdSoftware,"Find compatible software"]);
+  }
+  out.push(c); return out;
+}
+
+function englandCards(){
+  var out=[];
+  // B. Tenancy changes
+  var b={id:"rra-tenancies",title:"Renters\u2019 Rights Act: rolling tenancies",links:[[L.infoSheet,"Information Sheet 2026"],[L.rraOverview,"Overview for landlords"]]};
+  var rent=' Rent can rise once a year using Form 4A, with at least 2 months\u2019 notice.';
+  if(A.infosheet==="yes"||A.infosheet==="none"){
+    b.s="green"; b.body="Your tenancies are now rolling (assured periodic). Make sure no agreement shows an end date, and new tenants get the required written terms."+rent;
+  } else if(A.infosheet==="no"){
+    b.s="red"; b.body="The Information Sheet (or written key terms for verbal tenancies) was due by 31 May 2026. Not giving it can lead to a penalty of up to £7,000."+rent;
+    b.deadline="31 May 2026 (passed)"; b.todo="Give it to your tenants now and keep proof that you did.";
+  } else {
+    b.s="amber"; b.body="The Information Sheet (or written key terms for verbal tenancies) was due by 31 May 2026. Not giving it can lead to a penalty of up to £7,000."+rent;
+    b.deadline="31 May 2026 (passed)"; b.todo="Check your records, and send it if in doubt.";
+  }
+  out.push(b);
+
+  // C. Register your rental property
+  var c={id:"prs-database",title:"Register your rental property (new in England)",links:[[L.register,"Register your rental property: landlord guidance"]]};
+  var foot='<p style="font-size:.88rem;color:var(--muted)">The underlying regulations were still in draft on 31 October 2026; dates and fee come from current gov.uk guidance.</p>';
+  if(A.registered==="yes"){
+    c.s="green"; c.body="Registered. Renew every year, update any changes within 28 days, and show your landlord and property IDs in adverts. The fee is £65 per property per year (first fee pro-rated from 15 November 2027).";
+  } else {
+    var r=REGIONS.filter(function(x){return x[0]===A.region;})[0];
+    if(r){
+      var started=onOrAfter(r[2]), missed=after(r[3]);
+      c.s=(started||missed)?"red":"amber";
+      c.body="Your region\u2019s window (" + esc(r[1]) + ") is "+fmt(r[2])+" to "+fmt(r[3])+". Occupied properties must be registered by "+fmt(r[3])+". You can register early. Fee: £65 per property per year (per current government guidance). Not registering can mean a penalty of up to £7,000, and courts can\u2019t usually grant possession while you\u2019re unregistered.";
+      c.deadline=fmt(r[3])+(missed?" (passed)":"");
+      c.todo=(started?"Register now":"Set a reminder for "+fmt(r[2]))+", and gather your gas safety record, EICR and EPC.";
+    } else {
+      c.s="amber"; c.body="Registration opens region by region. The first deadline is 14 March 2027 (West Midlands) and the last is 14 November 2027 (South West). Fee: £65 per property per year (per current government guidance). Not registering can mean a penalty of up to £7,000.";
+      c.deadline="Depends on your region (see table)";
+      c.extra='<table><tr><th>Region</th><th>Opens</th><th>Register by</th></tr>'+REGIONS.map(function(x){return "<tr><td>"+x[1]+"</td><td>"+fmt(x[2])+"</td><td>"+fmt(x[3])+"</td></tr>";}).join("")+"</table>";
+      c.todo="Find your region on the gov.uk guidance, set a reminder, and gather your gas safety record, EICR and EPC.";
+    }
+  }
+  c.extra=(c.extra||"")+foot;
+  out.push(c);
+
+  // D. Ombudsman
+  out.push({id:"ombudsman",s:"info",title:"PRS Landlord Ombudsman",body:"Joining the PRS Landlord Ombudsman is expected to be mandatory from 2028. The cost and start date aren\u2019t confirmed yet; we\u2019ll update this when they are.",links:[[L.roadmap,"Government roadmap"]]});
+
+  // E. Safety checklist
+  var s=A.safety||[], items=[
+    ["gas","Gas safety","Have a Gas Safe registered engineer check gas appliances every year, and give tenants a copy of the record before they move in or within 28 days of the check.",L.gas],
+    ["eicr","Electrical safety (EICR)","Have the electrics inspected and tested at least every 5 years, and give tenants proof.",L.eicr],
+    ["epc","Energy Performance Certificate","You can\u2019t let a home rated F or G unless a registered exemption applies (the minimum is E). A move to EPC C by 2030 has been consulted on but isn\u2019t confirmed.",L.epc],
+    ["deposit","Deposit protection","Protect any deposit in a government-approved scheme within 30 days. An unprotected deposit can stop a court granting possession.",L.deposit],
+    ["alarms","Smoke and carbon monoxide alarms","Fit a smoke alarm on every storey with living space, and a carbon monoxide alarm in any room with a fixed combustion appliance (not gas cookers). Check them at the start of each tenancy.",L.alarms],
+    ["rtr","Right to rent checks","Check every adult who will live there before the tenancy starts. A first civil penalty can be up to £10,000 per occupier.",L.rtr]
+  ];
+  var noGas=s.indexOf("nogas")>=0, missing=[], ok=[];
+  items.forEach(function(it){ if(it[0]==="gas"&&noGas) return; (s.indexOf(it[0])>=0?ok:missing).push(it); });
+  missing.forEach(function(it){ out.push({id:"safety-"+it[0],s:"amber",title:it[1],body:it[2],todo:"Check this is in place and keep the paperwork; you\u2019ll need gas, electrical and EPC documents for the property register.",links:[[it[3],"Official guidance"]]}); });
+  if(!missing.length){ out.push({id:"safety-all",s:"green",title:"Safety and tenancy checks",body:"You\u2019ve told us your gas, electrical, EPC, deposit, alarm and right to rent checks are up to date. Keep the documents handy for the property register.",links:[[L.gas,"Safety responsibilities"]]}); }
+  return out;
+}
+
+function walesCards(){
+  var out=[];
+  out.push({id:"wales-reg",s:"amber",title:"Rent Smart Wales registration",body:"All landlords of rented homes in Wales must register with Rent Smart Wales (£60 online, valid 5 years).",todo:"Check your registration is current, or register online.",links:[[L.rswReg,"Rent Smart Wales: registration"]]});
+  if(A.manage==="agent"){
+    out.push({id:"wales-licence",s:"green",title:"Rent Smart Wales licence",body:"Because a letting agent does all the letting and management, you don\u2019t need your own licence, but your agent must hold one.",todo:"Check your agent\u2019s licence on the Rent Smart Wales public register.",links:[[L.rswLic,"Rent Smart Wales: licensing"]]});
+  } else {
+    out.push({id:"wales-licence",s:"amber",title:"Rent Smart Wales licence",body:"Because you manage the letting yourself, you also need a Rent Smart Wales licence (£254 online) and approved training.",todo:"Complete the approved training, then apply for a licence.",links:[[L.rswLic,"Rent Smart Wales: licensing"]]});
+  }
+  out.push({id:"wales-contract",s:"info",title:"Occupation contracts",body:"Give contract-holders a written statement of the occupation contract within 14 days of the move-in date.",links:[[L.walesContract,"Welsh Government: renting homes FAQs"]]});
+  out.push({id:"wales-na",s:"info",title:"England-only rules",body:"England\u2019s Renters\u2019 Rights Act and the new property register don\u2019t apply in Wales."});
+  return out;
+}
+function scotlandCards(){
+  return [
+    {id:"scot-reg",s:"amber",title:"Scottish Landlord Register",body:"You must be on the Scottish Landlord Register before letting, and renew every 3 years. Letting while unregistered is a criminal offence (fine up to £50,000). Fees: £85 plus £20 per property.",todo:"Check your registration and renewal date, or apply online.",links:[[L.scotReg,"mygov.scot: registering as a landlord"],[L.scotFees,"Registration fees"]]},
+    {id:"scot-adverts",s:"info",title:"Advertising in Scotland",body:"Adverts must show your landlord registration number (or \u2018landlord registration pending\u2019) and the property\u2019s EPC rating.",links:[[L.scotReg,"mygov.scot"]]}
+  ];
+}
+function niCards(){
+  return [{id:"ni-reg",s:"amber",title:"Northern Ireland Landlord Registration Scheme",body:"Register with the Landlord Registration Scheme before letting a new tenancy (£70 online, renew every 3 years). Fixed penalty up to £500; court fine up to £2,500.",todo:"Check your registration is current, or register online.",links:[[L.ni,"nidirect: landlord registration"]]}];
+}
+
+function results(){
+  logEvent("complete",{answers:JSON.parse(JSON.stringify(A))});
+  var groups=[];
+  if(A.lodger==="lodger"||A.lodger==="both"){
+    groups.push(["Your situation",[{id:"lodger",s:"info",title:"Letting a room in your own home",body:"Letting a room in your own home is treated differently. Check the official page for your nation before relying on these results."+(lodgerOnly()?" Because you only let a room in your own home, we\u2019ve skipped the tenancy and registration checks and shown the tax check only.":""),links:[[L.rraOverview,"England: landlord overview"],[L.rswReg,"Wales"],[L.scotReg,"Scotland"],[L.ni,"Northern Ireland"]]}]]);
+  }
+  groups.push(["Tax (UK-wide)",mtdCards()]);
+  if(!lodgerOnly()){
+    if(has("england")) groups.push(["England",englandCards()]);
+    if(has("wales")) groups.push(["Wales",walesCards()]);
+    if(has("scotland")) groups.push(["Scotland",scotlandCards()]);
+    if(has("ni")) groups.push(["Northern Ireland",niCards()]);
+  }
+  var tally={red:0,amber:0,green:0,info:0};
+  groups.forEach(function(g){g[1].forEach(function(c){tally[c.s]++;});});
+  var html='<div class="panel"><h1>Your results</h1><p class="lead">Based on your answers today ('+TODAY.toLocaleDateString("en-GB",{day:"numeric",month:"long",year:"numeric"})+'). Start with anything marked red.</p>'+
+    '<div class="summary">'+(tally.red?'<span class="s-red">'+tally.red+" action needed</span>":"")+(tally.amber?'<span class="s-amber">'+tally.amber+" to check</span>":"")+(tally.green?'<span class="s-green">'+tally.green+" fine</span>":"")+(tally.info?'<span class="s-info">'+tally.info+" good to know</span>":"")+"</div>";
+  groups.forEach(function(g){ html+='<h2 class="section-title">'+esc(g[0])+'</h2><div class="cards">'+g[1].map(card).join("")+"</div>"; });
+  html+='<section class="pitch" id="pitch"><h2>Stay on top of every date, for £6 a month</h2><ul>'+
+    "<li>We\u2019ll remind you before your register deadline, MTD quarterly updates, and gas, EICR and EPC renewals.</li>"+
+    "<li>Log rent, repairs and expenses in one place.</li><li>Export a tidy, accountant-ready summary each quarter.</li>"+
+    '</ul><form id="wl" novalidate><div class="row"><label for="em" style="position:absolute;left:-9999px">Email address</label><input type="email" id="em" placeholder="you@example.com" autocomplete="email" required><button class="btn btn-primary" type="submit" id="cta">Get reminders — £6/month</button></div><div id="msg"></div></form>'+
+    '<p class="small">Cancel anytime. '+DISC+"</p></section>";
+  html+='<div style="margin-top:18px;display:flex;gap:10px;flex-wrap:wrap"><button class="btn btn-link" id="redo">← Start again</button><button class="btn btn-link" id="print">Print or save results</button></div></div>';
+  app.innerHTML=html; window.scrollTo(0,0);
+  document.getElementById("redo").onclick=function(){start();};
+  document.getElementById("print").onclick=function(){window.print();};
+  document.getElementById("wl").onsubmit=function(e){ e.preventDefault(); joinWaitlist(tally); };
+}
+
+/* FAKE-DOOR: real deploy should open Lemon Squeezy checkout here and POST email to a form backend. */
+function joinWaitlist(tally){
+  var em=document.getElementById("em").value.trim(), msg=document.getElementById("msg");
+  logEvent("cta_click",{hasEmail:!!em});
+  if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(em)){ msg.innerHTML='<div class="err">Please enter a valid email address so we can tell you when it opens.</div>'; return; }
+  logEvent("email_submitted",{email:em,nations:A.nation,income:A.income||null,region:A.region||null,tally:tally});
+  document.getElementById("wl").querySelector(".row").style.display="none";
+  msg.innerHTML='<div class="thanks" id="thanks">Early access: we\u2019ll email you when it opens. You haven\u2019t been charged, and nothing has been sent anywhere in this test version.</div>';
+}
+
+/* ---------- Hidden admin view: index.html#admin ---------- */
+function admin(){
+  var arr=[]; try{arr=JSON.parse(localStorage.getItem(STORE)||"[]");}catch(e){}
+  var emails=arr.filter(function(x){return x.type==="email_submitted";});
+  var count=function(t){return arr.filter(function(x){return x.type===t;}).length;};
+  var html='<div class="panel admin"><h1>Test admin</h1><p class="lead">Stored in this browser only (localStorage key <code>'+STORE+'</code>).</p>'+
+    "<p>Starts: <b>"+count("start")+"</b> · Completed: <b>"+count("complete")+"</b> · CTA clicks: <b>"+count("cta_click")+"</b> · Emails: <b>"+emails.length+"</b></p>"+
+    "<h2>Emails</h2><table><tr><th>Time</th><th>Email</th><th>Nations</th><th>Income</th></tr>"+
+    emails.map(function(x){return "<tr><td>"+esc(x.t)+"</td><td>"+esc(x.data.email)+"</td><td>"+esc((x.data.nations||[]).join(", "))+"</td><td>"+esc(x.data.income||"")+"</td></tr>";}).join("")+"</table>"+
+    "<h2 style='margin-top:20px'>All events</h2><table><tr><th>Time</th><th>Type</th><th>Data</th></tr>"+
+    arr.slice().reverse().map(function(x){return "<tr><td>"+esc(x.t)+"</td><td>"+esc(x.type)+"</td><td><code>"+esc(JSON.stringify(x.data||""))+"</code></td></tr>";}).join("")+"</table>"+
+    '<p style="margin-top:16px"><button class="btn btn-primary" id="exp">Download CSV</button> <button class="btn btn-link" id="clr">Clear all</button> <a href="#" id="home">Back to checker</a></p></div>';
+  app.innerHTML=html;
+  document.getElementById("exp").onclick=function(){
+    var csv="time,type,data\n"+arr.map(function(x){return [x.t,x.type,JSON.stringify(x.data||"")].map(function(v){return '"'+String(v).replace(/"/g,'""')+'"';}).join(",");}).join("\n");
+    var a=document.createElement("a"); a.href=URL.createObjectURL(new Blob([csv],{type:"text/csv"})); a.download="checker-events.csv"; a.click();
+  };
+  document.getElementById("clr").onclick=function(){ if(confirm("Clear all stored events?")){localStorage.removeItem(STORE);admin();} };
+  document.getElementById("home").onclick=function(e){e.preventDefault();history.replaceState(null,"",location.pathname);start();};
+}
+
+function route(){ if(location.hash==="#admin"){admin();} else {start();} }
+window.addEventListener("hashchange",route);
+route();
+})();
+</script>
+</body>
+</html>

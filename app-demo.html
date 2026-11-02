@@ -1,0 +1,500 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Landlord Dashboard (demo)</title>
+<!--
+  CLICKABLE DEMO of the £6/month landlord dashboard.
+  - Everything is stored in this browser only (localStorage key "ukl_app_demo_v1"). Nothing is sent anywhere.
+  - Reminders are NOT sent; the "Upcoming reminders" panel only previews what the live app would email.
+  - Certificate intervals: gas safety 12 months, EICR 5 years, EPC 10 years, PRS database renewal yearly (£65, England only).
+-->
+<style>
+  :root{
+    --bg:#f6f7f5; --card:#ffffff; --ink:#1f2a2e; --muted:#5b6770; --line:#dfe3e1;
+    --brand:#1d4f5c; --brand-2:#2c6b7a; --focus:#ffbf47;
+    --red:#b3261e; --red-bg:#fdecea; --amber:#a15c00; --amber-bg:#fff4e0;
+    --green:#1e7a46; --green-bg:#e8f5ec; --info:#4a5560; --info-bg:#eef1f3;
+    --inc:#2c6b7a; --exp:#e0a33a;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;padding:0}
+  body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+       background:var(--bg);color:var(--ink);line-height:1.5;font-size:16px}
+  a{color:var(--brand-2)}
+  a:focus,button:focus,input:focus,select:focus{outline:3px solid var(--focus);outline-offset:2px}
+  header.top{background:var(--brand);color:#fff;padding:12px 16px}
+  header.top .wrap{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+  .logo{width:28px;height:28px;border-radius:7px;background:#fff;display:grid;place-items:center;color:var(--brand);font-weight:800}
+  .tag{font-size:.8rem;background:rgba(255,255,255,.16);padding:2px 9px;border-radius:99px}
+  .wrap{max-width:1080px;margin:0 auto;padding:0 4px}
+  nav.tabs{background:#fff;border-bottom:1px solid var(--line);position:sticky;top:0;z-index:5}
+  nav.tabs .wrap{display:flex;gap:4px;overflow-x:auto;scrollbar-width:none}
+  nav.tabs button{appearance:none;border:0;background:none;padding:13px 14px;font-size:.95rem;font-weight:600;color:var(--muted);cursor:pointer;border-bottom:3px solid transparent;white-space:nowrap}
+  nav.tabs button.on{color:var(--brand);border-bottom-color:var(--brand)}
+  main{padding:20px 14px 40px}
+  .panel{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:20px;box-shadow:0 1px 2px rgba(0,0,0,.03);margin-bottom:16px}
+  h1{font-size:1.6rem;line-height:1.2;margin:0 0 6px}
+  h2{font-size:1.2rem;margin:0 0 10px}
+  h3{font-size:1.05rem;margin:0 0 6px}
+  p.lead{color:var(--muted);margin:0 0 16px}
+  .muted{color:var(--muted)} .small{font-size:.85rem}
+  .btn{appearance:none;border:0;border-radius:10px;padding:10px 16px;font-size:.95rem;font-weight:600;cursor:pointer;white-space:nowrap}
+  .btn-primary{background:var(--brand);color:#fff} .btn-primary:hover{background:var(--brand-2)}
+  .btn-ghost{background:#eef3f4;color:var(--brand)} .btn-ghost:hover{background:#e0eaec}
+  .btn-danger{background:var(--red-bg);color:var(--red)}
+  .btn-sm{padding:6px 11px;font-size:.85rem;border-radius:8px}
+  .btn-link{appearance:none;border:0;font:inherit;font-weight:600;cursor:pointer;background:none;color:var(--brand-2);padding:6px 4px;text-decoration:underline}
+  .row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+  .between{justify-content:space-between}
+  .grid{display:grid;gap:14px}
+  .g4{grid-template-columns:repeat(4,1fr)} .g2{grid-template-columns:1fr 1fr}
+  .stat{background:#fff;border:1px solid var(--line);border-radius:12px;padding:14px 16px;border-left:6px solid var(--info)}
+  .stat .k{font-size:.82rem;color:var(--muted);text-transform:uppercase;letter-spacing:.04em;font-weight:600}
+  .stat .v{font-size:1.55rem;font-weight:700;margin:2px 0}
+  .stat.red{border-left-color:var(--red)} .stat.green{border-left-color:var(--green)} .stat.amber{border-left-color:var(--amber)} .stat.brand{border-left-color:var(--brand-2)}
+  .bar{height:8px;background:#e4e8e6;border-radius:99px;overflow:hidden;margin-top:6px}
+  .bar > div{height:100%;background:var(--green)}
+  .pill{display:inline-block;font-size:.72rem;font-weight:700;padding:2px 9px;border-radius:99px;letter-spacing:.02em;text-transform:uppercase;white-space:nowrap}
+  .p-red{background:var(--red-bg);color:var(--red)} .p-amber{background:var(--amber-bg);color:var(--amber)}
+  .p-green{background:var(--green-bg);color:var(--green)} .p-info{background:var(--info-bg);color:var(--info)}
+  .ex{font-size:.7rem;font-weight:700;background:#fff4e0;color:#7a4500;border:1px dashed #d9a54a;padding:1px 7px;border-radius:99px;text-transform:uppercase;letter-spacing:.03em}
+  table.t{width:100%;border-collapse:collapse;font-size:.92rem}
+  table.t th{font-size:.78rem;text-transform:uppercase;letter-spacing:.04em;color:var(--muted);text-align:left;padding:8px 6px;border-bottom:1px solid var(--line)}
+  table.t td{padding:9px 6px;border-bottom:1px solid var(--line);vertical-align:middle}
+  table.t tr.overdue td{background:var(--red-bg)}
+  table.t td.num,table.t th.num{text-align:right;font-variant-numeric:tabular-nums}
+  table.t tfoot td{font-weight:700;border-bottom:0}
+  .list{list-style:none;margin:0;padding:0}
+  .list li{display:flex;gap:10px;justify-content:space-between;align-items:center;padding:9px 0;border-bottom:1px solid var(--line)}
+  .list li:last-child{border-bottom:0}
+  .prop{border:1px solid var(--line);border-radius:12px;padding:16px;background:#fff;margin-bottom:14px}
+  .prop-head{display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;align-items:flex-start;margin-bottom:8px}
+  .cert{border:1px solid var(--line);border-left:6px solid var(--info);border-radius:10px;padding:10px 12px;display:flex;justify-content:space-between;gap:10px;align-items:center;flex-wrap:wrap}
+  .cert.red{border-left-color:var(--red)} .cert.amber{border-left-color:var(--amber)} .cert.green{border-left-color:var(--green)}
+  .certs{display:grid;gap:8px;grid-template-columns:repeat(auto-fill,minmax(300px,1fr))}
+  .onboard{text-align:center;padding:40px 20px}
+  .onboard .steps{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin:22px 0;text-align:left}
+  .onboard .steps div{background:#f0f6f7;border-radius:10px;padding:12px}
+  .notice{background:var(--amber-bg);color:#5c3600;border-radius:10px;padding:10px 14px;font-size:.9rem;margin-bottom:14px}
+  .preview{background:var(--info-bg);border-radius:8px;padding:6px 10px;font-size:.85rem;color:var(--info);font-weight:600;display:inline-block;margin-bottom:8px}
+  .legend{display:flex;gap:14px;font-size:.85rem;color:var(--muted)}
+  .legend i{display:inline-block;width:12px;height:12px;border-radius:3px;margin-right:5px;vertical-align:-1px}
+  /* modal */
+  .modal-bg{position:fixed;inset:0;background:rgba(16,54,63,.45);display:none;align-items:flex-start;justify-content:center;z-index:20;padding:40px 12px;overflow-y:auto}
+  .modal-bg.open{display:flex}
+  .modal{background:#fff;border-radius:14px;max-width:480px;width:100%;padding:22px;box-shadow:0 10px 30px rgba(0,0,0,.2)}
+  .field{margin-bottom:14px}
+  .field label{display:block;font-weight:600;font-size:.92rem;margin-bottom:4px}
+  .field .hint{font-size:.82rem;color:var(--muted);margin-top:3px}
+  .field input,.field select{width:100%;padding:11px 12px;border:1.5px solid var(--line);border-radius:10px;font-size:1rem;background:#fff;font-family:inherit}
+  .field.err input,.field.err select{border-color:var(--red)}
+  .errmsg{color:var(--red);font-size:.85rem;margin-top:3px}
+  .toast{position:fixed;left:50%;bottom:20px;transform:translateX(-50%);background:#10363f;color:#fff;padding:10px 18px;border-radius:10px;font-size:.92rem;z-index:30;display:none}
+  footer{color:var(--muted);font-size:.82rem;text-align:center;padding:10px 16px 30px}
+  .scroll{overflow-x:auto}
+  .dlg{grid-template-columns:3fr 2fr;align-items:start}
+  @media (max-width:860px){ .g4{grid-template-columns:1fr 1fr} .g2,.dlg{grid-template-columns:1fr} }
+  @media (max-width:520px){ h1{font-size:1.35rem} .panel{padding:16px 14px} .stat .v{font-size:1.3rem}
+    .onboard .steps{grid-template-columns:1fr} .certs{grid-template-columns:1fr}
+    table.t.resp thead{display:none} table.t.resp tr{display:block;border-bottom:1px solid var(--line);padding:6px 0}
+    table.t.resp td{display:flex;justify-content:space-between;border:0;padding:4px 6px}
+    table.t.resp td::before{content:attr(data-l);color:var(--muted);font-size:.82rem;margin-right:10px}
+    table.t.resp td.num{text-align:right} }
+</style>
+</head>
+<body>
+<header class="top"><div class="wrap"><div class="logo">✓</div><strong>Landlord Dashboard</strong><span class="tag">Demo · £6/month plan</span><span style="flex:1"></span><span style="opacity:.8;font-size:.85rem" id="today"></span></div></header>
+<nav class="tabs" aria-label="Sections"><div class="wrap" id="tabs"></div></nav>
+<main><div class="wrap" id="app" aria-live="polite"></div></main>
+<footer>
+  <div><strong>Demo:</strong> your data stays in this browser only. Reminders are previews; nothing is emailed.</div>
+  <div>Certificate intervals and fees are general guidance, not legal or tax advice.</div>
+</footer>
+<div class="modal-bg" id="modalBg" role="dialog" aria-modal="true"><div class="modal" id="modal"></div></div>
+<div class="toast" id="toast"></div>
+
+<script>
+(function(){
+"use strict";
+var KEY="ukl_app_demo_v1";
+var TODAY=(function(){var d=new Date();return new Date(d.getFullYear(),d.getMonth(),d.getDate());})();
+
+/* ---------- Date helpers (local dates, ISO yyyy-mm-dd) ---------- */
+function pad(n){return (n<10?"0":"")+n;}
+function iso(d){return d.getFullYear()+"-"+pad(d.getMonth()+1)+"-"+pad(d.getDate());}
+function parse(s){var p=s.split("-");return new Date(+p[0],+p[1]-1,+p[2]);}
+function dim(y,m){return new Date(y,m+1,0).getDate();}
+function addMonths(d,n){var y=d.getFullYear(),m=d.getMonth()+n;var ty=y+Math.floor(m/12),tm=((m%12)+12)%12;return new Date(ty,tm,Math.min(d.getDate(),dim(ty,tm)));}
+function addDays(d,n){return new Date(d.getFullYear(),d.getMonth(),d.getDate()+n);}
+function daysBetween(a,b){return Math.round((b-a)/86400000);}
+function fd(d){if(typeof d==="string")d=parse(d);return d.toLocaleDateString("en-GB",{day:"numeric",month:"short",year:"numeric"});}
+function fm(d){return d.toLocaleDateString("en-GB",{month:"short",year:"numeric"});}
+function money(n){var neg=n<0;n=Math.abs(n);return (neg?"−":"")+"£"+n.toLocaleString("en-GB",{minimumFractionDigits:n%1?2:0,maximumFractionDigits:2});}
+function taxYear(d){var y=d.getFullYear();var start=new Date(y,3,6);if(d<start){y--;}return {start:new Date(y,3,6),end:new Date(y+1,3,5),label:y+"–"+String(y+1).slice(2)};}
+var TY=taxYear(TODAY);
+function inTY(s){var d=parse(s);return d>=TY.start&&d<=TY.end;}
+
+/* ---------- State ---------- */
+var S;
+function blank(){return {properties:[],tenants:[],payments:[],expenses:[],certs:[],example:false};}
+function load(){try{S=JSON.parse(localStorage.getItem(KEY))||blank();}catch(e){S=blank();} ["properties","tenants","payments","expenses","certs"].forEach(function(k){if(!Array.isArray(S[k]))S[k]=[];});}
+function save(){localStorage.setItem(KEY,JSON.stringify(S));}
+function uid(){return Math.random().toString(36).slice(2,10)+Date.now().toString(36).slice(-4);}
+function prop(id){return S.properties.filter(function(p){return p.id===id;})[0];}
+function tenant(id){return S.tenants.filter(function(t){return t.id===id;})[0];}
+function pname(p){return p?(p.nickname||p.address):"(deleted)";}
+load();
+
+var COUNTRIES={england:"England",wales:"Wales",scotland:"Scotland",ni:"Northern Ireland"};
+var CATS=[["mortgage","Mortgage"],["repairs","Repairs"],["insurance","Insurance"],["agent","Agent fees"],["certificates","Certificates"],["other","Other"]];
+function catName(c){for(var i=0;i<CATS.length;i++)if(CATS[i][0]===c)return CATS[i][1];return c;}
+var CERTS={
+  gas:{name:"Gas safety check",months:12,doneLabel:"Date of last check",hint:"Must be renewed every 12 months."},
+  eicr:{name:"Electrical safety report (EICR)",months:60,doneLabel:"Date of last inspection",hint:"Renew at least every 5 years."},
+  epc:{name:"Energy certificate (EPC)",months:120,doneLabel:"Date issued",hint:"Valid for 10 years."},
+  deposit:{name:"Deposit protection",months:0,doneLabel:"Date deposit protected",hint:"One-off per tenancy: protect within 30 days of receiving it. No renewal tracked."},
+  prs:{name:"PRS database registration",months:12,doneLabel:"Date registered or last renewed",hint:"England only. Yearly renewal, £65 per property.",england:true}
+};
+var CERT_ORDER=["gas","eicr","epc","deposit","prs"];
+
+/* ---------- Rent schedule ---------- */
+function dueDateFor(y,m,day){return new Date(y,m,Math.min(day,dim(y,m)));}
+function rentRows(t){
+  var rows=[],start=parse(t.start),y=start.getFullYear(),m=start.getMonth();
+  var first=dueDateFor(y,m,t.dueDay); if(first<start){m++;if(m>11){m=0;y++;}}
+  var horizon=addMonths(TODAY,1);
+  for(var i=0;i<600;i++){
+    var due=dueDateFor(y,m,t.dueDay); if(due>horizon)break;
+    var key=y+"-"+pad(m+1);
+    var pay=S.payments.filter(function(p){return p.tenantId===t.id&&p.month===key;})[0];
+    var st, d=daysBetween(TODAY,due);
+    if(pay)st="paid"; else if(d<0)st="overdue"; else if(d<=7)st="soon"; else st="upcoming";
+    if(st!=="upcoming"||rows.length===0||d<=31)rows.push({tenant:t,month:key,due:due,status:st,pay:pay,days:d});
+    m++; if(m>11){m=0;y++;}
+  }
+  // only show the next upcoming month once
+  var seenUp=false; rows=rows.filter(function(r){if(r.status==="upcoming"){if(seenUp)return false;seenUp=true;}return true;});
+  return rows;
+}
+function allRentRows(){var out=[];S.tenants.forEach(function(t){out=out.concat(rentRows(t));});return out;}
+var RS={paid:["p-green","Paid"],soon:["p-amber","Due soon"],overdue:["p-red","Overdue"],upcoming:["p-info","Upcoming"]};
+
+/* ---------- Certificates ---------- */
+function certInfo(c){
+  var def=CERTS[c.type], done=parse(c.done);
+  if(!def.months) return {def:def,next:null,status:"green",label:"Protected",text:"Protected on "+fd(done)};
+  var next=addMonths(done,def.months), d=daysBetween(TODAY,next), st=d<0?"red":(d<=60?"amber":"green");
+  return {def:def,next:next,days:d,status:st,label:st==="red"?"Overdue":st==="amber"?"Due soon":"OK",
+    text:(d<0?"Was due "+fd(next)+" ("+(-d)+" days ago)":"Next due "+fd(next)+" (in "+d+" days)")};
+}
+function deadlines(){
+  var out=[];
+  S.certs.forEach(function(c){var p=prop(c.propertyId);if(!p)return;var i=certInfo(c);if(i.next)out.push({cert:c,prop:p,info:i});});
+  out.sort(function(a,b){return a.info.next-b.info.next;});return out;
+}
+function missingCerts(p){return CERT_ORDER.filter(function(k){if(CERTS[k].england&&p.country!=="england")return false;return !S.certs.some(function(c){return c.propertyId===p.id&&c.type===k;});});}
+function reminders(){
+  var out=[];
+  deadlines().forEach(function(x){
+    var due=x.info.next, label=x.info.def.name+" – "+pname(x.prop);
+    if(due<TODAY){out.push({when:TODAY,what:label,why:"Overdue since "+fd(due)+". Weekly reminder until updated.",s:"red"});return;}
+    [[60,"60 days before"],[30,"30 days before"],[7,"7 days before"],[0,"On the due date"]].forEach(function(r){
+      var w=addDays(due,-r[0]); if(w>=TODAY) out.push({when:w,what:label,why:r[1]+" (due "+fd(due)+")",s:r[0]<=7?"amber":"info"});
+    });
+  });
+  allRentRows().forEach(function(r){
+    var label="Rent – "+r.tenant.name+", "+pname(prop(r.tenant.propertyId));
+    if(r.status==="overdue")out.push({when:TODAY,what:label,why:money(r.tenant.rent)+" was due "+fd(r.due)+" and isn't marked paid.",s:"red"});
+    else if(r.status==="soon"||r.status==="upcoming"){var w=addDays(r.due,-3);if(w<TODAY)w=TODAY;out.push({when:w,what:label,why:money(r.tenant.rent)+" due "+fd(r.due),s:"info"});
+      out.push({when:addDays(r.due,1),what:label,why:"Only if still unpaid the day after it's due",s:"amber"});}
+  });
+  out.sort(function(a,b){return a.when-b.when;});return out;
+}
+
+/* ---------- Money ---------- */
+function income(pid){return S.payments.filter(function(p){var t=tenant(p.tenantId);return t&&(!pid||t.propertyId===pid)&&inTY(p.date);}).reduce(function(a,p){return a+ +p.amount;},0);}
+function expenses(pid){return S.expenses.filter(function(e){return (!pid||e.propertyId===pid)&&inTY(e.date);}).reduce(function(a,e){return a+ +e.amount;},0);}
+
+/* ---------- UI helpers ---------- */
+var app=document.getElementById("app"), view="home", showAllRent=false;
+function esc(s){return String(s==null?"":s).replace(/[&<>"']/g,function(c){return{"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c];});}
+function pill(cls,txt){return '<span class="pill '+cls+'">'+esc(txt)+'</span>';}
+function exTag(o){return o&&o.example?' <span class="ex">Example data</span>':'';}
+function toast(msg){var t=document.getElementById("toast");t.textContent=msg;t.style.display="block";clearTimeout(toast.h);toast.h=setTimeout(function(){t.style.display="none";},2200);}
+var TABS=[["home","Home"],["properties","Properties"],["rent","Rent"],["money","Money in/out"],["deadlines","Deadlines"],["tax","Tax summary"]];
+function renderTabs(){document.getElementById("tabs").innerHTML=TABS.map(function(t){return '<button data-tab="'+t[0]+'" class="'+(view===t[0]?"on":"")+'">'+t[1]+'</button>';}).join("");}
+document.getElementById("tabs").addEventListener("click",function(e){var b=e.target.closest("button");if(b){go(b.getAttribute("data-tab"));}});
+document.getElementById("today").textContent="Today: "+TODAY.toLocaleDateString("en-GB",{weekday:"short",day:"numeric",month:"long",year:"numeric"});
+function go(v){view=v;if(location.hash!=="#"+v)history.replaceState(null,"","#"+v);render();window.scrollTo(0,0);}
+function render(){renderTabs();var f={home:vHome,properties:vProps,rent:vRent,money:vMoney,deadlines:vDeadlines,tax:vTax}[view]||vHome;app.innerHTML=(S.example?'<div class="notice"><b>You\u2019re looking at example data.</b> The two properties, tenants and figures are made up to show how the app works. <button class="btn-link" data-act="clear">Clear all data</button> to start with your own.</div>':"")+f();}
+function needProps(){return S.properties.length?"":onboard();}
+function onboard(){
+  return '<div class="panel onboard" id="onboard"><h1>Welcome! Let\u2019s set up your first property</h1>'+
+  '<p class="lead">Add a property, its tenant and its certificates. The dashboard then shows your rent, profit and upcoming deadlines in one place.</p>'+
+  '<div class="steps"><div><b>1. Add a property</b><br><span class="muted small">Address, nickname and which UK nation it\u2019s in.</span></div><div><b>2. Add the tenant</b><br><span class="muted small">Monthly rent, due day and start date.</span></div><div><b>3. Add certificates</b><br><span class="muted small">Gas, electrics, EPC and more. We work out the next due dates.</span></div></div>'+
+  '<div class="row" style="justify-content:center"><button class="btn btn-primary" data-act="addProp">+ Add a property</button><button class="btn btn-ghost" data-act="example">Load example data</button></div>'+
+  '<p class="small muted" style="margin-top:14px">Just exploring? Example data fills in 2 made-up properties so you can click around.</p></div>';
+}
+
+/* ---------- Views ---------- */
+function vHome(){
+  if(!S.properties.length)return onboard();
+  var now=TODAY, ym=now.getFullYear()+"-"+pad(now.getMonth()+1), rows=allRentRows();
+  var thisMonth=rows.filter(function(r){return r.month===ym;});
+  var expected=thisMonth.reduce(function(a,r){return a+ +r.tenant.rent;},0);
+  var collected=thisMonth.filter(function(r){return r.pay;}).reduce(function(a,r){return a+ +r.pay.amount;},0);
+  var overdue=rows.filter(function(r){return r.status==="overdue";});
+  var od=overdue.reduce(function(a,r){return a+ +r.tenant.rent;},0);
+  var inc=income(),exp=expenses(),pr=inc-exp;
+  var pct=expected?Math.min(100,Math.round(collected/expected*100)):0;
+  var dl=deadlines().slice(0,5);
+  var h='<div class="row between" style="margin-bottom:14px"><div><h1>Your dashboard</h1><div class="muted">'+S.properties.length+' propert'+(S.properties.length===1?'y':'ies')+' · '+S.tenants.length+' tenant'+(S.tenants.length===1?'':'s')+' · Tax year '+TY.label+'</div></div>'+
+    '<div class="row"><button class="btn btn-primary" data-act="addProp">+ Property</button><button class="btn btn-ghost" data-act="addExp">+ Expense</button>'+(S.example?'':'<button class="btn btn-ghost" data-act="example">Load example data</button>')+'<button class="btn btn-ghost btn-danger" data-act="clear">Clear all data</button></div></div>';
+  h+='<div class="grid g4" style="margin-bottom:16px">'+
+    '<div class="stat brand" id="statRent"><div class="k">Rent this month</div><div class="v">'+money(collected)+' <span class="muted" style="font-size:1rem;font-weight:500">of '+money(expected)+'</span></div><div class="bar"><div style="width:'+pct+'%"></div></div><div class="small muted" style="margin-top:4px">'+fm(now)+' · '+pct+'% collected</div></div>'+
+    '<div class="stat '+(overdue.length?'red':'green')+'" id="statOverdue"><div class="k">Overdue rent</div><div class="v">'+overdue.length+'</div><div class="small muted">'+(overdue.length?money(od)+' outstanding':'Nothing overdue')+'</div></div>'+
+    '<div class="stat '+(pr>=0?'green':'red')+'" id="statProfit"><div class="k">Profit '+TY.label+'</div><div class="v">'+money(pr)+'</div><div class="small muted">'+money(inc)+' in · '+money(exp)+' out</div></div>'+
+    '<div class="stat '+(dl.some(function(x){return x.info.status==="red";})?'red':dl.some(function(x){return x.info.status==="amber";})?'amber':'green')+'"><div class="k">Deadlines in 60 days</div><div class="v">'+deadlines().filter(function(x){return x.info.days<=60;}).length+'</div><div class="small muted">Including overdue</div></div></div>';
+  h+='<div class="grid g2">';
+  h+='<div class="panel"><div class="row between"><h2>Income vs expenses</h2><div class="legend"><span><i style="background:var(--inc)"></i>Income</span><span><i style="background:var(--exp)"></i>Expenses</span></div></div><div class="small muted" style="margin-bottom:6px">By month, tax year '+TY.label+' (6 Apr – 5 Apr)</div>'+chart()+'</div>';
+  h+='<div class="panel" id="nextDeadlines"><div class="row between"><h2>Next 5 deadlines</h2><button class="btn-link" data-tab-go="deadlines">See all</button></div>'+
+    (dl.length?'<ul class="list">'+dl.map(function(x){var s={red:"p-red",amber:"p-amber",green:"p-green"}[x.info.status];return '<li><div><b>'+esc(x.info.def.name)+'</b><div class="small muted">'+esc(pname(x.prop))+' · '+x.info.text+'</div></div>'+pill(s,x.info.label)+'</li>';}).join("")+'</ul>':'<p class="muted">No certificates added yet. <button class="btn-link" data-tab-go="deadlines">Add one</button></p>')+'</div>';
+  h+='</div>';
+  if(overdue.length){h+='<div class="panel" style="border-left:6px solid var(--red)"><h2>Overdue rent</h2><ul class="list">'+overdue.map(function(r){return '<li><div><b>'+esc(r.tenant.name)+'</b> · '+esc(pname(prop(r.tenant.propertyId)))+'<div class="small muted">'+money(r.tenant.rent)+' due '+fd(r.due)+' ('+(-r.days)+' days ago)</div></div><button class="btn btn-primary btn-sm" data-act="pay" data-t="'+r.tenant.id+'" data-m="'+r.month+'">Mark paid</button></li>';}).join("")+'</ul></div>';}
+  return h;
+}
+function chart(){
+  var months=[],i; for(i=0;i<12;i++){var d=addMonths(new Date(TY.start.getFullYear(),3,1),i);months.push({y:d.getFullYear(),m:d.getMonth(),inc:0,exp:0});}
+  function idx(s){var d=parse(s);if(d<TY.start||d>TY.end)return -1;var y=d.getFullYear(),m=d.getMonth();if(m===3&&d.getDate()<6&&y===TY.end.getFullYear())return 11; for(var j=0;j<12;j++)if(months[j].y===y&&months[j].m===m)return j;return -1;}
+  S.payments.forEach(function(p){var j=idx(p.date);if(j>=0&&tenant(p.tenantId))months[j].inc+= +p.amount;});
+  S.expenses.forEach(function(e){var j=idx(e.date);if(j>=0)months[j].exp+= +e.amount;});
+  var max=Math.max(100,Math.max.apply(null,months.map(function(x){return Math.max(x.inc,x.exp);})));
+  var nice=Math.pow(10,Math.floor(Math.log10(max))); max=Math.ceil(max/nice)*nice;
+  var W=520,H=220,L=44,B=24,T=8,cw=(W-L-6)/12,bw=cw*0.34;
+  var s='<svg id="chart" viewBox="0 0 '+W+' '+H+'" width="100%" role="img" aria-label="Income and expenses by month" style="font-size:10px;font-family:inherit">';
+  for(i=0;i<=4;i++){var yv=T+(H-T-B)*(1-i/4);s+='<line x1="'+L+'" x2="'+(W-4)+'" y1="'+yv+'" y2="'+yv+'" stroke="#e4e8e6"/><text x="'+(L-6)+'" y="'+(yv+3)+'" text-anchor="end" fill="#5b6770">£'+(max*i/4>=1000?(max*i/4/1000).toLocaleString("en-GB",{maximumFractionDigits:1})+"k":Math.round(max*i/4))+'</text>';}
+  months.forEach(function(x,j){
+    var x0=L+j*cw+cw*0.14, hi=(H-T-B)*x.inc/max, he=(H-T-B)*x.exp/max;
+    s+='<rect x="'+x0+'" y="'+(H-B-hi)+'" width="'+bw+'" height="'+hi+'" fill="#2c6b7a" rx="2"><title>'+fm(new Date(x.y,x.m,1))+' income '+money(x.inc)+'</title></rect>';
+    s+='<rect x="'+(x0+bw+1)+'" y="'+(H-B-he)+'" width="'+bw+'" height="'+he+'" fill="#e0a33a" rx="2"><title>'+fm(new Date(x.y,x.m,1))+' expenses '+money(x.exp)+'</title></rect>';
+    s+='<text x="'+(L+j*cw+cw/2)+'" y="'+(H-8)+'" text-anchor="middle" fill="#5b6770">'+new Date(x.y,x.m,1).toLocaleDateString("en-GB",{month:"short"})+'</text>';
+  });
+  return s+'</svg>';
+}
+function vProps(){
+  if(!S.properties.length)return onboard();
+  var h='<div class="row between" style="margin-bottom:14px"><div><h1>Properties</h1><div class="muted">Add tenants and certificates to each property.</div></div><button class="btn btn-primary" data-act="addProp">+ Add a property</button></div>';
+  S.properties.forEach(function(p){
+    var ts=S.tenants.filter(function(t){return t.propertyId===p.id;});
+    h+='<div class="prop" data-prop="'+p.id+'"><div class="prop-head"><div><h2 style="margin:0">'+esc(p.nickname||p.address)+exTag(p)+'</h2><div class="muted small">'+esc(p.address)+' · '+COUNTRIES[p.country]+'</div></div><div class="row"><button class="btn btn-ghost btn-sm" data-act="editProp" data-p="'+p.id+'">Edit</button><button class="btn btn-danger btn-sm" data-act="delProp" data-p="'+p.id+'">Delete</button></div></div>';
+    h+='<div class="grid g2"><div><h3>Tenants</h3>'+(ts.length?'<ul class="list">'+ts.map(function(t){return '<li><div><b>'+esc(t.name)+'</b><div class="small muted">'+money(+t.rent)+'/month · due on day '+t.dueDay+' · since '+fd(t.start)+'</div></div><button class="btn btn-danger btn-sm" data-act="delTenant" data-t="'+t.id+'">Remove</button></li>';}).join("")+'</ul>':'<p class="muted small">No tenant yet.</p>')+'<button class="btn btn-ghost btn-sm" data-act="addTenant" data-p="'+p.id+'">+ Add tenant</button></div>';
+    var cs=S.certs.filter(function(c){return c.propertyId===p.id;});
+    h+='<div><h3>Certificates</h3>'+(cs.length?'<ul class="list">'+cs.map(function(c){var i=certInfo(c);return '<li><div><b>'+esc(i.def.name)+'</b><div class="small muted">'+i.text+'</div></div>'+pill({red:"p-red",amber:"p-amber",green:"p-green"}[i.status],i.label)+'</li>';}).join("")+'</ul>':'<p class="muted small">No certificates yet.</p>')+'<button class="btn btn-ghost btn-sm" data-act="addCert" data-p="'+p.id+'">+ Add certificate</button></div></div>';
+    h+='<div class="small muted" style="margin-top:10px">Tax year '+TY.label+': income '+money(income(p.id))+' · expenses '+money(expenses(p.id))+' · <b>profit '+money(income(p.id)-expenses(p.id))+'</b></div></div>';
+  });
+  return h;
+}
+function vRent(){
+  if(!S.properties.length)return onboard();
+  var all=allRentRows().sort(function(a,b){return b.due-a.due;}),cut=addMonths(TODAY,-6);
+  var rows=showAllRent?all:all.filter(function(r){return r.due>=cut||r.status==="overdue";});
+  var h='<div class="row between" style="margin-bottom:14px"><div><h1>Rent tracker</h1><div class="muted">Every month\u2019s rent for each tenant. Overdue rent is shown in red.</div></div><div class="row">'+
+    '<button class="btn btn-primary" data-act="addTenant">+ Add tenant</button></div></div>';
+  if(!S.tenants.length)return h+'<div class="panel"><p class="muted">No tenants yet. Add a tenant to a property to start tracking rent.</p></div>';
+  var c={paid:0,soon:0,overdue:0,upcoming:0};rows.forEach(function(r){c[r.status]++;});
+  h+='<div class="row" style="margin-bottom:12px">'+pill("p-red",c.overdue+" overdue")+pill("p-amber",c.soon+" due soon")+pill("p-green",c.paid+" paid")+'</div>';
+  h+='<div class="panel scroll" style="padding:8px 14px"><table class="t resp" id="rentTable"><thead><tr><th>Month</th><th>Tenant</th><th>Property</th><th>Due date</th><th class="num">Rent</th><th>Status</th><th></th></tr></thead><tbody>';
+  rows.forEach(function(r){var p=prop(r.tenant.propertyId),s=RS[r.status];
+    h+='<tr class="'+(r.status==="overdue"?"overdue":"")+'" data-status="'+r.status+'"><td data-l="Month"><b>'+fm(r.due)+'</b></td><td data-l="Tenant">'+esc(r.tenant.name)+exTag(r.tenant)+'</td><td data-l="Property">'+esc(pname(p))+'</td><td data-l="Due date">'+fd(r.due)+'</td><td data-l="Rent" class="num">'+money(+r.tenant.rent)+'</td><td data-l="Status">'+pill(s[0],s[1])+
+    (r.pay?'<div class="small muted">'+money(+r.pay.amount)+' on '+fd(r.pay.date)+'</div>':r.status==="overdue"?'<div class="small" style="color:var(--red)">'+(-r.days)+' days late</div>':'')+'</td><td data-l="">'+
+    (r.pay?'<button class="btn-link small" data-act="unpay" data-id="'+r.pay.id+'">Undo</button>':'<button class="btn btn-primary btn-sm" data-act="pay" data-t="'+r.tenant.id+'" data-m="'+r.month+'">Mark paid</button>')+'</td></tr>';});
+  return h+'</tbody></table></div><p class="small muted">'+(showAllRent?'Showing every month since each tenancy started. ':'Showing the last 6 months, any overdue rent, and the next month due. ')+(all.length>rows.length||showAllRent?'<button class="btn-link small" data-act="toggleRent">'+(showAllRent?'Show recent only':'Show all '+all.length+' months')+'</button>':'')+'</p>';
+}
+function vMoney(){
+  if(!S.properties.length)return onboard();
+  var h='<div class="row between" style="margin-bottom:14px"><div><h1>Money in and out</h1><div class="muted">Tax year '+TY.label+' ('+fd(TY.start)+' – '+fd(TY.end)+'). Rent marked paid counts as income.</div></div><button class="btn btn-primary" data-act="addExp">+ Add expense</button></div>';
+  var ti=income(),te=expenses();
+  h+='<div class="panel scroll" style="padding:8px 14px"><table class="t" id="moneyTable"><thead><tr><th>Property</th><th class="num">Income</th><th class="num">Expenses</th><th class="num">Profit</th></tr></thead><tbody>'+
+    S.properties.map(function(p){var i=income(p.id),e=expenses(p.id);return '<tr><td>'+esc(pname(p))+exTag(p)+'</td><td class="num">'+money(i)+'</td><td class="num">'+money(e)+'</td><td class="num" style="color:'+(i-e<0?'var(--red)':'var(--green)')+'"><b>'+money(i-e)+'</b></td></tr>';}).join("")+
+    '</tbody><tfoot><tr><td>Total</td><td class="num">'+money(ti)+'</td><td class="num">'+money(te)+'</td><td class="num">'+money(ti-te)+'</td></tr></tfoot></table></div>';
+  var ex=S.expenses.slice().sort(function(a,b){return b.date<a.date?-1:1;});
+  h+='<div class="panel scroll" style="padding:8px 14px"><h2 style="margin:10px 0">Expenses</h2>'+(ex.length?'<table class="t resp" id="expTable"><thead><tr><th>Date</th><th>Property</th><th>Category</th><th>Note</th><th class="num">Amount</th><th></th></tr></thead><tbody>'+
+    ex.map(function(e){return '<tr><td data-l="Date">'+fd(e.date)+'</td><td data-l="Property">'+esc(pname(prop(e.propertyId)))+'</td><td data-l="Category">'+catName(e.category)+'</td><td data-l="Note">'+esc(e.note||"")+'</td><td data-l="Amount" class="num">'+money(+e.amount)+'</td><td data-l=""><button class="btn-link small" data-act="delExp" data-id="'+e.id+'">Delete</button></td></tr>';}).join("")+'</tbody></table>':'<p class="muted">No expenses yet.</p>')+'</div>';
+  return h;
+}
+function vDeadlines(){
+  if(!S.properties.length)return onboard();
+  var h='<div class="row between" style="margin-bottom:14px"><div><h1>Deadlines</h1><div class="muted">Add when each check was last done; we work out the next due date. Amber = due within 60 days, red = overdue.</div></div><button class="btn btn-primary" data-act="addCert">+ Add certificate</button></div>';
+  h+='<div class="grid dlg" id="dlGrid"><div>';
+  S.properties.forEach(function(p){
+    var cs=S.certs.filter(function(c){return c.propertyId===p.id;}).sort(function(a,b){return CERT_ORDER.indexOf(a.type)-CERT_ORDER.indexOf(b.type);});
+    var miss=missingCerts(p);
+    h+='<div class="panel"><h2>'+esc(pname(p))+exTag(p)+' <span class="muted small" style="font-weight:400">· '+COUNTRIES[p.country]+'</span></h2><div class="certs">';
+    cs.forEach(function(c){var i=certInfo(c),s={red:"p-red",amber:"p-amber",green:"p-green"}[i.status];
+      h+='<div class="cert '+i.status+'" data-cert="'+c.type+'"><div><b>'+esc(i.def.name)+'</b><div class="small muted">Done '+fd(c.done)+(c.type==="prs"?' · £65/year':'')+'</div><div class="small">'+i.text+'</div></div><div style="text-align:right">'+pill(s,i.label)+'<div><button class="btn-link small" data-act="editCert" data-id="'+c.id+'">Update</button> <button class="btn-link small" data-act="delCert" data-id="'+c.id+'">Delete</button></div></div></div>';});
+    miss.forEach(function(k){h+='<div class="cert" style="border-style:dashed;border-left-style:solid"><div><b>'+CERTS[k].name+'</b><div class="small muted">Not added yet'+(k==="prs"?'. The register opens 15 Dec 2026, in regional windows.':'')+'</div></div><button class="btn btn-ghost btn-sm" data-act="addCert" data-p="'+p.id+'" data-type="'+k+'">+ Add date</button></div>';});
+    if(p.country!=="england")h+='<div class="small muted">'+COUNTRIES[p.country]+' has its own landlord registration scheme (not tracked in this demo).</div>';
+    h+='</div></div>';
+  });
+  var rem=reminders().slice(0,12);
+  h+='</div><div class="panel" id="reminders"><h2>Upcoming reminders</h2><div class="preview">Preview: reminders will be emailed in the live app</div>'+
+    (rem.length?'<ul class="list">'+rem.map(function(r){return '<li style="align-items:flex-start"><div><div class="small"><b>'+(r.when.getTime()===TODAY.getTime()?'Today':fd(r.when))+'</b></div><div>'+esc(r.what)+'</div><div class="small muted">'+esc(r.why)+'</div></div>'+pill({red:"p-red",amber:"p-amber",info:"p-info"}[r.s],r.s==="red"?"Urgent":r.s==="amber"?"Soon":"Planned")+'</li>';}).join("")+'</ul>':'<p class="muted small">Add a tenant or certificate to see what we\u2019d remind you about.</p>')+'</div></div>';
+  return h;
+}
+function vTax(){
+  if(!S.properties.length)return onboard();
+  var inc={},exp={},ti=0,te=0;
+  S.payments.forEach(function(p){var t=tenant(p.tenantId);if(!t||!inTY(p.date))return;var n=pname(prop(t.propertyId));inc[n]=(inc[n]||0)+ +p.amount;ti+= +p.amount;});
+  S.expenses.forEach(function(e){if(!inTY(e.date))return;exp[e.category]=(exp[e.category]||0)+ +e.amount;te+= +e.amount;});
+  var h='<div style="margin-bottom:14px"><h1>Tax summary</h1><div class="muted">Tax year '+TY.label+' ('+fd(TY.start)+' – '+fd(TY.end)+') · all properties</div></div>';
+  h+='<div class="notice"><b>Example layout; not tax advice.</b> Figures are what you\u2019ve entered so far. In the live app this would be the starting point for your Self Assessment or Making Tax Digital updates, which you or your accountant should check.</div>';
+  h+='<div class="grid g2"><div class="panel"><h2>Income</h2><table class="t" id="taxInc"><tbody>'+(Object.keys(inc).length?Object.keys(inc).map(function(k){return '<tr><td>Rent received – '+esc(k)+'</td><td class="num">'+money(inc[k])+'</td></tr>';}).join(""):'<tr><td class="muted">No rent recorded this tax year</td><td></td></tr>')+'</tbody><tfoot><tr><td>Total income</td><td class="num">'+money(ti)+'</td></tr></tfoot></table></div>';
+  h+='<div class="panel"><h2>Expenses</h2><table class="t" id="taxExp"><tbody>'+CATS.map(function(c){return '<tr><td>'+c[1]+(c[0]==="mortgage"?' <span class="small muted">*</span>':'')+'</td><td class="num">'+money(exp[c[0]]||0)+'</td></tr>';}).join("")+'</tbody><tfoot><tr><td>Total expenses</td><td class="num">'+money(te)+'</td></tr></tfoot></table>'+
+    '<p class="small muted">* For individual landlords, mortgage interest usually isn\u2019t deducted like other costs; it gets a basic-rate tax credit instead, and capital repayments aren\u2019t an expense. Shown here so you can see all your spending.</p></div></div>';
+  h+='<div class="panel"><div class="row between"><h2 style="margin:0">Profit before tax (simple)</h2><div style="font-size:1.4rem;font-weight:700">'+money(ti-te)+'</div></div><p class="small muted" style="margin:6px 0 0">Income minus all expenses above. Example layout; not tax advice.</p></div>';
+  return h;
+}
+
+/* ---------- Forms ---------- */
+var mbg=document.getElementById("modalBg"),modal=document.getElementById("modal");
+function field(id,label,input,hint){return '<div class="field" id="f-'+id+'"><label for="'+id+'">'+label+'</label>'+input+(hint?'<div class="hint">'+hint+'</div>':'')+'</div>';}
+function inp(id,type,val,extra){return '<input id="'+id+'" type="'+type+'" value="'+esc(val==null?"":val)+'" '+(extra||"")+'>';}
+function sel(id,opts,val){return '<select id="'+id+'">'+opts.map(function(o){return '<option value="'+esc(o[0])+'"'+(o[0]===val?' selected':'')+'>'+esc(o[1])+'</option>';}).join("")+'</select>';}
+function propOpts(filter){return S.properties.filter(filter||function(){return true;}).map(function(p){return [p.id,pname(p)];});}
+function openModal(title,body,onSave,saveLabel){
+  modal.innerHTML='<h2>'+title+'</h2><form id="mform" novalidate>'+body+'<div class="row" style="justify-content:flex-end;margin-top:6px"><button type="button" class="btn btn-ghost" id="mcancel">Cancel</button><button type="submit" class="btn btn-primary" id="msave">'+(saveLabel||"Save")+'</button></div></form>';
+  mbg.classList.add("open");
+  var first=modal.querySelector("input,select");if(first)first.focus();
+  document.getElementById("mcancel").onclick=closeModal;
+  document.getElementById("mform").onsubmit=function(e){e.preventDefault();modal.querySelectorAll(".field.err").forEach(function(f){f.classList.remove("err");var m=f.querySelector(".errmsg");if(m)m.remove();});if(onSave()!==false){closeModal();save();render();}};
+}
+function closeModal(){mbg.classList.remove("open");modal.innerHTML="";}
+mbg.addEventListener("click",function(e){if(e.target===mbg)closeModal();});
+document.addEventListener("keydown",function(e){if(e.key==="Escape"&&mbg.classList.contains("open"))closeModal();});
+function v(id){var el=document.getElementById(id);return el?el.value.trim():"";}
+function bad(id,msg){var f=document.getElementById("f-"+id);f.classList.add("err");f.insertAdjacentHTML("beforeend",'<div class="errmsg">'+msg+'</div>');return false;}
+
+function formProp(p){
+  var edit=!!p;p=p||{country:"england"};
+  openModal(edit?"Edit property":"Add a property",
+    field("pAddr","Address",inp("pAddr","text",p.address,'placeholder="e.g. 14 Albert Road, Manchester M14 6AB" autocomplete="off"'))+
+    field("pNick","Nickname (optional)",inp("pNick","text",p.nickname,'placeholder="e.g. Albert Rd flat"'),"A short name shown across the app.")+
+    field("pCountry","Where is it?",sel("pCountry",Object.keys(COUNTRIES).map(function(k){return [k,COUNTRIES[k]];}),p.country),"Some rules, like the new PRS database, only apply in England."),
+    function(){var a=v("pAddr");if(!a)return bad("pAddr","Please enter the address.");
+      if(edit){p.address=a;p.nickname=v("pNick");p.country=v("pCountry");if(p.country!=="england")S.certs=S.certs.filter(function(c){return !(c.propertyId===p.id&&c.type==="prs");});toast("Property updated");}
+      else{S.properties.push({id:uid(),address:a,nickname:v("pNick"),country:v("pCountry")});toast("Property added. Next: add a tenant.");if(view==="home")view="properties";}
+    },edit?"Save changes":"Add property");
+}
+function formTenant(pid){
+  if(!S.properties.length){formProp();return;}
+  openModal("Add a tenant",
+    field("tProp","Property",sel("tProp",propOpts(),pid||S.properties[0].id))+
+    field("tName","Tenant name",inp("tName","text","",'placeholder="e.g. Sarah Khan" autocomplete="off"'))+
+    '<div class="grid g2" style="gap:10px">'+field("tRent","Monthly rent (£)",inp("tRent","number","",'min="0" step="0.01" inputmode="decimal" placeholder="950"'))+
+    field("tDay","Rent due on day",inp("tDay","number","1",'min="1" max="31" inputmode="numeric"'),"Day of the month, 1–31")+'</div>'+
+    field("tStart","Tenancy start date",inp("tStart","date",iso(addMonths(TODAY,-3)))),
+    function(){var ok=true,r=parseFloat(v("tRent")),d=parseInt(v("tDay"),10);
+      if(!v("tName"))ok=bad("tName","Please enter the tenant\u2019s name.");
+      if(!(r>0))ok=bad("tRent","Enter the monthly rent, e.g. 950.");
+      if(!(d>=1&&d<=31))ok=bad("tDay","Enter a day between 1 and 31.");
+      if(!/^\d{4}-\d{2}-\d{2}$/.test(v("tStart")))ok=bad("tStart","Choose the start date.");
+      if(!ok)return false;
+      S.tenants.push({id:uid(),propertyId:v("tProp"),name:v("tName"),rent:r,dueDay:d,start:v("tStart")});toast("Tenant added. Their rent now shows in the Rent tab.");
+    },"Add tenant");
+}
+function formPay(tid,month){
+  var t=tenant(tid);if(!t)return;var p=month.split("-");var due=dueDateFor(+p[0],+p[1]-1,t.dueDay);
+  openModal("Mark rent as paid",'<p class="muted" style="margin-top:-4px">'+esc(t.name)+' · '+esc(pname(prop(t.propertyId)))+' · '+fm(due)+' rent (due '+fd(due)+')</p>'+
+    field("yDate","Date received",inp("yDate","date",iso(TODAY)))+field("yAmt","Amount received (£)",inp("yAmt","number",t.rent,'min="0" step="0.01" inputmode="decimal"')),
+    function(){var a=parseFloat(v("yAmt"));if(!/^\d{4}-\d{2}-\d{2}$/.test(v("yDate")))return bad("yDate","Choose a date.");if(!(a>0))return bad("yAmt","Enter the amount received.");
+      S.payments.push({id:uid(),tenantId:tid,month:month,date:v("yDate"),amount:a});toast("Marked as paid: "+money(a));},"Mark paid");
+}
+function formExp(){
+  if(!S.properties.length){formProp();return;}
+  openModal("Add an expense",field("eProp","Property",sel("eProp",propOpts(),S.properties[0].id))+field("eCat","Category",sel("eCat",CATS,"repairs"))+
+    '<div class="grid g2" style="gap:10px">'+field("eAmt","Amount (£)",inp("eAmt","number","",'min="0" step="0.01" inputmode="decimal" placeholder="120"'))+field("eDate","Date",inp("eDate","date",iso(TODAY)))+'</div>'+
+    field("eNote","Note (optional)",inp("eNote","text","",'placeholder="e.g. Boiler service" autocomplete="off"')),
+    function(){var a=parseFloat(v("eAmt"));if(!(a>0))return bad("eAmt","Enter the amount.");if(!/^\d{4}-\d{2}-\d{2}$/.test(v("eDate")))return bad("eDate","Choose a date.");
+      S.expenses.push({id:uid(),propertyId:v("eProp"),category:v("eCat"),amount:a,date:v("eDate"),note:v("eNote")});toast("Expense added");},"Add expense");
+}
+function certTypeOpts(pid){var p=prop(pid);return CERT_ORDER.filter(function(k){return !(CERTS[k].england&&p&&p.country!=="england");}).map(function(k){return [k,CERTS[k].name];});}
+function formCert(pid,type,existing){
+  if(!S.properties.length){formProp();return;}
+  pid=pid||(existing&&existing.propertyId)||S.properties[0].id;
+  openModal(existing?"Update certificate":"Add a certificate",
+    field("cProp","Property",sel("cProp",propOpts(),pid))+field("cType","Certificate or check",sel("cType",certTypeOpts(pid),type||(existing&&existing.type)||"gas"),'<span id="cHint"></span>')+
+    field("cDone",'<span id="cDoneL">Date done</span>',inp("cDone","date",existing?existing.done:iso(TODAY)))+'<div class="small muted" id="cNext" style="margin:-6px 0 12px"></div>',
+    function(){if(!/^\d{4}-\d{2}-\d{2}$/.test(v("cDone")))return bad("cDone","Choose the date.");if(parse(v("cDone"))>TODAY)return bad("cDone","This date is in the future. Enter when it was last done.");
+      var pp=v("cProp"),tt=v("cType");
+      var c=existing||S.certs.filter(function(x){return x.propertyId===pp&&x.type===tt;})[0];
+      if(c){c.propertyId=pp;c.type=tt;c.done=v("cDone");toast("Certificate updated");}else{S.certs.push({id:uid(),propertyId:pp,type:tt,done:v("cDone")});toast("Certificate added");}
+    },existing?"Save":"Add certificate");
+  function upd(){var tt=v("cType");if(!CERTS[tt])return;document.getElementById("cHint").textContent=CERTS[tt].hint;document.getElementById("cDoneL").textContent=CERTS[tt].doneLabel;
+    var d=v("cDone"),n=document.getElementById("cNext");if(/^\d{4}-\d{2}-\d{2}$/.test(d)){var i=certInfo({type:tt,done:d});n.textContent=i.next?"Next due: "+fd(i.next):"No renewal date for this one.";}else n.textContent="";}
+  document.getElementById("cProp").onchange=function(){var cur=v("cType");var s=document.getElementById("cType");s.innerHTML=certTypeOpts(v("cProp")).map(function(o){return '<option value="'+o[0]+'"'+(o[0]===cur?' selected':'')+'>'+o[1]+'</option>';}).join("");upd();};
+  document.getElementById("cType").onchange=upd;document.getElementById("cDone").oninput=upd;upd();
+}
+
+/* ---------- Example data (relative to today so statuses always look realistic) ---------- */
+function loadExample(){
+  S=blank();S.example=true;
+  var p1={id:uid(),address:"Flat 2, 14 Albert Road, Manchester M14 6AB",nickname:"Albert Road flat",country:"england",example:true};
+  var p2={id:uid(),address:"27 Heol y Parc, Cardiff CF14 3NB",nickname:"Cardiff house",country:"wales",example:true};
+  S.properties.push(p1,p2);
+  var t1={id:uid(),propertyId:p1.id,name:"Sarah Khan",rent:950,dueDay:1,start:iso(new Date(TODAY.getFullYear()-1,8,1)),example:true};
+  var t2={id:uid(),propertyId:p2.id,name:"James Evans",rent:825,dueDay:15,start:iso(new Date(TODAY.getFullYear()-2,2,15)),example:true};
+  S.tenants.push(t1,t2);
+  // Pay every past-due month, except leave James's most recent past-due month unpaid (to show Overdue)
+  [t1,t2].forEach(function(t){var rows=rentRows(t).filter(function(r){return r.due<=TODAY;});
+    rows.forEach(function(r,i){if(t===t2&&i===rows.length-1)return;var late=(i%5===2)?3:0;var pd=addDays(r.due,late);if(pd>TODAY)pd=TODAY;S.payments.push({id:uid(),tenantId:t.id,month:r.month,date:iso(pd),amount:t.rent});});});
+  // Expenses over the last 14 months
+  for(var i=0;i<14;i++){var d=addMonths(new Date(TODAY.getFullYear(),TODAY.getMonth(),5),-i);if(d>TODAY)continue;
+    S.expenses.push({id:uid(),propertyId:p1.id,category:"mortgage",amount:420,date:iso(d),note:"Buy-to-let mortgage"});
+    S.expenses.push({id:uid(),propertyId:p2.id,category:"agent",amount:82.5,date:iso(addDays(d,12)>TODAY?d:addDays(d,12)),note:"Letting agent 10%"});}
+  var E=function(pid,cat,amt,daysAgo,note){S.expenses.push({id:uid(),propertyId:pid,category:cat,amount:amt,date:iso(addDays(TODAY,-daysAgo)),note:note});};
+  E(p1.id,"insurance",286,150,"Landlord insurance (annual)");E(p2.id,"insurance",312,95,"Landlord insurance (annual)");
+  E(p1.id,"repairs",180,40,"Boiler repair");E(p2.id,"repairs",95,120,"Leaking tap");E(p2.id,"repairs",640,70,"Replace back door");
+  E(p1.id,"certificates",75,345,"Gas safety check");E(p2.id,"certificates",70,395,"Gas safety check");E(p1.id,"other",48,20,"Smoke alarm batteries & keys");E(p2.id,"certificates",65,25,"Gas safety check (booked)");
+  var C=function(pid,type,d){S.certs.push({id:uid(),propertyId:pid,type:type,done:iso(d)});};
+  C(p1.id,"gas",addDays(addMonths(TODAY,-12),20));        // due in ~20 days -> amber
+  C(p1.id,"eicr",addDays(addMonths(TODAY,-48),-30));      // ~11 months left -> green
+  C(p1.id,"epc",addDays(addMonths(TODAY,-120),45));       // due in ~45 days -> amber
+  C(p1.id,"deposit",addDays(parse(t1.start),9));
+  C(p2.id,"gas",addDays(addMonths(TODAY,-12),-30));       // overdue ~30 days -> red
+  C(p2.id,"eicr",addMonths(TODAY,-30));C(p2.id,"epc",addMonths(TODAY,-78));C(p2.id,"deposit",addDays(parse(t2.start),6));
+  save();go("home");toast("Example data loaded");
+}
+function clearAll(){if(!confirm("Clear all data in this demo? This removes every property, tenant, payment, expense and certificate stored in this browser."))return;localStorage.removeItem(KEY);S=blank();go("home");toast("All data cleared");}
+
+/* ---------- Actions ---------- */
+document.addEventListener("click",function(e){
+  var tg=e.target.closest("[data-tab-go]");if(tg){go(tg.getAttribute("data-tab-go"));return;}
+  var b=e.target.closest("[data-act]");if(!b)return;
+  var a=b.getAttribute("data-act"),pid=b.getAttribute("data-p"),id=b.getAttribute("data-id");
+  if(a==="addProp")formProp();
+  else if(a==="editProp")formProp(prop(pid));
+  else if(a==="delProp"){var p=prop(pid);if(confirm("Delete "+pname(p)+"? Its tenants, rent records, expenses and certificates will also be removed.")){var tids=S.tenants.filter(function(t){return t.propertyId===pid;}).map(function(t){return t.id;});
+    S.properties=S.properties.filter(function(x){return x.id!==pid;});S.tenants=S.tenants.filter(function(t){return t.propertyId!==pid;});S.payments=S.payments.filter(function(x){return tids.indexOf(x.tenantId)<0;});
+    S.expenses=S.expenses.filter(function(x){return x.propertyId!==pid;});S.certs=S.certs.filter(function(x){return x.propertyId!==pid;});if(!S.properties.length)S.example=false;save();render();toast("Property deleted");}}
+  else if(a==="addTenant")formTenant(pid);
+  else if(a==="delTenant"){var t=tenant(b.getAttribute("data-t"));if(confirm("Remove "+t.name+" and their rent records?")){S.tenants=S.tenants.filter(function(x){return x.id!==t.id;});S.payments=S.payments.filter(function(x){return x.tenantId!==t.id;});save();render();}}
+  else if(a==="pay")formPay(b.getAttribute("data-t"),b.getAttribute("data-m"));
+  else if(a==="unpay"){S.payments=S.payments.filter(function(x){return x.id!==id;});save();render();toast("Payment removed");}
+  else if(a==="addExp")formExp();
+  else if(a==="delExp"){S.expenses=S.expenses.filter(function(x){return x.id!==id;});save();render();toast("Expense deleted");}
+  else if(a==="addCert")formCert(pid,b.getAttribute("data-type"));
+  else if(a==="editCert")formCert(null,null,S.certs.filter(function(x){return x.id===id;})[0]);
+  else if(a==="delCert"){if(confirm("Delete this certificate date?")){S.certs=S.certs.filter(function(x){return x.id!==id;});save();render();}}
+  else if(a==="example"){if(!S.properties.length||confirm("Replace your current data with example data?"))loadExample();}
+  else if(a==="clear")clearAll();
+  else if(a==="toggleRent"){showAllRent=!showAllRent;render();}
+});
+
+var h0=location.hash.slice(1);if(TABS.some(function(t){return t[0]===h0;}))view=h0;
+render();
+})();
+</script>
+</body>
+</html>
