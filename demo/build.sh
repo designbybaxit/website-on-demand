@@ -11,3 +11,6 @@ const shell=fs.readFileSync("shell.html","utf8");
 const i=shell.indexOf("/*__SCRIPT__*/");
 fs.writeFileSync("../demo.html", shell.slice(0,i)+js+shell.slice(i+14));
 console.log("demo.html", fs.statSync("../demo.html").size, "bytes");'
+# GitHub Pages publishes the repository root (main:/), so the live demo is /demo.html, not demo/demo.html.
+cp ../demo.html ../../demo.html
+echo "copied to repo root demo.html"
