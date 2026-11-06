@@ -1,0 +1,5 @@
+name = "wod-design-test"
+compatibility_date = "2026-01-01"
+account_id = "88e4c5606cc2dc31cd0a84f5a04a114d"
+[assets]
+directory = "./public"

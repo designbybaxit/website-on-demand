@@ -1,0 +1,841 @@
+{
+ "title": "Dentara",
+ "url": "https://askcreativelab.com/dentara/?storefront=envato-elements",
+ "height": 14669,
+ "bg": [
+  [
+   "rgb(26, 105, 81)",
+   43
+  ],
+  [
+   "rgb(246, 249, 241)",
+   40
+  ],
+  [
+   "rgb(255, 255, 255)",
+   27
+  ],
+  [
+   "rgba(2, 1, 1, 0)",
+   16
+  ],
+  [
+   "rgba(228, 236, 238, 0)",
+   11
+  ],
+  [
+   "rgb(60, 231, 179)",
+   10
+  ],
+  [
+   "rgba(235, 252, 113, 0)",
+   3
+  ],
+  [
+   "rgba(255, 255, 255, 0)",
+   2
+  ],
+  [
+   "rgba(10, 108, 255, 0)",
+   2
+  ],
+  [
+   "rgb(0, 30, 20)",
+   1
+  ]
+ ],
+ "fg": [
+  [
+   "rgb(95, 102, 100)",
+   80
+  ],
+  [
+   "rgb(0, 30, 20)",
+   72
+  ],
+  [
+   "rgb(246, 249, 241)",
+   54
+  ],
+  [
+   "rgb(26, 105, 81)",
+   45
+  ],
+  [
+   "rgb(255, 255, 255)",
+   4
+  ]
+ ],
+ "fonts": [
+  [
+   "\"Inclusive Sans\"",
+   164
+  ],
+  [
+   "\"Inter Tight\"",
+   91
+  ]
+ ],
+ "heads": [
+  [
+   "H2|\"Inclusive Sans\"|500|52px",
+   11
+  ],
+  [
+   "H3|\"Inclusive Sans\"|500|21px",
+   8
+  ],
+  [
+   "H3|\"Inclusive Sans\"|500|18px",
+   7
+  ],
+  [
+   "H3|\"Inclusive Sans\"|500|26px",
+   4
+  ],
+  [
+   "H1|\"Inclusive Sans\"|500|70px",
+   1
+  ],
+  [
+   "H3|\"Inclusive Sans\"|500|32px",
+   1
+  ],
+  [
+   "H3|\"Inclusive Sans\"|500|52px",
+   1
+  ]
+ ],
+ "btns": [
+  {
+   "t": "Schedule Visit",
+   "bg": "rgba(0, 0, 0, 0)",
+   "c": "rgb(95, 102, 100)",
+   "r": "0px",
+   "pad": "0px",
+   "ff": "\"Inter Tight\"",
+   "fw": "400",
+   "tt": "none",
+   "border": "0px none rgb(95, 102, 100)"
+  },
+  {
+   "t": "Schedule Visit",
+   "bg": "rgb(60, 231, 179)",
+   "c": "rgb(0, 30, 20)",
+   "r": "30px",
+   "pad": "12px 24px",
+   "ff": "\"Inclusive Sans\"",
+   "fw": "500",
+   "tt": "none",
+   "border": "0px none rgb(0, 30, 20)"
+  },
+  {
+   "t": "Schedule Visit",
+   "bg": "rgba(0, 0, 0, 0)",
+   "c": "rgb(0, 30, 20)",
+   "r": "0px",
+   "pad": "0px",
+   "ff": "\"Inclusive Sans\"",
+   "fw": "500",
+   "tt": "none",
+   "border": "0px none rgb(0, 30, 20)"
+  },
+  {
+   "t": "Schedule Visit",
+   "bg": "rgba(0, 0, 0, 0)",
+   "c": "rgb(0, 30, 20)",
+   "r": "0px",
+   "pad": "0px",
+   "ff": "\"Inclusive Sans\"",
+   "fw": "500",
+   "tt": "none",
+   "border": "0px none rgb(0, 30, 20)"
+  },
+  {
+   "t": "Book an Appointment",
+   "bg": "rgba(0, 0, 0, 0)",
+   "c": "rgb(95, 102, 100)",
+   "r": "0px",
+   "pad": "0px",
+   "ff": "\"Inter Tight\"",
+   "fw": "400",
+   "tt": "none",
+   "border": "0px none rgb(95, 102, 100)"
+  },
+  {
+   "t": "Book an Appointment",
+   "bg": "rgb(26, 105, 81)",
+   "c": "rgb(246, 249, 241)",
+   "r": "30px",
+   "pad": "14px 27px",
+   "ff": "\"Inclusive Sans\"",
+   "fw": "500",
+   "tt": "none",
+   "border": "0px solid rgb(60, 231, 179)"
+  },
+  {
+   "t": "Book an Appointment",
+   "bg": "rgba(0, 0, 0, 0)",
+   "c": "rgb(246, 249, 241)",
+   "r": "0px",
+   "pad": "0px",
+   "ff": "\"Inclusive Sans\"",
+   "fw": "500",
+   "tt": "none",
+   "border": "0px none rgb(246, 249, 241)"
+  },
+  {
+   "t": "Book an Appointment",
+   "bg": "rgba(0, 0, 0, 0)",
+   "c": "rgb(246, 249, 241)",
+   "r": "0px",
+   "pad": "0px",
+   "ff": "\"Inclusive Sans\"",
+   "fw": "500",
+   "tt": "none",
+   "border": "0px none rgb(246, 249, 241)"
+  },
+  {
+   "t": "Explore Our Services",
+   "bg": "rgba(0, 0, 0, 0)",
+   "c": "rgb(95, 102, 100)",
+   "r": "0px",
+   "pad": "0px",
+   "ff": "\"Inter Tight\"",
+   "fw": "400",
+   "tt": "none",
+   "border": "0px none rgb(95, 102, 100)"
+  },
+  {
+   "t": "Explore Our Services",
+   "bg": "rgba(228, 236, 238, 0)",
+   "c": "rgb(26, 105, 81)",
+   "r": "0px",
+   "pad": "0px 0px 3px",
+   "ff": "\"Inclusive Sans\"",
+   "fw": "500",
+   "tt": "none",
+   "border": ""
+  },
+  {
+   "t": "Explore Our Services",
+   "bg": "rgba(0, 0, 0, 0)",
+   "c": "rgb(26, 105, 81)",
+   "r": "0px",
+   "pad": "0px",
+   "ff": "\"Inclusive Sans\"",
+   "fw": "500",
+   "tt": "none",
+   "border": "0px none rgb(26, 105, 81)"
+  },
+  {
+   "t": "",
+   "bg": "rgba(0, 0, 0, 0)",
+   "c": "rgb(26, 105, 81)",
+   "r": "0px",
+   "pad": "0px",
+   "ff": "\"Inclusive Sans\"",
+   "fw": "500",
+   "tt": "none",
+   "border": "0px none rgb(26, 105, 81)"
+  }
+ ],
+ "sections": [
+  {
+   "tag": "DIV",
+   "cls": "elementor-element elementor-element-2d2c481 e-con-full e-flex e-con e-parent e-lazyloaded",
+   "y": 32,
+   "h": 70,
+   "bg": "rgb(246, 249, 241)",
+   "bgimg": "none",
+   "heads": [],
+   "imgs": 2,
+   "inputs": 0,
+   "widgets": [
+    "image.default",
+    "ekit-nav-menu.default",
+    "button.default"
+   ],
+   "swipers": 0,
+   "counters": 0,
+   "accordions": 5,
+   "videos": 0,
+   "anims": []
+  },
+  {
+   "tag": "DIV",
+   "cls": "elementor-element elementor-element-fff3f33 e-con-full e-flex e-con e-parent e-lazyloaded",
+   "y": 102,
+   "h": 785,
+   "bg": "rgb(246, 249, 241)",
+   "bgimg": "none",
+   "heads": [
+    "H3: 4.9/5.0 Rating",
+    "H1: Better Care, Brighter Smiles"
+   ],
+   "imgs": 4,
+   "inputs": 0,
+   "widgets": [
+    "image.default",
+    "image-box.default",
+    "text-editor.default",
+    "elementskit-heading.default",
+    "button.default"
+   ],
+   "swipers": 0,
+   "counters": 0,
+   "accordions": 0,
+   "videos": 0,
+   "anims": [
+    "fadeIn",
+    "fadeInUp"
+   ]
+  },
+  {
+   "tag": "DIV",
+   "cls": "elementor-element elementor-element-064ba4e e-flex e-con-boxed e-con e-parent e-lazyloaded",
+   "y": 887,
+   "h": 417,
+   "bg": "rgba(0, 0, 0, 0)",
+   "bgimg": "none",
+   "heads": [
+    "H3: Experience You Can Trust",
+    "H3: Modern Dental Technology",
+    "H3: Personalized Treatment Plans"
+   ],
+   "imgs": 0,
+   "inputs": 0,
+   "widgets": [
+    "icon-box.default"
+   ],
+   "swipers": 0,
+   "counters": 0,
+   "accordions": 0,
+   "videos": 0,
+   "anims": [
+    "fadeInUp"
+   ]
+  },
+  {
+   "tag": "DIV",
+   "cls": "elementor-element elementor-element-185e778 e-flex e-con-boxed e-con e-parent e-lazyloaded",
+   "y": 1304,
+   "h": 958,
+   "bg": "rgba(0, 0, 0, 0)",
+   "bgimg": "none",
+   "heads": [
+    "H2: Personalized Care for Healthier, Happier Smiles",
+    "H3: Experienced Dentists",
+    "H3: Modern Technology",
+    "H3: Personalized Care",
+    "H3: Comfortable Environment"
+   ],
+   "imgs": 1,
+   "inputs": 0,
+   "widgets": [
+    "image.default",
+    "text-editor.default",
+    "elementskit-heading.default",
+    "icon-box.default",
+    "button.default"
+   ],
+   "swipers": 0,
+   "counters": 0,
+   "accordions": 0,
+   "videos": 0,
+   "anims": [
+    "fadeIn",
+    "fadeInUp"
+   ]
+  },
+  {
+   "tag": "DIV",
+   "cls": "elementor-element elementor-element-23812bc e-grid e-con-boxed e-con e-parent e-lazyloaded",
+   "y": 2262,
+   "h": 213,
+   "bg": "rgba(0, 0, 0, 0)",
+   "bgimg": "none",
+   "heads": [],
+   "imgs": 0,
+   "inputs": 0,
+   "widgets": [
+    "text-editor.default",
+    "counter.default"
+   ],
+   "swipers": 0,
+   "counters": 24,
+   "accordions": 0,
+   "videos": 0,
+   "anims": [
+    "fadeInUp"
+   ]
+  },
+  {
+   "tag": "DIV",
+   "cls": "elementor-element elementor-element-1274fdc e-flex e-con-boxed e-con e-parent e-lazyloaded",
+   "y": 2475,
+   "h": 1611,
+   "bg": "rgb(255, 255, 255)",
+   "bgimg": "none",
+   "heads": [
+    "H2: Complete Care for Every Smile",
+    "H4: General Dentistry",
+    "H4: Cosmetic Dentistry",
+    "H4: Teeth Whitening",
+    "H4: Dental Implants",
+    "H4: Orthodontic Care",
+    "H4: Restorative Dentistry",
+    "H3: Personalized Treatment Plans"
+   ],
+   "imgs": 6,
+   "inputs": 0,
+   "widgets": [
+    "text-editor.default",
+    "elementskit-heading.default",
+    "image.default",
+    "heading.default",
+    "button.default"
+   ],
+   "swipers": 0,
+   "counters": 0,
+   "accordions": 0,
+   "videos": 0,
+   "anims": [
+    "fadeInUp"
+   ]
+  },
+  {
+   "tag": "DIV",
+   "cls": "elementor-element elementor-element-cb30853 e-flex e-con-boxed e-con e-parent e-lazyloaded",
+   "y": 4087,
+   "h": 893,
+   "bg": "rgba(0, 0, 0, 0)",
+   "bgimg": "none",
+   "heads": [
+    "H2: Dental Care You Can Feel Confident About",
+    "H3: Experienced Dentists",
+    "H3: Comfortable Environment",
+    "H3: Advanced Technology",
+    "H3: Flexible Appointments"
+   ],
+   "imgs": 0,
+   "inputs": 0,
+   "widgets": [
+    "divider.default",
+    "text-editor.default",
+    "elementskit-heading.default",
+    "icon-box.default"
+   ],
+   "swipers": 0,
+   "counters": 0,
+   "accordions": 0,
+   "videos": 0,
+   "anims": [
+    "fadeIn",
+    "fadeInUp"
+   ]
+  },
+  {
+   "tag": "DIV",
+   "cls": "elementor-element elementor-element-26fe3be e-flex e-con-boxed e-con e-parent e-lazyloaded",
+   "y": 4979,
+   "h": 1902,
+   "bg": "rgb(255, 255, 255)",
+   "bgimg": "none",
+   "heads": [
+    "H2: Transform Your Smile With Personalized Care",
+    "H4: Professional Teeth Whitening",
+    "H4: Porcelain Veneers",
+    "H4: Dental Implants",
+    "H3: Your Smile Goals, Our Expertise"
+   ],
+   "imgs": 0,
+   "inputs": 0,
+   "widgets": [
+    "text-editor.default",
+    "elementskit-heading.default",
+    "heading.default",
+    "button.default"
+   ],
+   "swipers": 0,
+   "counters": 0,
+   "accordions": 0,
+   "videos": 0,
+   "anims": [
+    "fadeInUp"
+   ]
+  },
+  {
+   "tag": "DIV",
+   "cls": "elementor-element elementor-element-0b21c55 e-flex e-con-boxed e-con e-parent e-lazyloaded",
+   "y": 6881,
+   "h": 787,
+   "bg": "rgba(0, 0, 0, 0)",
+   "bgimg": "none",
+   "heads": [
+    "H2: Experienced Professionals, Caring Approach"
+   ],
+   "imgs": 4,
+   "inputs": 0,
+   "widgets": [
+    "text-editor.default",
+    "elementskit-heading.default",
+    "image.default",
+    "heading.default",
+    "social-icons.default"
+   ],
+   "swipers": 0,
+   "counters": 0,
+   "accordions": 0,
+   "videos": 0,
+   "anims": [
+    "fadeInUp"
+   ]
+  },
+  {
+   "tag": "DIV",
+   "cls": "elementor-element elementor-element-a273f0b e-flex e-con-boxed e-con e-parent e-lazyloaded",
+   "y": 7667,
+   "h": 1451,
+   "bg": "rgb(26, 105, 81)",
+   "bgimg": "none",
+   "heads": [
+    "H2: See the Difference Personalized Care Can Make"
+   ],
+   "imgs": 2,
+   "inputs": 0,
+   "widgets": [
+    "text-editor.default",
+    "elementskit-heading.default",
+    "elementskit-image-comparison.default",
+    "button.default"
+   ],
+   "swipers": 0,
+   "counters": 0,
+   "accordions": 0,
+   "videos": 0,
+   "anims": [
+    "fadeInUp"
+   ]
+  },
+  {
+   "tag": "DIV",
+   "cls": "elementor-element elementor-element-355e37b e-flex e-con-boxed e-con e-parent e-lazyloaded",
+   "y": 9118,
+   "h": 735,
+   "bg": "rgba(0, 0, 0, 0)",
+   "bgimg": "none",
+   "heads": [
+    "H2: Your Journey to Better Dental Care",
+    "H5: Book Appointment",
+    "H5: Meet Your Dentist",
+    "H5: Explore Your Options",
+    "H5: Begin Your Care"
+   ],
+   "imgs": 0,
+   "inputs": 0,
+   "widgets": [
+    "text-editor.default",
+    "elementskit-heading.default",
+    "icon-box.default"
+   ],
+   "swipers": 0,
+   "counters": 0,
+   "accordions": 0,
+   "videos": 0,
+   "anims": [
+    "fadeInUp"
+   ]
+  },
+  {
+   "tag": "DIV",
+   "cls": "elementor-element elementor-element-841b3d0 e-flex e-con-boxed e-con e-parent e-lazyloaded",
+   "y": 9853,
+   "h": 1254,
+   "bg": "rgb(255, 255, 255)",
+   "bgimg": "none",
+   "heads": [
+    "H2: What Our Patients Say",
+    "H4: “I Finally Feel Confident Smiling Again.”",
+    "H4: “The Team Made Me Feel Completely Comfortable.”",
+    "H4: “A Great Experience From Start to Finish.”",
+    "H4: “I Finally Feel Confident Smiling Again.”",
+    "H4: “The Team Made Me Feel Completely Comfortable.”"
+   ],
+   "imgs": 5,
+   "inputs": 0,
+   "widgets": [
+    "text-editor.default",
+    "elementskit-heading.default",
+    "button.default",
+    "rating.default",
+    "heading.default",
+    "testimonial.default",
+    "elementskit-video.default"
+   ],
+   "swipers": 0,
+   "counters": 0,
+   "accordions": 0,
+   "videos": 3,
+   "anims": [
+    "fadeInUp",
+    "fadeIn"
+   ]
+  },
+  {
+   "tag": "DIV",
+   "cls": "elementor-element elementor-element-f625146 e-flex e-con-boxed e-con e-parent e-lazyloaded",
+   "y": 11107,
+   "h": 1122,
+   "bg": "rgba(0, 0, 0, 0)",
+   "bgimg": "none",
+   "heads": [
+    "H2: Making Dental Care Easier to Access",
+    "H3: Insurance Support",
+    "H3: Insurance Support",
+    "H3: Clear Treatment Estimates",
+    "H3: Friendly Assistance",
+    "H3: Know What to Expect",
+    "H5: Have Questions About Your Coverage?"
+   ],
+   "imgs": 10,
+   "inputs": 0,
+   "widgets": [
+    "text-editor.default",
+    "elementskit-heading.default",
+    "divider.default",
+    "icon-box.default",
+    "elementskit-client-logo.default",
+    "heading.default",
+    "icon.default",
+    "button.default"
+   ],
+   "swipers": 1,
+   "counters": 0,
+   "accordions": 0,
+   "videos": 0,
+   "anims": [
+    "fadeInUp"
+   ]
+  },
+  {
+   "tag": "DIV",
+   "cls": "elementor-element elementor-element-4342e5e e-flex e-con-boxed e-con e-parent e-lazyloaded",
+   "y": 12229,
+   "h": 929,
+   "bg": "rgb(255, 255, 255)",
+   "bgimg": "none",
+   "heads": [
+    "H2: Everything You Need to Know"
+   ],
+   "imgs": 0,
+   "inputs": 0,
+   "widgets": [
+    "text-editor.default",
+    "elementskit-heading.default",
+    "elementskit-accordion.default"
+   ],
+   "swipers": 0,
+   "counters": 0,
+   "accordions": 44,
+   "videos": 0,
+   "anims": [
+    "fadeInUp"
+   ]
+  },
+  {
+   "tag": "DIV",
+   "cls": "elementor-element elementor-element-900c7b6 e-con-full e-flex e-con e-parent e-lazyloaded",
+   "y": 13158,
+   "h": 740,
+   "bg": "rgb(255, 255, 255)",
+   "bgimg": "none",
+   "heads": [
+    "H4: Prefer to Talk With Us?",
+    "H3: dentara.info@mail.com",
+    "H3: +1 (000) 123-4567",
+    "H2: Your Healthier Smile Starts Here"
+   ],
+   "imgs": 0,
+   "inputs": 0,
+   "widgets": [
+    "heading.default",
+    "icon-box.default",
+    "text-editor.default",
+    "elementskit-heading.default",
+    "button.default"
+   ],
+   "swipers": 0,
+   "counters": 0,
+   "accordions": 0,
+   "videos": 0,
+   "anims": [
+    "fadeIn",
+    "fadeInUp"
+   ]
+  },
+  {
+   "tag": "DIV",
+   "cls": "elementor-element elementor-element-913df1b e-flex e-con-boxed e-con e-parent e-lazyloaded",
+   "y": 13898,
+   "h": 771,
+   "bg": "rgba(0, 0, 0, 0)",
+   "bgimg": "url(\"https://askcreativelab.com/dentara/wp-content",
+   "heads": [
+    "H6: Address",
+    "H6: Contact",
+    "H6: Opening Hours",
+    "H6: Pages",
+    "H6: Our Services"
+   ],
+   "imgs": 1,
+   "inputs": 1,
+   "widgets": [
+    "image.default",
+    "text-editor.default",
+    "social-icons.default",
+    "metform.default",
+    "mf-email.default",
+    "mf-button.default",
+    "heading.default",
+    "icon-list.default",
+    "divider.default",
+    "button.default"
+   ],
+   "swipers": 0,
+   "counters": 0,
+   "accordions": 0,
+   "videos": 0,
+   "anims": [
+    "fadeIn"
+   ]
+  }
+ ],
+ "scripts": [
+  "js/v4-shims.min.js",
+  "jquery/jquery.min.js",
+  "jquery/jquery-migrate.min.js",
+  "js/allscripts.js",
+  "js/owl.carousel.min.js",
+  "js/price-table.js",
+  "public/template-kit-export-public.js",
+  "chunks/background-slideshow.min.js",
+  "chunks/background-video.min.js",
+  "chunks/text-editor.min.js",
+  "chunks/counter.min.js",
+  "js/wp-emoji-release.min.js",
+  "js/jquery.easing.1.3.js",
+  "js/jquery.superslides.js",
+  "vendor/react.min.js",
+  "vendor/react-dom.min.js",
+  "vendor/react-jsx-runtime.min.js",
+  "dist/escape-html.min.js",
+  "dist/element.min.js",
+  "dist/hooks.min.js",
+  "dist/i18n.min.js",
+  "htm/htm.js",
+  "app/index.js",
+  "widget-bootstrap/index.js",
+  "cute-alert/cute-alert.js",
+  "js/hello-frontend.js",
+  "jquery-numerator/jquery-numerator.min.js",
+  "js/imagesloaded.min.js",
+  "event-move-js/jquery.event.move.js",
+  "twentytwenty/jquery.twentytwenty.js",
+  "js/webpack.runtime.min.js",
+  "js/frontend-modules.min.js",
+  "ui/core.min.js",
+  "js/frontend.min.js",
+  "widgets/core.js",
+  "widgets/image-comparison.js",
+  "widgets/video.js",
+  "mediaelement/mediaelement-and-player.min.js",
+  "mediaelement/mediaelement-migrate.min.js",
+  "mediaelement/wp-mediaelement.min.js",
+  "magnific-popup/jquery.magnific-popup.min.js",
+  "widgets/client-logo.js",
+  "v8/swiper.min.js",
+  "js/ekit-ui.js",
+  "widgets/accordion.js",
+  "js/nav-menu.js",
+  "widgets/nav-menu.js",
+  "widgets/header-search.js",
+  "widgets/header-offcanvas.js"
+ ],
+ "fontLinks": [
+  "https://askcreativelab.com/dentara/wp-content/plugins/elementor/assets/lib/font-awesome/css/all.min.css?ver=4.3.5",
+  "https://askcreativelab.com/dentara/wp-content/plugins/elementor/assets/lib/font-awesome/css/v4-shims.min.css?ver=4.3.5",
+  "https://fonts.googleapis.com/css?family=Inclusive+Sans:100,100italic,200,200italic,300,300italic,400,400italic,500,500italic,600,600italic,700,700italic,800,800italic,900,900italic&display=auto",
+  "https://fonts.googleapis.com/css?family=Inter+Tight:100,100italic,200,200italic,300,300italic,400,400italic,500,500italic,600,600italic,700,700italic,800,800italic,900,900italic&display=auto"
+ ],
+ "fontFaces": [
+  "Font Awesome 5 Brands 400 normal unloaded",
+  "Font Awesome 5 Free 400 normal unloaded",
+  "Font Awesome 5 Free 900 normal loaded",
+  "swiper-icons 400 normal unloaded",
+  "Inclusive Sans 300 italic unloaded",
+  "Inclusive Sans 400 italic unloaded",
+  "Inclusive Sans 500 italic unloaded",
+  "Inclusive Sans 500 italic loaded",
+  "Inclusive Sans 600 italic unloaded",
+  "Inclusive Sans 700 italic unloaded",
+  "Inclusive Sans 300 normal unloaded",
+  "Inclusive Sans 400 normal unloaded",
+  "Inclusive Sans 500 normal unloaded",
+  "Inclusive Sans 500 normal loaded",
+  "Inclusive Sans 600 normal unloaded",
+  "Inclusive Sans 600 normal loaded",
+  "Inclusive Sans 700 normal unloaded",
+  "Inclusive Sans 700 normal loaded",
+  "Inter Tight 100 italic unloaded",
+  "Inter Tight 200 italic unloaded",
+  "Inter Tight 300 italic unloaded",
+  "Inter Tight 400 italic unloaded",
+  "Inter Tight 400 italic loaded",
+  "Inter Tight 500 italic unloaded",
+  "Inter Tight 600 italic unloaded",
+  "Inter Tight 700 italic unloaded",
+  "Inter Tight 800 italic unloaded",
+  "Inter Tight 900 italic unloaded",
+  "Inter Tight 100 normal unloaded",
+  "Inter Tight 200 normal unloaded"
+ ],
+ "vars": {
+  "--wp--preset--color--black": "#000000",
+  "--wp--preset--color--cyan-bluish-gray": "#abb8c3",
+  "--wp--preset--color--white": "#ffffff",
+  "--wp--preset--color--pale-pink": "#f78da7",
+  "--wp--preset--color--vivid-red": "#cf2e2e",
+  "--wp--preset--color--luminous-vivid-orange": "#ff6900",
+  "--wp--preset--color--luminous-vivid-amber": "#fcb900",
+  "--wp--preset--color--light-green-cyan": "#7bdcb5",
+  "--wp--preset--color--vivid-green-cyan": "#00d084",
+  "--wp--preset--color--pale-cyan-blue": "#8ed1fc",
+  "--wp--preset--color--vivid-cyan-blue": "#0693e3",
+  "--wp--preset--color--vivid-purple": "#9b51e0",
+  "--e-global-color-primary": "#001E14",
+  "--e-global-color-secondary": "#1A6951",
+  "--e-global-color-text": "#5F6664",
+  "--e-global-color-accent": "#3CE7B3",
+  "--e-global-color-cfb282d": "#F6F9F1",
+  "--e-global-color-63dc31e": "#FFFFFF",
+  "--e-global-typography-primary-font-family": "\"Inclusive Sans\"",
+  "--e-global-typography-secondary-font-family": "\"Inclusive Sans\"",
+  "--e-global-typography-text-font-family": "\"Inter Tight\"",
+  "--e-global-typography-accent-font-family": "\"Inclusive Sans\"",
+  "--e-global-typography-217add7-font-family": "\"Inclusive Sans\"",
+  "--e-global-typography-3d4a7b1-font-family": "\"Inclusive Sans\"",
+  "--e-global-typography-0fa659a-font-family": "\"Inclusive Sans\"",
+  "--e-global-typography-c6a9cbb-font-family": "\"Inclusive Sans\"",
+  "--e-global-typography-fc56b58-font-family": "\"Inclusive Sans\"",
+  "--e-global-typography-a792461-font-family": "\"Inter Tight\"",
+  "--e-global-typography-b141dfb-font-family": "\"Inclusive Sans\"",
+  "--e-global-typography-595d31b-font-family": "\"Inclusive Sans\"",
+  "--swiper-theme-color": "#007aff"
+ },
+ "cssAnims": [
+  "animated-slow animated",
+  "animated"
+ ],
+ "httpStatus": 200
+}

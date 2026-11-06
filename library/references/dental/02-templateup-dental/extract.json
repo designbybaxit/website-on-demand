@@ -1,0 +1,575 @@
+{
+ "title": "Dental – Dentist Elementor Pro Template Kit",
+ "url": "https://templateup.site/dental/?storefront=envato-elements",
+ "height": 6058,
+ "bg": [
+  [
+   "rgb(249, 102, 157)",
+   14
+  ],
+  [
+   "rgb(58, 48, 137)",
+   12
+  ],
+  [
+   "rgb(255, 255, 255)",
+   8
+  ],
+  [
+   "rgb(245, 245, 245)",
+   6
+  ],
+  [
+   "rgb(48, 38, 109)",
+   4
+  ]
+ ],
+ "fg": [
+  [
+   "rgb(255, 255, 255)",
+   48
+  ],
+  [
+   "rgb(39, 42, 42)",
+   30
+  ],
+  [
+   "rgb(122, 122, 122)",
+   19
+  ],
+  [
+   "rgb(249, 102, 157)",
+   15
+  ],
+  [
+   "rgb(105, 114, 125)",
+   4
+  ],
+  [
+   "rgb(37, 37, 37)",
+   4
+  ],
+  [
+   "rgb(58, 48, 137)",
+   2
+  ],
+  [
+   "rgb(204, 51, 102)",
+   1
+  ]
+ ],
+ "fonts": [
+  [
+   "\"Yusei Magic\"",
+   95
+  ],
+  [
+   "\"Roboto Flex\"",
+   28
+  ]
+ ],
+ "heads": [
+  [
+   "H3|\"Yusei Magic\"|500|21.33px",
+   7
+  ],
+  [
+   "H2|\"Yusei Magic\"|400|39.81px",
+   5
+  ],
+  [
+   "H2|\"Yusei Magic\"|400|33.18px",
+   3
+  ],
+  [
+   "H3|\"Yusei Magic\"|400|27.65px",
+   2
+  ],
+  [
+   "H1|\"Yusei Magic\"|400|58px",
+   1
+  ]
+ ],
+ "btns": [
+  {
+   "t": "SCHEDULE A VISIT",
+   "bg": "rgba(0, 0, 0, 0)",
+   "c": "rgb(122, 122, 122)",
+   "r": "0px",
+   "pad": "0px",
+   "ff": "\"Roboto Flex\"",
+   "fw": "400",
+   "tt": "none",
+   "border": "0px none rgb(122, 122, 122)"
+  },
+  {
+   "t": "SCHEDULE A VISIT",
+   "bg": "rgba(0, 0, 0, 0)",
+   "c": "rgb(122, 122, 122)",
+   "r": "0px",
+   "pad": "0px",
+   "ff": "\"Roboto Flex\"",
+   "fw": "400",
+   "tt": "none",
+   "border": "0px none rgb(122, 122, 122)"
+  },
+  {
+   "t": "SCHEDULE A VISIT",
+   "bg": "rgb(249, 102, 157)",
+   "c": "rgb(255, 255, 255)",
+   "r": "100px",
+   "pad": "12px 24px",
+   "ff": "\"Yusei Magic\"",
+   "fw": "700",
+   "tt": "uppercase",
+   "border": "0px none rgb(255, 255, 255)"
+  },
+  {
+   "t": "SCHEDULE A VISIT",
+   "bg": "rgba(0, 0, 0, 0)",
+   "c": "rgb(255, 255, 255)",
+   "r": "0px",
+   "pad": "0px",
+   "ff": "\"Yusei Magic\"",
+   "fw": "700",
+   "tt": "uppercase",
+   "border": "0px none rgb(255, 255, 255)"
+  },
+  {
+   "t": "SCHEDULE A VISIT",
+   "bg": "rgba(0, 0, 0, 0)",
+   "c": "rgb(255, 255, 255)",
+   "r": "0px",
+   "pad": "0px",
+   "ff": "\"Yusei Magic\"",
+   "fw": "700",
+   "tt": "uppercase",
+   "border": "0px none rgb(255, 255, 255)"
+  },
+  {
+   "t": "LEARN MORE",
+   "bg": "rgba(0, 0, 0, 0)",
+   "c": "rgb(122, 122, 122)",
+   "r": "0px",
+   "pad": "0px",
+   "ff": "\"Roboto Flex\"",
+   "fw": "400",
+   "tt": "none",
+   "border": "0px none rgb(122, 122, 122)"
+  },
+  {
+   "t": "LEARN MORE",
+   "bg": "rgba(0, 0, 0, 0)",
+   "c": "rgb(122, 122, 122)",
+   "r": "0px",
+   "pad": "0px",
+   "ff": "\"Roboto Flex\"",
+   "fw": "400",
+   "tt": "none",
+   "border": "0px none rgb(122, 122, 122)"
+  },
+  {
+   "t": "LEARN MORE",
+   "bg": "rgba(0, 0, 0, 0)",
+   "c": "rgb(255, 255, 255)",
+   "r": "100px",
+   "pad": "12px 24px",
+   "ff": "\"Yusei Magic\"",
+   "fw": "700",
+   "tt": "uppercase",
+   "border": "2px solid rgb(255, 255, 255)"
+  },
+  {
+   "t": "LEARN MORE",
+   "bg": "rgba(0, 0, 0, 0)",
+   "c": "rgb(255, 255, 255)",
+   "r": "0px",
+   "pad": "0px",
+   "ff": "\"Yusei Magic\"",
+   "fw": "700",
+   "tt": "uppercase",
+   "border": "0px none rgb(255, 255, 255)"
+  },
+  {
+   "t": "LEARN MORE",
+   "bg": "rgba(0, 0, 0, 0)",
+   "c": "rgb(255, 255, 255)",
+   "r": "0px",
+   "pad": "0px",
+   "ff": "\"Yusei Magic\"",
+   "fw": "700",
+   "tt": "uppercase",
+   "border": "0px none rgb(255, 255, 255)"
+  },
+  {
+   "t": "LEARN MORE",
+   "bg": "rgba(0, 0, 0, 0)",
+   "c": "rgb(122, 122, 122)",
+   "r": "0px",
+   "pad": "0px",
+   "ff": "\"Roboto Flex\"",
+   "fw": "400",
+   "tt": "none",
+   "border": "0px none rgb(122, 122, 122)"
+  },
+  {
+   "t": "LEARN MORE",
+   "bg": "rgba(0, 0, 0, 0)",
+   "c": "rgb(122, 122, 122)",
+   "r": "0px",
+   "pad": "0px",
+   "ff": "\"Roboto Flex\"",
+   "fw": "400",
+   "tt": "none",
+   "border": "0px none rgb(122, 122, 122)"
+  }
+ ],
+ "sections": [
+  {
+   "tag": "HEADER",
+   "cls": "elementor elementor-21 elementor-location-header",
+   "y": 0,
+   "h": 159,
+   "bg": "rgba(0, 0, 0, 0)",
+   "bgimg": "none",
+   "heads": [],
+   "imgs": 0,
+   "forms": 0,
+   "inputs": 0,
+   "widgets": [
+    "icon-list.default",
+    "social-icons.default",
+    "spacer.default",
+    "heading.default",
+    "nav-menu.default",
+    "button.default"
+   ],
+   "swipers": 0,
+   "counters": 0,
+   "accordions": 4,
+   "videos": 0,
+   "anims": []
+  },
+  {
+   "tag": "DIV",
+   "cls": "elementor-element elementor-element-4fc630d8 e-flex e-con-boxed e-con e-parent e-lazyloaded",
+   "y": 44,
+   "h": 1126,
+   "bg": "rgba(0, 0, 0, 0)",
+   "bgimg": "linear-gradient(rgb(48, 38, 109) 80%, rgb(255, 255, 255) 0%)",
+   "heads": [
+    "H1: We Improve Dental Health & Enhance Smiles",
+    "H2: Get To Know Some Treatments",
+    "H3: Prosthetics",
+    "H3: Whitening",
+    "H3: Periodontics"
+   ],
+   "imgs": 0,
+   "forms": 0,
+   "inputs": 0,
+   "widgets": [
+    "heading.default",
+    "icon-box.default",
+    "button.default",
+    "lottie.default",
+    "spacer.default"
+   ],
+   "swipers": 0,
+   "counters": 0,
+   "accordions": 0,
+   "videos": 0,
+   "anims": [
+    "zoomIn",
+    "fadeIn",
+    "rotateInUpRight"
+   ]
+  },
+  {
+   "tag": "DIV",
+   "cls": "elementor-element elementor-element-62948e4e e-con-full e-flex e-con e-parent e-lazyloaded",
+   "y": 1171,
+   "h": 671,
+   "bg": "rgba(0, 0, 0, 0)",
+   "bgimg": "none",
+   "heads": [
+    "H2: Keeping Teeth Healthy And Achieving A Beautiful Smile",
+    "H5: 85%",
+    "H5: 75%"
+   ],
+   "imgs": 0,
+   "forms": 0,
+   "inputs": 0,
+   "widgets": [
+    "heading.default",
+    "icon-box.default",
+    "tp-adv-text-block.default",
+    "tp-progress-bar.default"
+   ],
+   "swipers": 0,
+   "counters": 2,
+   "accordions": 0,
+   "videos": 0,
+   "anims": [
+    "fadeInLeft"
+   ]
+  },
+  {
+   "tag": "DIV",
+   "cls": "elementor-element elementor-element-26c4462a e-flex e-con-boxed e-con e-parent e-lazyloaded",
+   "y": 1841,
+   "h": 537,
+   "bg": "rgba(0, 0, 0, 0)",
+   "bgimg": "none",
+   "heads": [
+    "H2: Tooth Whitening",
+    "H3: Contact Lenses & Porcelain Veneers"
+   ],
+   "imgs": 0,
+   "forms": 0,
+   "inputs": 0,
+   "widgets": [
+    "icon-box.default",
+    "button.default"
+   ],
+   "swipers": 0,
+   "counters": 0,
+   "accordions": 0,
+   "videos": 0,
+   "anims": [
+    "fadeInUp"
+   ]
+  },
+  {
+   "tag": "DIV",
+   "cls": "elementor-element elementor-element-426035f9 e-flex e-con-boxed e-con e-parent e-lazyloaded",
+   "y": 2379,
+   "h": 1027,
+   "bg": "rgba(0, 0, 0, 0)",
+   "bgimg": "linear-gradient(rgb(245, 245, 245) 0%, rgb(255, 255, 255) 10",
+   "heads": [
+    "H2: Choose The Right Plan For You",
+    "H3: Monthly Package",
+    "H3: Monthly Package",
+    "H3: Monthly Package"
+   ],
+   "imgs": 0,
+   "forms": 3,
+   "inputs": 36,
+   "widgets": [
+    "spacer.default",
+    "heading.default",
+    "icon-box.default",
+    "lottie.default",
+    "icon-list.default",
+    "paypal-button.default"
+   ],
+   "swipers": 0,
+   "counters": 0,
+   "accordions": 0,
+   "videos": 0,
+   "anims": [
+    "fadeIn",
+    "fadeInUp",
+    "fadeInLeft",
+    "zoomIn",
+    "fadeInRight"
+   ]
+  },
+  {
+   "tag": "DIV",
+   "cls": "elementor-element elementor-element-6e2c47d0 e-flex e-con-boxed e-con e-parent e-lazyloaded",
+   "y": 3406,
+   "h": 521,
+   "bg": "rgba(0, 0, 0, 0)",
+   "bgimg": "none",
+   "heads": [
+    "H2: Botulinum Toxin & Hyaluronic Acid Filler",
+    "H3: Tooth Whitening"
+   ],
+   "imgs": 0,
+   "forms": 0,
+   "inputs": 0,
+   "widgets": [
+    "heading.default",
+    "icon-box.default",
+    "tp-adv-text-block.default",
+    "blockquote.default"
+   ],
+   "swipers": 0,
+   "counters": 0,
+   "accordions": 0,
+   "videos": 0,
+   "anims": []
+  },
+  {
+   "tag": "DIV",
+   "cls": "elementor-element elementor-element-25f55650 e-flex e-con-boxed e-con e-parent e-lazyloaded",
+   "y": 3927,
+   "h": 620,
+   "bg": "rgb(245, 245, 245)",
+   "bgimg": "none",
+   "heads": [
+    "H2: Orthodontics With Innovative Transparent Aligners",
+    "H3: Opening Hours"
+   ],
+   "imgs": 0,
+   "forms": 0,
+   "inputs": 0,
+   "widgets": [
+    "heading.default",
+    "icon-box.default",
+    "button.default",
+    "price-list.default"
+   ],
+   "swipers": 0,
+   "counters": 0,
+   "accordions": 0,
+   "videos": 0,
+   "anims": [
+    "fadeIn"
+   ]
+  },
+  {
+   "tag": "DIV",
+   "cls": "elementor-element elementor-element-3b44616a e-flex e-con-boxed e-con e-parent e-lazyloaded",
+   "y": 4547,
+   "h": 620,
+   "bg": "rgba(0, 0, 0, 0)",
+   "bgimg": "none",
+   "heads": [
+    "H2: The Best Technique Immediate & Efficient Result"
+   ],
+   "imgs": 0,
+   "forms": 0,
+   "inputs": 0,
+   "widgets": [
+    "lottie.default",
+    "spacer.default",
+    "heading.default",
+    "icon-box.default",
+    "button.default"
+   ],
+   "swipers": 0,
+   "counters": 0,
+   "accordions": 0,
+   "videos": 0,
+   "anims": [
+    "fadeInLeft"
+   ]
+  },
+  {
+   "tag": "FOOTER",
+   "cls": "elementor elementor-17 elementor-location-footer",
+   "y": 5167,
+   "h": 891,
+   "bg": "rgba(0, 0, 0, 0)",
+   "bgimg": "none",
+   "heads": [
+    "H2: Find The Ideal Treatment For Your Smile!"
+   ],
+   "imgs": 0,
+   "forms": 1,
+   "inputs": 5,
+   "widgets": [
+    "heading.default",
+    "button.default",
+    "spacer.default",
+    "text-editor.default",
+    "social-icons.default",
+    "icon-list.default",
+    "form.default"
+   ],
+   "swipers": 0,
+   "counters": 0,
+   "accordions": 0,
+   "videos": 0,
+   "anims": []
+  }
+ ],
+ "scripts": [
+  "js-front-end/breeze-prefetch-links.min.js",
+  "jquery/jquery.min.js",
+  "jquery/jquery-migrate.min.js",
+  "public/template-kit-export-public.js",
+  "chunks/background-slideshow.min.js",
+  "chunks/background-video.min.js",
+  "chunks/text-editor.min.js",
+  "js/wp-emoji-release.min.js",
+  "ui/core.min.js",
+  "ui/mouse.min.js",
+  "ui/slider.min.js",
+  "extra/jquery.waypoints.min.js",
+  "progress-bar/plus-progress-bar.min.js",
+  "js/webpack.runtime.min.js",
+  "js/frontend-modules.min.js",
+  "js/frontend.min.js",
+  "smartmenus/jquery.smartmenus.min.js",
+  "lottie/lottie.min.js",
+  "js/webpack-pro.runtime.min.js",
+  "dist/hooks.min.js",
+  "dist/i18n.min.js",
+  "js/frontend.min.js",
+  "js/elements-handlers.min.js"
+ ],
+ "fontLinks": [
+  "https://templateup.site/dental/wp-content/plugins/elementor/assets/lib/font-awesome/css/fontawesome.min.css?ver=5.15.3",
+  "https://templateup.site/dental/wp-content/plugins/elementor/assets/lib/font-awesome/css/brands.min.css?ver=5.15.3",
+  "https://templateup.site/dental/wp-content/uploads/sites/19/elementor/google-fonts/css/yuseimagic.css?ver=1742301991",
+  "https://templateup.site/dental/wp-content/uploads/sites/19/elementor/google-fonts/css/robotoflex.css?ver=1754412364",
+  "https://templateup.site/dental/wp-content/plugins/elementor/assets/lib/font-awesome/css/solid.min.css?ver=5.15.3",
+  "https://templateup.site/dental/wp-content/plugins/elementor/assets/lib/font-awesome/css/regular.min.css?ver=5.15.3"
+ ],
+ "fontFaces": [
+  "eicons 400 normal loaded",
+  "Font Awesome 5 Brands 400 normal loaded",
+  "Yusei Magic 400 normal unloaded",
+  "Yusei Magic 400 normal loaded",
+  "Roboto Flex 400 normal unloaded",
+  "Roboto Flex 400 normal loaded",
+  "Font Awesome 5 Free 900 normal loaded",
+  "Font Awesome 5 Free 400 normal loaded"
+ ],
+ "vars": {
+  "--wp--preset--color--black": "#000000",
+  "--wp--preset--color--cyan-bluish-gray": "#abb8c3",
+  "--wp--preset--color--white": "#ffffff",
+  "--wp--preset--color--pale-pink": "#f78da7",
+  "--wp--preset--color--vivid-red": "#cf2e2e",
+  "--wp--preset--color--luminous-vivid-orange": "#ff6900",
+  "--wp--preset--color--luminous-vivid-amber": "#fcb900",
+  "--wp--preset--color--light-green-cyan": "#7bdcb5",
+  "--wp--preset--color--vivid-green-cyan": "#00d084",
+  "--wp--preset--color--pale-cyan-blue": "#8ed1fc",
+  "--wp--preset--color--vivid-cyan-blue": "#0693e3",
+  "--wp--preset--color--vivid-purple": "#9b51e0",
+  "--e-global-color-primary": "#3A3089",
+  "--e-global-color-secondary": "#F9669D",
+  "--e-global-color-text": "#7A7A7A",
+  "--e-global-color-accent": "#FFFFFF",
+  "--e-global-color-9776f51": "#272A2A",
+  "--e-global-color-5bc9cb4": "#30266D",
+  "--e-global-color-0770ff8": "#F5F5F5",
+  "--e-global-color-2d846c6": "#FFFFFF",
+  "--e-global-color-016429b": "#EAEAEA",
+  "--e-global-typography-primary-font-family": "\"Yusei Magic\"",
+  "--e-global-typography-secondary-font-family": "\"Yusei Magic\"",
+  "--e-global-typography-text-font-family": "\"Roboto Flex\"",
+  "--e-global-typography-accent-font-family": "\"Yusei Magic\"",
+  "--e-global-typography-494bb27-font-family": "\"Yusei Magic\"",
+  "--e-global-typography-aa89519-font-family": "\"Yusei Magic\"",
+  "--e-global-typography-c2753c4-font-family": "\"Yusei Magic\"",
+  "--e-global-typography-12b0bcf-font-family": "\"Yusei Magic\"",
+  "--e-global-typography-c5da802-font-family": "\"Yusei Magic\"",
+  "--e-global-typography-ea159c7-font-family": "\"Yusei Magic\"",
+  "--e-global-typography-ada99b9-font-family": "\"Roboto Flex\"",
+  "--e-global-typography-19912ba-font-family": "\"Roboto Flex\"",
+  "--e-global-typography-b26eee4-font-family": "\"Yusei Magic\"",
+  "--e-global-typography-22f931e-font-family": "\"Yusei Magic\"",
+  "--e-global-typography-9a01f5c-font-family": "\"Yusei Magic\""
+ },
+ "cssAnims": [
+  "animated",
+  "text_block_parallax"
+ ],
+ "httpStatus": 200
+}

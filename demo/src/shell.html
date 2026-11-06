@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>SiteSpark – Your website, ready to preview</title>
+<meta name="robots" content="noindex">
+<style>
+/* ====== App shell (agency side) ====== */
+:root{--brand:#4338ca;--brand2:#312e81;--ink:#0f172a;--mut:#64748b;--line:#e5e7eb;--bg:#f7f7fa;--ok:#15803d;--warn:#b45309;--bad:#dc2626;--r:16px}
+*{box-sizing:border-box}
+html,body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.55 system-ui,-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;-webkit-font-smoothing:antialiased}
+a{color:var(--brand)}
+.top{background:rgba(255,255,255,.86);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);border-bottom:1px solid var(--line);position:sticky;top:0;z-index:20}
+.top .in{max-width:1120px;margin:0 auto;display:flex;align-items:center;gap:12px;padding:12px 18px}
+.mark{width:34px;height:34px;border-radius:10px;background:linear-gradient(135deg,#4338ca,#db2777);display:grid;place-items:center;color:#fff;font-weight:800}
+.bname{font-weight:800;font-size:18px;letter-spacing:-.3px}
+.top .sp{flex:1}
+.steps{display:flex;gap:6px;font-size:12.5px;color:var(--mut)}
+.steps span{padding:5px 11px;border-radius:99px;background:#f1f5f9}
+.steps span.on{background:var(--ink);color:#fff}
+.wrap{max-width:1120px;margin:0 auto;padding:22px 18px 60px}
+.screen{display:none}.screen.on{display:block;animation:fade .35s ease}
+@keyframes fade{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+@media (prefers-reduced-motion:reduce){.screen.on{animation:none}.spin{animation-duration:2s}}
+.hero-a{text-align:center;padding:26px 0 10px}
+.hero-a h1{font-size:clamp(26px,4vw,38px);line-height:1.1;margin:0 0 10px;letter-spacing:-.8px}
+.hero-a p{color:var(--mut);margin:0 auto;max-width:640px;font-size:16px}
+.trust{display:flex;gap:8px 18px;justify-content:center;flex-wrap:wrap;margin-top:14px;font-size:13px;color:#334155}
+.trust span::before{content:"✓ ";color:var(--ok);font-weight:800}
+.card{background:#fff;border:1px solid var(--line);border-radius:var(--r);padding:22px;margin:16px 0;box-shadow:0 1px 2px rgba(15,23,42,.04)}
+.card h2{font-size:17px;margin:0 0 4px;letter-spacing:-.2px}.card .hint{color:var(--mut);font-size:13px;margin:0 0 14px}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:14px 16px}
+.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:14px 16px}
+.full{grid-column:1/-1}
+label{display:block;font-weight:600;font-size:13.5px;margin-bottom:5px}
+label .opt{font-weight:400;color:var(--mut)}
+label .req{color:var(--bad)}
+input[type=text],input[type=email],input[type=tel],input[type=url],select,textarea{width:100%;padding:11px 12px;border:1px solid #cbd5e1;border-radius:11px;font:inherit;background:#fff;color:inherit}
+textarea{min-height:90px;resize:vertical}
+input:focus,select:focus,textarea:focus{outline:3px solid #e0e7ff;border-color:var(--brand)}
+.err-msg{color:var(--bad);font-size:12.5px;margin-top:4px;display:none}
+.invalid input,.invalid select,.invalid textarea{border-color:var(--bad)}
+.invalid .err-msg{display:block}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;border:0;border-radius:12px;padding:11px 18px;font:inherit;font-weight:700;cursor:pointer;background:var(--ink);color:#fff;text-decoration:none;transition:transform .15s ease,background .15s ease}
+.btn:hover{background:#1e293b}.btn:active{transform:scale(.98)}
+.btn.ghost{background:#fff;color:var(--ink);border:1px solid #cbd5e1}
+.btn.ghost:hover{background:#f8fafc}
+.btn.green{background:var(--ok)}.btn.green:hover{background:#166534}
+.btn.sm{padding:7px 12px;font-size:13px;border-radius:9px}
+.btn.big{padding:14px 24px;font-size:16px}
+.btn:disabled{opacity:.5;cursor:not-allowed}
+.row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+.ex-row{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.ex-row select{width:auto;padding:7px 10px;font-size:13px}
+.svc{display:grid;grid-template-columns:1.2fr 2fr .7fr auto;gap:8px;margin-bottom:8px;align-items:start}
+.svc button{height:44px}
+.logo-box{display:flex;gap:14px;align-items:center}
+.logo-prev{width:64px;height:64px;border-radius:12px;border:1px dashed #cbd5e1;display:grid;place-items:center;color:var(--mut);font-size:11px;overflow:hidden;background:#f8fafc;flex:none}
+.logo-prev img{max-width:100%;max-height:100%}
+.photos{display:flex;gap:8px;flex-wrap:wrap;margin-top:8px}
+.photos figure{margin:0;width:84px;height:64px;border-radius:10px;overflow:hidden;position:relative;background:#f1f5f9}
+.ba-drop{display:flex;flex-wrap:wrap;gap:8px;align-items:center;position:relative}.ba-drop label.btn{cursor:pointer;margin:0}.ba-drop label.btn.ok{border-color:#16a34a;color:#15803d}
+.ba-list figure{width:auto;display:flex;gap:2px;padding:0;height:64px}.ba-list figure img{width:64px;height:64px;object-fit:cover}.ba-list figcaption{position:absolute;left:0;right:0;bottom:0;background:rgba(15,23,42,.7);color:#fff;font-size:10px;padding:1px 4px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.dnav{display:flex;align-items:center;justify-content:center;gap:10px;flex-wrap:wrap;margin:14px 0 0}.dnav .pill{min-width:118px;text-align:center}
+.photos img{width:100%;height:100%;object-fit:cover;display:block}
+.photos button{position:absolute;top:3px;right:3px;width:22px;height:22px;border-radius:50%;border:0;background:rgba(15,23,42,.75);color:#fff;font-size:12px;cursor:pointer;line-height:1}
+.drop{border:1.5px dashed #cbd5e1;border-radius:12px;padding:14px;background:#fafafa;font-size:13px;color:var(--mut)}
+.acts{display:grid;grid-template-columns:repeat(5,1fr);gap:8px}
+.acts label{margin:0;border:1px solid #cbd5e1;border-radius:12px;padding:10px;text-align:center;cursor:pointer;font-weight:600;font-size:13px;background:#fff;transition:border-color .15s}
+.acts input{position:absolute;opacity:0;pointer-events:none}
+.acts label:has(input:checked){border-color:var(--ink);box-shadow:0 0 0 2px var(--ink) inset;background:#f8fafc}
+.acts label:focus-within{outline:3px solid #e0e7ff}
+.acts small{display:block;font-weight:400;color:var(--mut);font-size:11.5px}
+.sticky-act{position:sticky;bottom:0;z-index:5;display:flex;gap:10px;justify-content:space-between;flex-wrap:wrap;align-items:center;background:rgba(247,247,250,.92);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);padding:12px 0;border-top:1px solid var(--line)}
+.note{font-size:12.5px;color:var(--mut)}
+.banner-err{display:none;background:#fef2f2;color:#991b1b;border:1px solid #fecaca;padding:10px 14px;border-radius:10px;margin-top:12px}
+.pipe{display:grid;gap:14px;max-width:740px;margin:10px auto}
+.bot{display:flex;gap:14px;align-items:flex-start;background:#fff;border:1px solid var(--line);border-radius:16px;padding:16px 18px;opacity:.45;transition:opacity .3s,box-shadow .3s}
+.bot.run,.bot.done{opacity:1}
+.bot.run{border-color:#a5b4fc;box-shadow:0 0 0 4px #eef2ff}
+.bot .ic{width:44px;height:44px;border-radius:12px;background:#eef2ff;display:grid;place-items:center;font-weight:800;color:var(--brand);flex:none}
+.bot.done .ic{background:#dcfce7;color:var(--ok)}
+.bot h3{margin:0;font-size:15.5px}
+.bot .st{font-size:13px;color:var(--mut)}
+.bot ul{margin:8px 0 0;padding-left:18px;font:12.5px/1.6 ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;color:#334155}
+.spin{display:inline-block;width:14px;height:14px;border:2px solid #c7d2fe;border-top-color:var(--brand);border-radius:50%;animation:sp .8s linear infinite;vertical-align:-2px}
+@keyframes sp{to{transform:rotate(360deg)}}
+.arrow{text-align:center;color:#94a3b8;font-size:18px;line-height:1}
+.pv-head{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}
+.toggle{display:inline-flex;background:#e5e7eb;border-radius:11px;padding:3px}
+.toggle button{border:0;background:transparent;padding:8px 16px;border-radius:9px;font:inherit;font-weight:600;cursor:pointer;color:#334155}
+.toggle button.on{background:#fff;box-shadow:0 1px 2px rgba(0,0,0,.12);color:var(--ink)}
+.stage{margin-top:16px;display:flex;justify-content:center}
+.browser{width:100%;max-width:1060px;border-radius:14px;overflow:hidden;border:1px solid #cbd5e1;background:#fff;box-shadow:0 30px 60px -30px rgba(15,23,42,.45)}
+.browser .bar{display:flex;gap:6px;align-items:center;padding:9px 12px;background:#f1f5f9;border-bottom:1px solid #e2e8f0}
+.dot{width:10px;height:10px;border-radius:50%;background:#cbd5e1;flex:none}
+.url{flex:1;margin-left:8px;background:#fff;border-radius:7px;padding:4px 10px;font-size:12px;color:var(--mut);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.viewport{max-height:74vh;overflow:auto;position:relative;background:#fff;overscroll-behavior:contain}
+.phone{width:340px;border-radius:44px;padding:12px;background:#0f172a;box-shadow:0 30px 60px -30px rgba(15,23,42,.7)}
+.phone .viewport{border-radius:32px;max-height:690px;scrollbar-width:none}
+.live{position:relative;overflow:hidden;background:#fff}
+.live iframe{display:block;border:0;background:#fff;position:absolute;left:0;top:0}
+.phone .screenwrap{border-radius:32px;overflow:hidden;background:#fff}
+.open-card{display:flex;gap:18px;align-items:center;justify-content:space-between;flex-wrap:wrap;margin-top:16px;border:2px solid #c7d2fe;background:linear-gradient(135deg,#eef2ff,#fff)}
+.open-cta{display:flex;flex-direction:column;align-items:flex-end;gap:6px}
+.open-cta .note{margin:0;min-height:1em}
+#openPv{text-decoration:none;font-size:17px;padding:15px 24px}
+.lock{position:absolute;inset:0;z-index:5}
+.locked-frame{position:relative;overflow:hidden}
+.locked-frame iframe{display:block;width:100%;border:0;pointer-events:none}
+.wm{position:absolute;inset:0;pointer-events:none;z-index:4;overflow:hidden}
+.wm span{position:absolute;left:50%;transform:translate(-50%,-50%) rotate(-30deg);font:900 70px/1 system-ui;color:rgba(15,23,42,.12);white-space:nowrap}
+.pill{display:inline-flex;align-items:center;gap:6px;font-size:12px;font-weight:700;padding:4px 10px;border-radius:99px;background:#fef3c7;color:#92400e}
+.pill.g{background:#dcfce7;color:#166534}.pill.b{background:#e0e7ff;color:#3730a3}.pill.r{background:#fee2e2;color:#991b1b}
+.actions{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-top:18px}
+.changes{display:none}.changes.on{display:block}
+.chips{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:12px}
+.chip{border:1px solid #cbd5e1;background:#fff;border-radius:99px;padding:6px 12px;font:inherit;font-size:12.5px;cursor:pointer}
+.chip:hover{border-color:var(--ink)}
+.ap{display:grid;grid-template-columns:1fr 1.05fr;gap:18px;align-items:start}
+.thumb{border-radius:12px;overflow:hidden;border:1px solid var(--line);max-height:380px}
+.thumb{height:380px;position:relative}.thumb iframe{border:0;display:block;pointer-events:none;position:absolute;left:0;top:0}
+.prelaunch{background:#fffbeb;border:1px solid #fde68a;border-radius:12px;padding:12px 14px;margin-top:14px;font-size:13.5px}
+.prelaunch b{display:block;margin-bottom:4px}
+.prelaunch ul{margin:4px 0 0;padding-left:18px}
+.price{width:100%;border-collapse:collapse;font-size:14.5px}
+.price td{padding:10px 0;border-bottom:1px solid var(--line)}
+.price td:last-child{text-align:right;font-weight:700;white-space:nowrap}
+.price tr.tot td{font-size:17px;border-bottom:0;padding-top:14px}
+.opt-box{border:1px solid var(--line);border-radius:12px;padding:12px;margin:12px 0;display:grid;gap:8px}
+.opt-box label{font-weight:500;display:flex;gap:8px;align-items:flex-start;margin:0}
+.done-box{text-align:center;padding:30px 20px}
+.done-box .big-ic{width:64px;height:64px;border-radius:50%;background:#dcfce7;color:var(--ok);display:grid;place-items:center;font-size:30px;margin:0 auto 10px;font-weight:800}
+table.adm{width:100%;border-collapse:collapse;font-size:13.5px}
+table.adm th,table.adm td{padding:9px 8px;border-bottom:1px solid var(--line);text-align:left;vertical-align:top}
+table.adm th{font-size:12px;text-transform:uppercase;letter-spacing:.4px;color:var(--mut)}
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
+.stat{background:#fff;border:1px solid var(--line);border-radius:12px;padding:12px}
+.stat b{display:block;font-size:22px}.stat span{font-size:12px;color:var(--mut)}
+.modal{position:fixed;inset:0;background:rgba(15,23,42,.6);display:none;z-index:50;padding:20px}
+.modal.on{display:flex;align-items:center;justify-content:center}
+.modal .box{background:#fff;border-radius:16px;width:min(1240px,100%);max-height:94vh;display:flex;flex-direction:column;overflow:hidden}
+.modal .mh{display:flex;justify-content:space-between;align-items:center;padding:12px 16px;border-bottom:1px solid var(--line);gap:10px;flex-wrap:wrap}
+.modal iframe{width:100%;height:80vh;border:0}
+.foot{text-align:center;color:var(--mut);font-size:12px;padding:20px}
+@media (max-width:760px){
+ .open-card{flex-direction:column;align-items:stretch}.open-cta{align-items:stretch}#openPv{justify-content:center;text-align:center}
+ .grid2,.grid3,.ap{grid-template-columns:1fr}
+ .acts{grid-template-columns:repeat(3,1fr)}
+ .svc{grid-template-columns:1fr 1fr auto}
+ .svc .d{grid-column:1/-1;order:3}
+ .steps{display:none}
+ .stats{grid-template-columns:1fr 1fr}
+ .phone{width:100%;max-width:340px}
+ table.adm .hide-m{display:none}
+}
+</style>
+</head>
+<body>
+<header class="top"><div class="in">
+  <div class="mark" data-brand-initial>S</div><div class="bname" data-brand>SiteSpark</div>
+  <div class="sp"></div>
+  <nav class="steps" id="stepsNav"><span>1 · Your details</span><span>2 · We build it</span><span>3 · Preview</span><span>4 · Go live</span></nav>
+</div></header>
+
+<main class="wrap">
+
+<!-- ========== STEP 1: INTAKE FORM ========== -->
+<section class="screen" id="screen-form">
+  <div class="hero-a">
+    <h1>Tell us about your business.<br>We'll build your website in minutes.</h1>
+    <p>Fill in the form, our bots design a full website for your trade, and you see a preview straight away. You only pay if you love it.</p>
+    <div class="trust"><span>Free preview</span><span>No card needed</span><span>Made for phones first</span><span>Designed by Design by Baxit</span></div>
+  </div>
+  <form id="intake" novalidate>
+  <div class="card">
+    <div class="row" style="justify-content:space-between;align-items:flex-start"><div><h2>1. The basics</h2><p class="hint">Fields marked <span style="color:var(--bad)">*</span> are required.</p></div>
+      <div class="ex-row"><select id="exPick" aria-label="Example business"></select><button type="button" class="btn ghost sm" id="fillExample">Fill example</button></div></div>
+    <div class="grid2">
+      <div class="f" data-f="name"><label for="f-name">Business name <span class="req">*</span></label><input id="f-name" type="text" name="name" maxlength="60" placeholder="e.g. Smith &amp; Sons Plumbing"><div class="err-msg">Please enter your business name.</div></div>
+      <div class="f" data-f="industry"><label for="industry">Industry <span class="req">*</span></label>
+        <select name="industry" id="industry"><option value="">Choose…</option></select>
+        <input type="text" name="industryOther" id="industryOther" placeholder="Type your trade, e.g. barber, physio, accountant" style="display:none;margin-top:8px" maxlength="40" aria-label="Your trade">
+        <div class="note" id="styleHint" style="margin-top:4px"></div>
+        <div class="err-msg">Please choose your industry (or type it under "Other").</div></div>
+      <div class="f"><label for="f-country">Country</label><select id="f-country" name="country"></select><div class="note">Prices on your site use this currency.</div></div>
+      <div class="f"><label for="f-city">Town / city <span class="opt">(optional)</span></label><input id="f-city" type="text" name="city" maxlength="40" placeholder="e.g. Leeds"></div>
+      <div class="f full"><label for="f-areas">Areas you cover <span class="opt">(optional, comma separated)</span></label><input id="f-areas" type="text" name="areas" maxlength="200" placeholder="e.g. Headingley, Roundhay, Horsforth"></div>
+      <div class="f"><label>Logo <span class="opt">(optional, no logo? we'll make a neat text one)</span></label>
+        <div class="logo-box"><div class="logo-prev" id="logoPrev">No logo</div>
+        <div><input type="file" id="logoFile" accept="image/*" aria-label="Upload logo"><br><button type="button" class="btn ghost sm" id="logoClear" style="display:none;margin-top:6px">Remove logo</button></div></div></div>
+      <div class="f"><label>Colour preference <span class="opt">(optional)</span></label>
+        <select name="colour" id="colour" aria-label="Colour preference"></select>
+        <input type="color" id="colourCustom" value="#0ea5e9" style="display:none;margin-top:8px;width:60px;height:38px;border:0;background:none" aria-label="Custom colour"></div>
+      <div class="f full" data-f="about"><label for="f-about">About your business <span class="req">*</span></label><textarea id="f-about" name="about" maxlength="900" placeholder="Who you are, how long you've been going, what makes you different… We only use facts you write here."></textarea><div class="err-msg">Please write at least a couple of sentences (30+ characters).</div></div>
+    </div>
+  </div>
+  <div class="card">
+    <h2>2. Your services or menu <span style="color:var(--bad)">*</span></h2><p class="hint">Add at least one. Price is optional (numbers only is fine, we add the currency). Tip: group them with a prefix, e.g. <b>Hair: Balayage</b> or <b>Mains: Sirloin</b>.</p>
+    <div id="svcList"></div>
+    <div class="f" data-f="services"><div class="err-msg">Please add at least one service with a name.</div></div>
+    <button type="button" class="btn ghost sm" id="addSvc">+ Add another</button>
+  </div>
+  <div class="card">
+    <h2>3. How should customers reach you?</h2><p class="hint">Your main action becomes the big button on every screen.</p>
+    <div class="acts" id="acts" role="radiogroup" aria-label="Main action">
+      <label><input type="radio" name="mainAction" value="book">Book<small>appointments</small></label>
+      <label><input type="radio" name="mainAction" value="call">Call<small>tap to call</small></label>
+      <label><input type="radio" name="mainAction" value="quote">Get a quote<small>quote / enquiry form</small></label>
+      <label><input type="radio" name="mainAction" value="reserve">Reserve<small>table booking</small></label>
+      <label><input type="radio" name="mainAction" value="whatsapp">WhatsApp<small>chat first</small></label>
+    </div>
+    <div class="grid2" style="margin-top:14px">
+      <div class="f" data-f="phone"><label for="f-phone">Phone <span class="req">*</span></label><input id="f-phone" type="tel" name="phone" maxlength="30" placeholder="e.g. 0113 496 0000"><div class="err-msg">Please enter a phone number.</div></div>
+      <div class="f" data-f="whatsapp"><label for="f-wa">WhatsApp number <span class="opt" id="waOpt">(optional)</span></label><input id="f-wa" type="tel" name="whatsapp" maxlength="30" placeholder="e.g. +44 7700 900000"><div class="err-msg">WhatsApp is your main action, so please add your WhatsApp number.</div></div>
+      <div class="f" data-f="email"><label for="f-email">Email <span class="req">*</span></label><input id="f-email" type="email" name="email" maxlength="80" placeholder="you@business.com"><div class="err-msg">Please enter a valid email address.</div></div>
+      <div class="f"><label for="f-address">Address <span class="opt">(optional)</span></label><input id="f-address" type="text" name="address" maxlength="120" placeholder="Street, town, postcode"></div>
+      <div class="f full"><label for="f-hours">Opening hours <span class="opt">(optional, one per line)</span></label><textarea id="f-hours" name="hours" style="min-height:76px" maxlength="300" placeholder="Mon–Fri: 8am–6pm&#10;Sat: 9am–1pm"></textarea></div>
+    </div>
+  </div>
+  <div class="card">
+    <h2>4. Photos, reviews &amp; numbers <span style="font-weight:400;color:var(--mut)">(all optional)</span></h2>
+    <p class="hint">Real photos and reviews sell best. If you skip them, your preview uses stock photos and clearly labelled sample reviews, which we swap for your real ones before launch.</p>
+    <div class="f"><label>Your photos <span class="opt">(up to 6: your work, team, premises)</span></label>
+      <div class="drop"><input type="file" id="photoFile" accept="image/*" multiple aria-label="Upload photos"> <span id="photoCount">0 / 6</span></div>
+      <div class="photos" id="photoList"></div></div>
+    <div class="f" id="baField" style="margin-top:14px"><label>Before &amp; after photos <span class="opt">(optional, your own work only: up to 4 pairs)</span></label>
+      <p class="hint" style="margin:0 0 6px">Only add pairs you took yourself, with the client's permission. Your site shows a before/after slider only when you add them; we never use stock photos as results.</p>
+      <div class="drop ba-drop"><label class="btn ghost sm" for="baBefore">1 · Before photo</label><input type="file" id="baBefore" accept="image/*" aria-label="Before photo" style="position:absolute;opacity:0;width:1px;height:1px">
+        <label class="btn ghost sm" for="baAfter">2 · After photo</label><input type="file" id="baAfter" accept="image/*" aria-label="After photo" style="position:absolute;opacity:0;width:1px;height:1px">
+        <input type="text" id="baLabel" maxlength="40" placeholder="What was done (e.g. Whitening)" aria-label="Before and after label" style="max-width:230px">
+        <button type="button" class="btn sm" id="baAdd" disabled>Add pair</button> <span id="baCount">0 / 4</span>
+        <div class="note" id="baStage" role="status" aria-live="polite"></div></div>
+      <div class="photos ba-list" id="baList"></div></div>
+    <div class="grid2" style="margin-top:14px">
+      <div class="f"><label for="f-reviews">Real customer reviews <span class="opt">(one per line: quote — Name)</span></label><textarea id="f-reviews" name="reviews" maxlength="1500" placeholder="Turned up on time and left it spotless. — Helen R."></textarea></div>
+      <div class="f full" id="insField"><label for="f-insurance">Insurance, NHS &amp; payment plans <span class="opt">(optional: only what you really offer)</span></label><textarea id="f-insurance" name="insurance" maxlength="500" style="min-height:70px" placeholder="NHS &amp; private patients&#10;We accept Bupa, AXA and Denplan&#10;0% finance on treatments over £1,000"></textarea></div>
+      <div class="f"><label for="f-stats">Numbers you can stand behind <span class="opt">(one per line: number | label)</span></label><textarea id="f-stats" name="stats" maxlength="400" placeholder="12+ | years in business&#10;1,500 | jobs completed"></textarea></div>
+    </div>
+  </div>
+  <div class="card">
+    <h2>5. Social links <span style="font-weight:400;color:var(--mut)">(optional)</span></h2>
+    <div class="grid3">
+      <div class="f"><label for="f-fb">Facebook page</label><input id="f-fb" type="url" name="facebook" maxlength="120" placeholder="https://facebook.com/…"></div>
+      <div class="f"><label for="f-ig">Instagram</label><input id="f-ig" type="url" name="instagram" maxlength="120" placeholder="https://instagram.com/…"></div>
+      <div class="f"><label for="f-other">Other link (Google reviews, TikTok…)</label><input id="f-other" type="url" name="other" maxlength="120" placeholder="https://…"></div>
+    </div>
+  </div>
+  <div class="sticky-act">
+    <span class="note">Free to preview. No card needed.</span>
+    <button type="submit" class="btn big" id="buildBtn">Build my website →</button>
+  </div>
+  <div class="banner-err" id="formErr" role="alert">Please fix the highlighted fields above.</div>
+  </form>
+</section>
+
+<!-- ========== STEP 2: PIPELINE ========== -->
+<section class="screen" id="screen-pipeline">
+  <div class="hero-a"><h1 id="pipeTitle">Building your website…</h1><p>Three bots pass your details along, one after the other.</p></div>
+  <div class="pipe">
+    <div class="bot" id="bot1"><div class="ic">1</div><div><h3>Intake bot</h3><div class="st">Waiting…</div><ul></ul></div></div>
+    <div class="arrow">↓</div>
+    <div class="bot" id="bot2"><div class="ic">2</div><div><h3>Builder bot</h3><div class="st">Waiting…</div><ul></ul></div></div>
+    <div class="arrow">↓</div>
+    <div class="bot" id="bot3"><div class="ic">3</div><div><h3>Preview bot</h3><div class="st">Waiting…</div><ul></ul></div></div>
+  </div>
+</section>
+
+<!-- ========== STEP 3: PREVIEW ========== -->
+<section class="screen" id="screen-preview">
+  <div class="pv-head">
+    <div><h1 style="margin:0;font-size:24px;letter-spacing:-.4px">Your website preview is ready</h1>
+    <div class="row" style="margin-top:4px"><span class="pill g">● Live preview</span><span class="pill b" id="pvRev">Version 1</span></div></div>
+    <div class="toggle" role="tablist" aria-label="Device"><button type="button" class="on" data-dev="desktop" role="tab">Desktop</button><button type="button" data-dev="mobile" role="tab">Mobile</button></div>
+  </div>
+  <div class="card open-card">
+    <div><h2 style="margin:0 0 4px">See your full website</h2><p class="hint" style="margin:0">Opens in a new tab. Everything works: the menu, buttons, animations, sliders and forms (forms send nothing in a preview).</p></div>
+    <div class="open-cta"><a class="btn big" id="openPv" href="#" target="_blank" rel="noopener">Open your website preview ↗</a><p class="note" id="pvOpened" role="status" aria-live="polite"></p></div>
+  </div>
+  <div class="dnav" id="dnav" role="group" aria-label="Choose a design">
+    <button type="button" class="btn ghost sm" id="dPrev">← Previous design</button>
+    <span class="pill b" id="dPos" aria-live="polite">Design 1 of 1</span>
+    <button type="button" class="btn ghost sm" id="dNext">Show me another design →</button>
+  </div>
+  <p class="note" id="dNote" style="text-align:center;margin:6px 0 0">Step back and forth through designs. The one showing when you press Apply is the one we keep.</p>
+  <p class="note" style="text-align:center;margin:18px 0 0">Or try it right here. Scroll and click inside the frame.</p>
+  <div class="stage" id="stage"></div>
+  <p class="note" id="pvSamples" style="text-align:center;margin:12px auto 0;max-width:760px"></p>
+  <div class="actions">
+    <button type="button" class="btn ghost big" id="reqBtn">Request changes</button>
+    <button type="button" class="btn green big" id="approveBtn">Approve &amp; go live →</button>
+  </div>
+  <div class="card changes" id="changes">
+    <h2>What would you like to change?</h2><p class="hint">Pick a quick option or describe it. The Builder bot re-runs with your changes.</p>
+    <div class="chips" id="chips">
+      <button type="button" class="chip" data-t="Show me another design">Show me another design</button>
+      <button type="button" class="chip" data-t="Make it darker">Make it darker</button>
+      <button type="button" class="chip" data-t="Make it lighter">Make it lighter</button>
+      <button type="button" class="chip" data-t="Use green as the main colour">Green colour</button>
+      <button type="button" class="chip" data-t="Use blue as the main colour">Blue colour</button>
+      <button type="button" class="chip" data-t="Use gold as the main colour">Gold colour</button>
+    </div>
+    <div class="grid2">
+      <div><label for="chTheme">Style</label><select id="chTheme"><option value="">Keep current style</option></select></div>
+      <div><label for="chColour">Main colour</label><select id="chColour"><option value="">Keep current colour</option></select></div>
+      <div class="full"><label for="chHeadline">New headline <span class="opt">(optional)</span></label><input type="text" id="chHeadline" maxlength="90" placeholder="e.g. Leeds' friendliest plumbers"></div>
+      <div class="full"><label for="chNotes">Anything else?</label><textarea id="chNotes" maxlength="600" placeholder="e.g. Make it darker, use blue, mention we're Gas Safe registered…"></textarea></div>
+    </div>
+    <div class="row" style="margin-top:12px;justify-content:space-between">
+      <button type="button" class="btn ghost sm" id="editDetails">Edit my details instead</button>
+      <button type="button" class="btn" id="rerunBtn">Send to Builder bot ↻</button>
+    </div>
+    <p class="note" style="margin-top:10px">Demo: style, colour and headline changes apply automatically, and words like "dark", "light", a colour name or a style name (clinic, restaurant, salon…) in your note are picked up. Other notes are saved for the team (the live version passes them to the AI builder).</p>
+  </div>
+  <p class="note" style="text-align:center;margin:16px auto 0;max-width:760px">Your website goes live on your own address once you approve.<br><i>Demo note: here the preview is built inside your browser. In the live version it is a private link on our server (for example preview.sitespark.site/your-id) that expires after a few days, so you can open it on your phone or send it to a partner.</i></p>
+</section>
+
+<!-- ========== STEP 4: APPROVE ========== -->
+<section class="screen" id="screen-approve">
+  <div class="hero-a"><h1>Great choice. Let's put it live.</h1><p>Here's exactly what you'll pay. Cancel the monthly plan any time.</p></div>
+  <div class="ap">
+    <div class="card"><h2 id="apName">Your website</h2><p class="hint">Approved version <span id="apRev"></span></p><div class="thumb" id="apThumb"></div>
+      <p style="margin:10px 0 0"><a id="apOpen" href="#" target="_blank" rel="noopener">Open the approved version in a new tab ↗</a></p>
+      <div class="prelaunch" id="apPre"></div></div>
+    <div class="card">
+      <h2>Your plan</h2>
+      <div class="opt-box">
+        <label><input type="radio" name="dom" value="free" checked> <span><b>Free web address</b><br><span class="note" id="freeSub">yourbusiness.sitespark.site</span></span></label>
+        <label><input type="radio" name="dom" value="connect"> <span><b>Connect my own domain</b> (<span id="domFee">+$10</span> one-time)<br><span class="note">You already own e.g. yourbusiness.co.uk and we connect it for you.</span></span></label>
+      </div>
+      <table class="price" id="priceTbl"></table>
+      <div class="f" style="margin-top:12px"><label for="payEmail">Email for your receipt</label><input type="email" id="payEmail"></div>
+      <button type="button" class="btn green big" id="payBtn" style="width:100%;margin-top:14px">Pay &amp; go live</button>
+      <p class="note" style="text-align:center;margin-top:8px">Monthly plan covers hosting, SSL, security updates and small text changes.</p>
+      <button type="button" class="btn ghost sm" id="backPreview">← Back to preview</button>
+    </div>
+  </div>
+</section>
+
+<!-- ========== THANKS (fake door result) ========== -->
+<section class="screen" id="screen-thanks">
+  <div class="card done-box">
+    <div class="big-ic">✓</div>
+    <h1 style="margin:0 0 6px">You're on the early-access list</h1>
+    <p style="max-width:560px;margin:0 auto 6px">Online payments aren't switched on yet, so <b>no money has been taken</b>. We've saved your approved website and we'll email <b id="thxEmail"></b> as soon as you can go live.</p>
+    <p class="note">(Demo fake door: this records that you'd pay, so we can measure real interest.)</p>
+    <div class="actions"><button type="button" class="btn ghost" id="startOver">Start a new website</button></div>
+  </div>
+</section>
+
+<!-- ========== ADMIN ========== -->
+<section class="screen" id="screen-admin">
+  <div class="row" style="justify-content:space-between">
+    <div><h1 style="margin:0;font-size:24px">Agency admin <span class="pill r">Internal</span></h1><p class="note" style="margin:2px 0 0">Submissions saved in this browser (localStorage). Only the agency side opens full sites.</p></div>
+    <div class="row"><a class="btn ghost sm" href="#">← Client view</a><button class="btn ghost sm" id="exportBtn">Export JSON</button><button class="btn ghost sm" id="clearBtn" style="color:var(--bad)">Clear all</button></div>
+  </div>
+  <div class="stats" style="margin-top:14px" id="stats"></div>
+  <div class="card" style="overflow-x:auto"><table class="adm" id="admTbl"></table></div>
+</section>
+</main>
+<div class="foot"><span data-brand>SiteSpark</span> demo · sites designed with Design by Baxit · <a href="#admin">Admin</a></div>
+
+<div class="modal" id="siteModal"><div class="box">
+  <div class="mh"><b id="smTitle">Full site</b><div class="row"><span class="pill r">Agency only</span><button class="btn ghost sm" id="smDownload">Download .html</button><button class="btn ghost sm" id="smOpen">Open in new tab</button><button class="btn sm" id="smClose">Close</button></div></div>
+  <iframe id="smFrame" sandbox="allow-scripts allow-popups" title="Full site"></iframe>
+</div></div>
+<script>
+/*__SCRIPT__*/
+</script>
+</body>
+</html>

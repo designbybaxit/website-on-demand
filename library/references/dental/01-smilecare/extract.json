@@ -1,0 +1,705 @@
+{
+ "title": "Smilecare – Dental Care",
+ "url": "https://smilecare.1onestrong.com/?storefront=envato-elements",
+ "height": 5013,
+ "bg": [
+  [
+   "rgba(255, 255, 255, 0)",
+   15
+  ],
+  [
+   "rgb(255, 255, 255)",
+   8
+  ],
+  [
+   "rgb(3, 5, 65)",
+   6
+  ],
+  [
+   "rgb(82, 205, 129)",
+   5
+  ],
+  [
+   "rgba(2, 1, 1, 0)",
+   4
+  ],
+  [
+   "rgb(244, 244, 244)",
+   3
+  ],
+  [
+   "rgb(233, 239, 248)",
+   3
+  ],
+  [
+   "rgb(198, 255, 241)",
+   3
+  ],
+  [
+   "rgb(57, 195, 185)",
+   2
+  ],
+  [
+   "rgb(72, 42, 253)",
+   1
+  ],
+  [
+   "rgb(71, 45, 255)",
+   1
+  ],
+  [
+   "rgb(0, 0, 0)",
+   1
+  ]
+ ],
+ "fg": [
+  [
+   "rgb(3, 5, 65)",
+   67
+  ],
+  [
+   "rgb(204, 214, 223)",
+   30
+  ],
+  [
+   "rgb(233, 239, 248)",
+   16
+  ],
+  [
+   "rgb(0, 0, 0)",
+   12
+  ],
+  [
+   "rgb(255, 255, 255)",
+   9
+  ],
+  [
+   "rgb(90, 90, 90)",
+   6
+  ],
+  [
+   "rgb(72, 42, 253)",
+   5
+  ],
+  [
+   "rgb(57, 195, 185)",
+   4
+  ]
+ ],
+ "fonts": [
+  [
+   "Poppins",
+   100
+  ],
+  [
+   "Arial",
+   30
+  ],
+  [
+   "\"Red Hat Display\"",
+   19
+  ]
+ ],
+ "heads": [
+  [
+   "H2|Poppins|400|12px",
+   11
+  ],
+  [
+   "H2|Poppins|500|17px",
+   9
+  ],
+  [
+   "H3|Poppins|600|19px",
+   5
+  ],
+  [
+   "H2|\"Red Hat Display\"|500|14px",
+   4
+  ],
+  [
+   "H2|Poppins|600|19px",
+   4
+  ],
+  [
+   "H2|\"Red Hat Display\"|800|45px",
+   2
+  ],
+  [
+   "H2|\"Red Hat Display\"|900|85px",
+   1
+  ],
+  [
+   "H2|\"Red Hat Display\"|800|33px",
+   1
+  ],
+  [
+   "H3|\"Red Hat Display\"|800|33px",
+   1
+  ],
+  [
+   "H3|Poppins|700|25px",
+   1
+  ],
+  [
+   "H3|\"Red Hat Display\"|900|85px",
+   1
+  ],
+  [
+   "H3|\"Red Hat Display\"|500|14px",
+   1
+  ]
+ ],
+ "btns": [
+  {
+   "t": "021 778 9600",
+   "bg": "rgba(0, 0, 0, 0)",
+   "c": "rgb(3, 5, 65)",
+   "r": "0px",
+   "pad": "0px",
+   "ff": "Poppins",
+   "fw": "300",
+   "tt": "none",
+   "border": "0px none rgb(3, 5, 65)"
+  },
+  {
+   "t": "021 778 9600",
+   "bg": "rgba(0, 0, 0, 0)",
+   "c": "rgb(3, 5, 65)",
+   "r": "0px",
+   "pad": "0px",
+   "ff": "Poppins",
+   "fw": "300",
+   "tt": "none",
+   "border": "0px none rgb(3, 5, 65)"
+  },
+  {
+   "t": "021 778 9600",
+   "bg": "rgb(72, 42, 253)",
+   "c": "rgb(255, 255, 255)",
+   "r": "0px",
+   "pad": "15px",
+   "ff": "\"Red Hat Display\"",
+   "fw": "500",
+   "tt": "uppercase",
+   "border": "0px none rgb(255, 255, 255)"
+  },
+  {
+   "t": "021 778 9600",
+   "bg": "rgba(0, 0, 0, 0)",
+   "c": "rgb(255, 255, 255)",
+   "r": "0px",
+   "pad": "0px",
+   "ff": "\"Red Hat Display\"",
+   "fw": "500",
+   "tt": "uppercase",
+   "border": "0px none rgb(255, 255, 255)"
+  },
+  {
+   "t": "",
+   "bg": "rgba(0, 0, 0, 0)",
+   "c": "rgb(255, 255, 255)",
+   "r": "0px",
+   "pad": "0px",
+   "ff": "\"Red Hat Display\"",
+   "fw": "500",
+   "tt": "uppercase",
+   "border": "0px none rgb(255, 255, 255)"
+  },
+  {
+   "t": "021 778 9600",
+   "bg": "rgba(0, 0, 0, 0)",
+   "c": "rgb(255, 255, 255)",
+   "r": "0px",
+   "pad": "0px",
+   "ff": "\"Red Hat Display\"",
+   "fw": "500",
+   "tt": "uppercase",
+   "border": "0px none rgb(255, 255, 255)"
+  },
+  {
+   "t": "MAKE AN APPOINMENT",
+   "bg": "rgba(0, 0, 0, 0)",
+   "c": "rgb(3, 5, 65)",
+   "r": "0px",
+   "pad": "0px",
+   "ff": "Poppins",
+   "fw": "300",
+   "tt": "none",
+   "border": "0px none rgb(3, 5, 65)"
+  },
+  {
+   "t": "MAKE AN APPOINMENT",
+   "bg": "rgba(0, 0, 0, 0)",
+   "c": "rgb(3, 5, 65)",
+   "r": "0px",
+   "pad": "0px",
+   "ff": "Poppins",
+   "fw": "300",
+   "tt": "none",
+   "border": "0px none rgb(3, 5, 65)"
+  },
+  {
+   "t": "MAKE AN APPOINMENT",
+   "bg": "rgb(71, 45, 255)",
+   "c": "rgb(255, 255, 255)",
+   "r": "0px",
+   "pad": "20px 35px",
+   "ff": "\"Red Hat Display\"",
+   "fw": "500",
+   "tt": "uppercase",
+   "border": "0px none rgb(255, 255, 255)"
+  },
+  {
+   "t": "MAKE AN APPOINMENT",
+   "bg": "rgba(0, 0, 0, 0)",
+   "c": "rgb(255, 255, 255)",
+   "r": "0px",
+   "pad": "0px",
+   "ff": "\"Red Hat Display\"",
+   "fw": "500",
+   "tt": "uppercase",
+   "border": "0px none rgb(255, 255, 255)"
+  },
+  {
+   "t": "MAKE AN APPOINMENT",
+   "bg": "rgba(0, 0, 0, 0)",
+   "c": "rgb(255, 255, 255)",
+   "r": "0px",
+   "pad": "0px",
+   "ff": "\"Red Hat Display\"",
+   "fw": "500",
+   "tt": "uppercase",
+   "border": "0px none rgb(255, 255, 255)"
+  },
+  {
+   "t": "LEARN MORE",
+   "bg": "rgba(0, 0, 0, 0)",
+   "c": "rgb(3, 5, 65)",
+   "r": "0px",
+   "pad": "0px",
+   "ff": "Poppins",
+   "fw": "300",
+   "tt": "none",
+   "border": "0px none rgb(3, 5, 65)"
+  }
+ ],
+ "sections": [
+  {
+   "tag": "SECTION",
+   "cls": "elementor-section elementor-top-section elementor-element elementor-element-020424e she-header-yes elementor-section-box",
+   "y": 0,
+   "h": 87,
+   "bg": "rgba(0, 0, 0, 0)",
+   "bgimg": "none",
+   "heads": [],
+   "imgs": 2,
+   "forms": 0,
+   "inputs": 0,
+   "widgets": [
+    "image.default",
+    "ekit-nav-menu.default",
+    "button.default"
+   ],
+   "swipers": 0,
+   "counters": 0,
+   "accordions": 6,
+   "videos": 0,
+   "anims": []
+  },
+  {
+   "tag": "SECTION",
+   "cls": "elementor-section elementor-top-section elementor-element elementor-element-0c91bf7 elementor-section-height-min-height ",
+   "y": 0,
+   "h": 794,
+   "bg": "rgb(57, 195, 185)",
+   "bgimg": "none",
+   "heads": [
+    "H2: WELCOME TO SMILECARE DENTAL",
+    "H2: Dental Care",
+    "H2: SERVING PATIENTS OF ALL AGES"
+   ],
+   "imgs": 1,
+   "forms": 0,
+   "inputs": 0,
+   "widgets": [
+    "heading.default",
+    "button.default",
+    "image.default"
+   ],
+   "swipers": 0,
+   "counters": 0,
+   "accordions": 0,
+   "videos": 0,
+   "anims": [
+    "fadeInUp"
+   ]
+  },
+  {
+   "tag": "SECTION",
+   "cls": "elementor-section elementor-top-section elementor-element elementor-element-e70fdbe elementor-section-boxed elementor-se",
+   "y": 708,
+   "h": 355,
+   "bg": "rgba(0, 0, 0, 0)",
+   "bgimg": "none",
+   "heads": [
+    "H2: Dental Implants",
+    "H2: Tooth Extractions",
+    "H2: General Dentistry",
+    "H2: Cosmetic Dentistry",
+    "H2: Implants Destures",
+    "H2: Oral Surgery",
+    "H2: Restorations",
+    "H2: Cleaning Prevention"
+   ],
+   "imgs": 8,
+   "forms": 0,
+   "inputs": 0,
+   "widgets": [
+    "image.default",
+    "heading.default",
+    "elementskit-icon-box.default"
+   ],
+   "swipers": 0,
+   "counters": 0,
+   "accordions": 0,
+   "videos": 0,
+   "anims": []
+  },
+  {
+   "tag": "SECTION",
+   "cls": "elementor-section elementor-top-section elementor-element elementor-element-e89ac23 elementor-section-boxed elementor-se",
+   "y": 1063,
+   "h": 389,
+   "bg": "rgba(0, 0, 0, 0)",
+   "bgimg": "linear-gradient(rgb(255, 255, 255) 0%, rgb(233, 239, 248) 10",
+   "heads": [
+    "H2: WE ARE COMPASSIONATE DENTAL PROFESSIONALS",
+    "H2: We Care About Your Dental Health"
+   ],
+   "imgs": 0,
+   "forms": 0,
+   "inputs": 0,
+   "widgets": [
+    "heading.default",
+    "elementskit-heading.default",
+    "text-editor.default",
+    "button.default"
+   ],
+   "swipers": 0,
+   "counters": 0,
+   "accordions": 0,
+   "videos": 0,
+   "anims": [
+    "fadeInUp",
+    "none"
+   ]
+  },
+  {
+   "tag": "SECTION",
+   "cls": "elementor-section elementor-top-section elementor-element elementor-element-fed19f0 elementor-section-boxed elementor-se",
+   "y": 1452,
+   "h": 699,
+   "bg": "rgba(0, 0, 0, 0)",
+   "bgimg": "linear-gradient(rgb(233, 239, 248) 0%, rgb(255, 255, 255) 10",
+   "heads": [
+    "H3: More Than 8+"
+   ],
+   "imgs": 0,
+   "forms": 0,
+   "inputs": 0,
+   "widgets": [
+    "spacer.default",
+    "elementskit-icon-box.default"
+   ],
+   "swipers": 0,
+   "counters": 0,
+   "accordions": 0,
+   "videos": 0,
+   "anims": [
+    "fadeInUp"
+   ]
+  },
+  {
+   "tag": "SECTION",
+   "cls": "elementor-section elementor-top-section elementor-element elementor-element-0053f16 elementor-section-height-min-height ",
+   "y": 2150,
+   "h": 742,
+   "bg": "rgba(0, 0, 0, 0)",
+   "bgimg": "url(\"https://smilecare.1onestrong.com/wp-content/uploads/202",
+   "heads": [
+    "H2: DR. JOHN KOHLER",
+    "H2: Smilecare Helping Create A Stunning Smile"
+   ],
+   "imgs": 2,
+   "forms": 0,
+   "inputs": 0,
+   "widgets": [
+    "image.default",
+    "heading.default",
+    "elementskit-heading.default",
+    "text-editor.default",
+    "button.default"
+   ],
+   "swipers": 0,
+   "counters": 0,
+   "accordions": 0,
+   "videos": 0,
+   "anims": [
+    "fadeInUp",
+    "none"
+   ]
+  },
+  {
+   "tag": "SECTION",
+   "cls": "elementor-section elementor-top-section elementor-element elementor-element-4d185ad elementor-section-boxed elementor-se",
+   "y": 2892,
+   "h": 410,
+   "bg": "rgba(0, 0, 0, 0)",
+   "bgimg": "none",
+   "heads": [
+    "H3: FREE ONLINE",
+    "H2: WITH OUR DOCTORS"
+   ],
+   "imgs": 1,
+   "forms": 0,
+   "inputs": 0,
+   "widgets": [
+    "image.default",
+    "image-box.default",
+    "heading.default",
+    "icon.default"
+   ],
+   "swipers": 0,
+   "counters": 0,
+   "accordions": 0,
+   "videos": 0,
+   "anims": []
+  },
+  {
+   "tag": "SECTION",
+   "cls": "elementor-section elementor-top-section elementor-element elementor-element-acd4022 elementor-section-boxed elementor-se",
+   "y": 3302,
+   "h": 231,
+   "bg": "rgba(0, 0, 0, 0)",
+   "bgimg": "none",
+   "heads": [
+    "H3: TEAM MEMBERS"
+   ],
+   "imgs": 0,
+   "forms": 0,
+   "inputs": 0,
+   "widgets": [
+    "image-box.default",
+    "elementskit-heading.default"
+   ],
+   "swipers": 0,
+   "counters": 0,
+   "accordions": 0,
+   "videos": 0,
+   "anims": []
+  },
+  {
+   "tag": "SECTION",
+   "cls": "elementor-section elementor-top-section elementor-element elementor-element-4b8714b elementor-section-boxed elementor-se",
+   "y": 3605,
+   "h": 257,
+   "bg": "rgba(0, 0, 0, 0)",
+   "bgimg": "linear-gradient(rgb(255, 255, 255) 0%, rgb(233, 239, 248) 10",
+   "heads": [
+    "H3: Dr. Andreas",
+    "H2: FOLLOW ON",
+    "H2: RATING",
+    "H3: Dr. Andreas",
+    "H2: FOLLOW ON",
+    "H2: RATING",
+    "H3: Dr. Andreas",
+    "H2: FOLLOW ON"
+   ],
+   "imgs": 5,
+   "forms": 0,
+   "inputs": 0,
+   "widgets": [
+    "image.default",
+    "icon.default",
+    "image-box.default",
+    "heading.default",
+    "social-icons.default",
+    "star-rating.default"
+   ],
+   "swipers": 0,
+   "counters": 0,
+   "accordions": 0,
+   "videos": 0,
+   "anims": []
+  },
+  {
+   "tag": "SECTION",
+   "cls": "elementor-section elementor-top-section elementor-element elementor-element-2693b05 elementor-section-height-min-height ",
+   "y": 3863,
+   "h": 630,
+   "bg": "rgba(0, 0, 0, 0)",
+   "bgimg": "linear-gradient(rgb(233, 239, 248) 0%, rgb(255, 255, 255) 64",
+   "heads": [
+    "H3: Review"
+   ],
+   "imgs": 5,
+   "forms": 0,
+   "inputs": 0,
+   "widgets": [
+    "image-box.default",
+    "image.default",
+    "elementskit-testimonial.default"
+   ],
+   "swipers": 1,
+   "counters": 0,
+   "accordions": 0,
+   "videos": 0,
+   "anims": []
+  },
+  {
+   "tag": "SECTION",
+   "cls": "elementor-section elementor-top-section elementor-element elementor-element-c6ca63e elementor-section-boxed elementor-se",
+   "y": 4608,
+   "h": 351,
+   "bg": "rgb(3, 5, 65)",
+   "bgimg": "none",
+   "heads": [
+    "H2: All Your Implant & Dental Needs. All in Office.",
+    "H2: FOLLOW US",
+    "H2: ABOUT",
+    "H2: TREATMENT",
+    "H2: PATIENT RESULTS",
+    "H2: CONTACT US"
+   ],
+   "imgs": 1,
+   "forms": 0,
+   "inputs": 0,
+   "widgets": [
+    "image.default",
+    "heading.default",
+    "social-icons.default",
+    "icon-list.default"
+   ],
+   "swipers": 0,
+   "counters": 0,
+   "accordions": 0,
+   "videos": 0,
+   "anims": []
+  }
+ ],
+ "scripts": [
+  "js/v4-shims.min.js",
+  "jquery/jquery.min.js",
+  "jquery/jquery-migrate.min.js",
+  "public/template-kit-export-public.js",
+  "js/she-header.js",
+  "chunks/section-stretched-section.min.js",
+  "chunks/background-slideshow.min.js",
+  "chunks/background-video.min.js",
+  "chunks/text-editor.min.js",
+  "js/wp-emoji-release.min.js",
+  "cute-alert/cute-alert.js",
+  "js/hello-frontend.min.js",
+  "js/webpack.runtime.min.js",
+  "js/frontend-modules.min.js",
+  "ui/core.min.js",
+  "js/frontend.min.js",
+  "widgets/core.js",
+  "widgets/testimonial.js",
+  "v8/swiper.min.js",
+  "js/nav-menu.js",
+  "widgets/nav-menu.js",
+  "magnific-popup/jquery.magnific-popup.min.js",
+  "widgets/header-search.js",
+  "widgets/header-offcanvas.js",
+  "beacon.min.js/vce701823e78c4301a35b7e07294d87301792088814092"
+ ],
+ "fontLinks": [
+  "https://smilecare.1onestrong.com/wp-content/plugins/elementor/assets/lib/font-awesome/css/all.min.css?ver=4.3.5",
+  "https://smilecare.1onestrong.com/wp-content/plugins/elementor/assets/lib/font-awesome/css/v4-shims.min.css?ver=4.3.5",
+  "https://smilecare.1onestrong.com/wp-content/uploads/elementor/google-fonts/css/redhatdisplay.css?ver=1742251603",
+  "https://smilecare.1onestrong.com/wp-content/uploads/elementor/google-fonts/css/poppins.css?ver=1742251604",
+  "https://smilecare.1onestrong.com/wp-content/plugins/elementor/assets/lib/font-awesome/css/fontawesome.min.css?ver=5.15.3",
+  "https://smilecare.1onestrong.com/wp-content/plugins/elementor/assets/lib/font-awesome/css/brands.min.css?ver=5.15.3",
+  "https://smilecare.1onestrong.com/wp-content/plugins/elementor/assets/lib/font-awesome/css/solid.min.css?ver=5.15.3",
+  "https://smilecare.1onestrong.com/wp-content/plugins/elementor/assets/lib/font-awesome/css/regular.min.css?ver=5.15.3"
+ ],
+ "fontFaces": [
+  "Font Awesome 5 Brands 400 normal loaded",
+  "Font Awesome 5 Free 400 normal loaded",
+  "Font Awesome 5 Free 900 normal loaded",
+  "swiper-icons 400 normal unloaded",
+  "eicons 400 normal unloaded",
+  "Red Hat Display 300 italic unloaded",
+  "Red Hat Display 400 italic unloaded",
+  "Red Hat Display 500 italic unloaded",
+  "Red Hat Display 500 italic loaded",
+  "Red Hat Display 600 italic unloaded",
+  "Red Hat Display 700 italic unloaded",
+  "Red Hat Display 800 italic unloaded",
+  "Red Hat Display 900 italic unloaded",
+  "Red Hat Display 300 normal unloaded",
+  "Red Hat Display 400 normal unloaded",
+  "Red Hat Display 500 normal unloaded",
+  "Red Hat Display 500 normal loaded",
+  "Red Hat Display 600 normal unloaded",
+  "Red Hat Display 700 normal unloaded",
+  "Red Hat Display 800 normal unloaded",
+  "Red Hat Display 800 normal loaded",
+  "Red Hat Display 900 normal unloaded",
+  "Red Hat Display 900 normal loaded",
+  "Poppins 100 italic unloaded",
+  "Poppins 200 italic unloaded",
+  "Poppins 300 italic unloaded",
+  "Poppins 300 italic loaded",
+  "Poppins 400 italic unloaded",
+  "Poppins 500 italic unloaded",
+  "Poppins 600 italic unloaded"
+ ],
+ "vars": {
+  "--wp--preset--color--black": "#000000",
+  "--wp--preset--color--cyan-bluish-gray": "#abb8c3",
+  "--wp--preset--color--white": "#ffffff",
+  "--wp--preset--color--pale-pink": "#f78da7",
+  "--wp--preset--color--vivid-red": "#cf2e2e",
+  "--wp--preset--color--luminous-vivid-orange": "#ff6900",
+  "--wp--preset--color--luminous-vivid-amber": "#fcb900",
+  "--wp--preset--color--light-green-cyan": "#7bdcb5",
+  "--wp--preset--color--vivid-green-cyan": "#00d084",
+  "--wp--preset--color--pale-cyan-blue": "#8ed1fc",
+  "--wp--preset--color--vivid-cyan-blue": "#0693e3",
+  "--wp--preset--color--vivid-purple": "#9b51e0",
+  "--e-global-color-primary": "#030541",
+  "--e-global-color-secondary": "#000000",
+  "--e-global-color-text": "#5A5A5A",
+  "--e-global-color-accent": "#FFFFFF",
+  "--e-global-color-564c7cb": "#39C3B9",
+  "--e-global-color-c65a16e": "#482AFD",
+  "--e-global-color-4a98ddb": "#86868645",
+  "--e-global-color-46e9c07": "#E9EFF8",
+  "--e-global-color-ed6200c": "#86868624",
+  "--e-global-color-f526d2f": "#C6FFF1",
+  "--e-global-color-e69ba7a": "#293742",
+  "--e-global-color-9be1d4b": "#F6F6F6",
+  "--e-global-color-adb38a0": "#F7F9FB",
+  "--e-global-typography-primary-font-family": "\"Red Hat Display\"",
+  "--e-global-typography-secondary-font-family": "\"Red Hat Display\"",
+  "--e-global-typography-text-font-family": "\"Poppins\"",
+  "--e-global-typography-accent-font-family": "\"Red Hat Display\"",
+  "--e-global-typography-e6f363f-font-family": "\"Red Hat Display\"",
+  "--e-global-typography-6dec1cc-font-family": "\"Poppins\"",
+  "--e-global-typography-5840fee-font-family": "\"Poppins\"",
+  "--e-global-typography-21dcc2f-font-family": "\"Poppins\"",
+  "--e-global-typography-6bdfb5b-font-family": "\"Red Hat Display\"",
+  "--e-global-typography-f4734e2-font-family": "\"Poppins\"",
+  "--e-global-typography-ae770e6-font-family": "\"Poppins\"",
+  "--e-global-typography-e1f1a99-font-family": "\"Poppins\"",
+  "--e-global-typography-c45fdf5-font-family": "\"Poppins\"",
+  "--swiper-theme-color": "#007aff"
+ },
+ "cssAnims": [
+  "animated"
+ ],
+ "httpStatus": 200
+}

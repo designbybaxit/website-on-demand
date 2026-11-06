@@ -1,0 +1,464 @@
+{
+ "title": "Denty – Dental Care Elementor Template Kit",
+ "url": "https://fatma-studio.com/denty/?storefront=envato-elements",
+ "height": 10415,
+ "bg": [
+  [
+   "rgba(2, 1, 1, 0)",
+   16
+  ],
+  [
+   "rgb(255, 255, 255)",
+   14
+  ],
+  [
+   "rgb(250, 254, 255)",
+   11
+  ],
+  [
+   "rgb(61, 143, 120)",
+   6
+  ],
+  [
+   "rgb(10, 132, 255)",
+   4
+  ],
+  [
+   "rgba(0, 0, 0, 0.32)",
+   4
+  ],
+  [
+   "rgb(255, 200, 87)",
+   3
+  ],
+  [
+   "rgb(255, 217, 160)",
+   3
+  ],
+  [
+   "rgb(37, 117, 252)",
+   3
+  ],
+  [
+   "rgba(255, 255, 255, 0.23)",
+   3
+  ],
+  [
+   "rgba(247, 247, 248, 0)",
+   1
+  ],
+  [
+   "rgba(61, 143, 120, 0.45)",
+   1
+  ],
+  [
+   "rgb(31, 41, 55)",
+   1
+  ],
+  [
+   "rgb(241, 252, 254)",
+   1
+  ]
+ ],
+ "fg": [
+  [
+   "rgb(31, 41, 55)",
+   54
+  ],
+  [
+   "rgb(255, 255, 255)",
+   41
+  ],
+  [
+   "rgb(94, 101, 110)",
+   37
+  ],
+  [
+   "rgb(200, 204, 208)",
+   7
+  ],
+  [
+   "rgb(10, 132, 255)",
+   1
+  ],
+  [
+   "rgb(16, 112, 209)",
+   1
+  ],
+  [
+   "rgb(255, 0, 0)",
+   1
+  ]
+ ],
+ "fonts": [
+  [
+   "Inter",
+   89
+  ],
+  [
+   "\"DM Sans\"",
+   53
+  ]
+ ],
+ "heads": [
+  [
+   "H2|\"DM Sans\"|500|48px",
+   12
+  ],
+  [
+   "H2|\"DM Sans\"|500|40px",
+   4
+  ],
+  [
+   "H2|\"DM Sans\"|500|32px",
+   3
+  ],
+  [
+   "H2|\"DM Sans\"|500|24px",
+   3
+  ],
+  [
+   "H1|\"DM Sans\"|500|56px",
+   2
+  ]
+ ],
+ "btns": [
+  {
+   "t": "Book An Appointment",
+   "bg": "rgba(0, 0, 0, 0)",
+   "c": "rgb(94, 101, 110)",
+   "r": "0px",
+   "pad": "0px",
+   "ff": "Inter",
+   "fw": "400",
+   "tt": "none",
+   "border": "0px none rgb(94, 101, 110)"
+  },
+  {
+   "t": "Book An Appointment",
+   "bg": "rgb(10, 132, 255)",
+   "c": "rgb(255, 255, 255)",
+   "r": "48px",
+   "pad": "8px 24px",
+   "ff": "Inter",
+   "fw": "600",
+   "tt": "capitalize",
+   "border": "0px none rgb(255, 255, 255)"
+  },
+  {
+   "t": "Book An Appointment",
+   "bg": "rgba(0, 0, 0, 0)",
+   "c": "rgb(255, 255, 255)",
+   "r": "0px",
+   "pad": "0px",
+   "ff": "Inter",
+   "fw": "600",
+   "tt": "capitalize",
+   "border": "0px none rgb(255, 255, 255)"
+  },
+  {
+   "t": "Book An Appointment",
+   "bg": "rgba(0, 0, 0, 0)",
+   "c": "rgb(255, 255, 255)",
+   "r": "0px",
+   "pad": "0px",
+   "ff": "Inter",
+   "fw": "600",
+   "tt": "capitalize",
+   "border": "0px none rgb(255, 255, 255)"
+  },
+  {
+   "t": "Book An Appointment",
+   "bg": "rgba(0, 0, 0, 0)",
+   "c": "rgb(94, 101, 110)",
+   "r": "0px",
+   "pad": "0px",
+   "ff": "Inter",
+   "fw": "400",
+   "tt": "none",
+   "border": "0px none rgb(94, 101, 110)"
+  },
+  {
+   "t": "Book An Appointment",
+   "bg": "rgb(250, 254, 255)",
+   "c": "rgb(31, 41, 55)",
+   "r": "48px",
+   "pad": "8px 24px",
+   "ff": "Inter",
+   "fw": "600",
+   "tt": "capitalize",
+   "border": "0px none rgb(31, 41, 55)"
+  },
+  {
+   "t": "Book An Appointment",
+   "bg": "rgba(0, 0, 0, 0)",
+   "c": "rgb(31, 41, 55)",
+   "r": "0px",
+   "pad": "0px",
+   "ff": "Inter",
+   "fw": "600",
+   "tt": "capitalize",
+   "border": "0px none rgb(31, 41, 55)"
+  },
+  {
+   "t": "Book An Appointment",
+   "bg": "rgba(0, 0, 0, 0)",
+   "c": "rgb(31, 41, 55)",
+   "r": "0px",
+   "pad": "0px",
+   "ff": "Inter",
+   "fw": "600",
+   "tt": "capitalize",
+   "border": "0px none rgb(31, 41, 55)"
+  },
+  {
+   "t": "Explore Services",
+   "bg": "rgba(0, 0, 0, 0)",
+   "c": "rgb(94, 101, 110)",
+   "r": "0px",
+   "pad": "0px",
+   "ff": "Inter",
+   "fw": "400",
+   "tt": "none",
+   "border": "0px none rgb(94, 101, 110)"
+  },
+  {
+   "t": "Explore Services",
+   "bg": "rgba(2, 1, 1, 0)",
+   "c": "rgb(255, 255, 255)",
+   "r": "48px",
+   "pad": "8px 24px",
+   "ff": "Inter",
+   "fw": "600",
+   "tt": "capitalize",
+   "border": "1px solid rgb(250, 254, 255)"
+  },
+  {
+   "t": "Explore Services",
+   "bg": "rgba(0, 0, 0, 0)",
+   "c": "rgb(255, 255, 255)",
+   "r": "0px",
+   "pad": "0px",
+   "ff": "Inter",
+   "fw": "600",
+   "tt": "capitalize",
+   "border": "0px none rgb(255, 255, 255)"
+  },
+  {
+   "t": "Explore Services",
+   "bg": "rgba(0, 0, 0, 0)",
+   "c": "rgb(255, 255, 255)",
+   "r": "0px",
+   "pad": "0px",
+   "ff": "Inter",
+   "fw": "600",
+   "tt": "capitalize",
+   "border": "0px none rgb(255, 255, 255)"
+  }
+ ],
+ "sections": [
+  {
+   "tag": "DIV",
+   "cls": "elementor-element elementor-element-baf2136 e-con-full she-header-yes e-flex e-con e-parent e-lazylo",
+   "y": 0,
+   "h": 72,
+   "bg": "rgba(0, 0, 0, 0)",
+   "bgimg": "none",
+   "heads": [],
+   "imgs": 2,
+   "inputs": 0,
+   "widgets": [
+    "image.default",
+    "jkit_nav_menu.default",
+    "button.default"
+   ],
+   "swipers": 0,
+   "counters": 0,
+   "accordions": 0,
+   "videos": 0,
+   "anims": []
+  },
+  {
+   "tag": "DIV",
+   "cls": "page-content",
+   "y": 72,
+   "h": 9639,
+   "bg": "rgba(0, 0, 0, 0)",
+   "bgimg": "none",
+   "heads": [
+    "H1: Bright Smiles Start Here. Your Smile, Our Priority",
+    "H2: 99%",
+    "H2: 3,500+",
+    "H2: 12+ Years",
+    "H2: Our Dental Services",
+    "H2: General Dentistry",
+    "H2: Orthodontics",
+    "H2: Implants & Restorations"
+   ],
+   "imgs": 8,
+   "inputs": 5,
+   "widgets": [
+    "heading.default",
+    "text-editor.default",
+    "button.default",
+    "icon-box.default",
+    "jkit_icon_box.default",
+    "image.default",
+    "image-box.default",
+    "elementskit-accordion.default",
+    "elementskit-blog-posts.default",
+    "metform.default",
+    "mf-listing-fname.default",
+    "mf-email.default",
+    "mf-telephone.default",
+    "mf-text.default",
+    "mf-textarea.default",
+    "mf-button.default"
+   ],
+   "swipers": 0,
+   "counters": 0,
+   "accordions": 38,
+   "videos": 0,
+   "anims": [
+    "slideInDown",
+    "fadeIn",
+    "slideInUp"
+   ]
+  },
+  {
+   "tag": "DIV",
+   "cls": "elementor-element elementor-element-c0e3d3c e-con-full e-flex e-con e-parent e-lazyloaded",
+   "y": 9711,
+   "h": 704,
+   "bg": "rgb(31, 41, 55)",
+   "bgimg": "none",
+   "heads": [
+    "H2: Ready For A Healthier Smile? Book Your Visit Today.",
+    "H5: Menu",
+    "H5: Office"
+   ],
+   "imgs": 0,
+   "inputs": 0,
+   "widgets": [
+    "heading.default",
+    "button.default",
+    "icon-list.default",
+    "text-editor.default"
+   ],
+   "swipers": 0,
+   "counters": 0,
+   "accordions": 0,
+   "videos": 0,
+   "anims": []
+  }
+ ],
+ "scripts": [
+  "jquery/jquery.min.js",
+  "jquery/jquery-migrate.min.js",
+  "public/template-kit-export-public.js",
+  "js/she-header.js",
+  "js/webpack.runtime.min.js",
+  "js/frontend-modules.min.js",
+  "ui/core.min.js",
+  "js/frontend.min.js",
+  "js/htm.js",
+  "vendor/react.min.js",
+  "vendor/react-dom.min.js",
+  "dist/escape-html.min.js",
+  "dist/element.min.js",
+  "js/app.js",
+  "cute-alert/cute-alert.js",
+  "js/hello-frontend.js",
+  "js/frontend-script.js",
+  "js/widget-scripts.js",
+  "elements/sticky-element.js",
+  "elements/nav-menu.js",
+  "js/v4-shims.min.js",
+  "js/animate-circle.min.js",
+  "js/elementor.js"
+ ],
+ "fontLinks": [
+  "https://fatma-studio.com/denty/wp-content/uploads/sites/10/elementor/google-fonts/css/dmsans.css?ver=1754552339",
+  "https://fatma-studio.com/denty/wp-content/uploads/sites/10/elementor/google-fonts/css/inter.css?ver=1754552419",
+  "https://fatma-studio.com/denty/wp-content/plugins/jeg-elementor-kit/assets/fonts/jkiticon/jkiticon.css?ver=2.6.14",
+  "https://fatma-studio.com/denty/wp-content/plugins/elementor/assets/lib/font-awesome/css/all.min.css?ver=3.31.3",
+  "https://fatma-studio.com/denty/wp-content/plugins/elementor/assets/lib/font-awesome/css/v4-shims.min.css?ver=3.31.3"
+ ],
+ "fontFaces": [
+  "DM Sans 100 italic unloaded",
+  "DM Sans 200 italic unloaded",
+  "DM Sans 300 italic unloaded",
+  "DM Sans 400 italic unloaded",
+  "DM Sans 500 italic unloaded",
+  "DM Sans 600 italic unloaded",
+  "DM Sans 700 italic unloaded",
+  "DM Sans 800 italic unloaded",
+  "DM Sans 900 italic unloaded",
+  "DM Sans 100 normal unloaded",
+  "DM Sans 200 normal unloaded",
+  "DM Sans 300 normal unloaded",
+  "DM Sans 400 normal unloaded",
+  "DM Sans 500 normal unloaded",
+  "DM Sans 500 normal loaded",
+  "DM Sans 600 normal unloaded",
+  "DM Sans 700 normal unloaded",
+  "DM Sans 800 normal unloaded",
+  "DM Sans 900 normal unloaded",
+  "Inter 100 italic unloaded",
+  "Inter 200 italic unloaded",
+  "Inter 300 italic unloaded",
+  "Inter 400 italic unloaded",
+  "Inter 500 italic unloaded",
+  "Inter 600 italic unloaded",
+  "Inter 700 italic unloaded",
+  "Inter 800 italic unloaded",
+  "Inter 900 italic unloaded",
+  "Inter 100 normal unloaded",
+  "Inter 200 normal unloaded"
+ ],
+ "vars": {
+  "--wp--preset--color--black": "#000000",
+  "--wp--preset--color--cyan-bluish-gray": "#abb8c3",
+  "--wp--preset--color--white": "#ffffff",
+  "--wp--preset--color--pale-pink": "#f78da7",
+  "--wp--preset--color--vivid-red": "#cf2e2e",
+  "--wp--preset--color--luminous-vivid-orange": "#ff6900",
+  "--wp--preset--color--luminous-vivid-amber": "#fcb900",
+  "--wp--preset--color--light-green-cyan": "#7bdcb5",
+  "--wp--preset--color--vivid-green-cyan": "#00d084",
+  "--wp--preset--color--pale-cyan-blue": "#8ed1fc",
+  "--wp--preset--color--vivid-cyan-blue": "#0693e3",
+  "--wp--preset--color--vivid-purple": "#9b51e0",
+  "--e-global-color-primary": "#0A84FF",
+  "--e-global-color-secondary": "#FAFEFF",
+  "--e-global-color-text": "#F1FCFE",
+  "--e-global-color-accent": "#A8E6CF",
+  "--e-global-color-922169a": "#3D8F78",
+  "--e-global-color-03cda55": "#FFD9A0",
+  "--e-global-color-4921d5b": "#FFC857",
+  "--e-global-color-3cab8f2": "#1070D1",
+  "--e-global-color-a650e6a": "#1F2937",
+  "--e-global-color-bb55343": "#5E656E",
+  "--e-global-color-2b3b2a6": "#A7ADB4",
+  "--e-global-color-99953a1": "#C8CCD0",
+  "--e-global-color-60a0f80": "#FFFFFF",
+  "--e-global-color-bd5d1b2": "#000000",
+  "--e-global-color-11e3899": "#FFFFFF",
+  "--e-global-typography-primary-font-family": "\"DM Sans\"",
+  "--e-global-typography-secondary-font-family": "\"DM Sans\"",
+  "--e-global-typography-text-font-family": "\"DM Sans\"",
+  "--e-global-typography-accent-font-family": "\"DM Sans\"",
+  "--e-global-typography-d1f8d94-font-family": "\"DM Sans\"",
+  "--e-global-typography-c7bdd63-font-family": "\"DM Sans\"",
+  "--e-global-typography-5549308-font-family": "\"Inter\"",
+  "--e-global-typography-0728992-font-family": "\"Inter\"",
+  "--e-global-typography-173eb68-font-family": "\"Inter\""
+ },
+ "cssAnims": [
+  "animated-fast animated",
+  "animated",
+  "hover-from-arise hover-gradient",
+  "hover-from-arise"
+ ],
+ "httpStatus": 200
+}

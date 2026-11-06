@@ -1,0 +1,840 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>SiteSpark – Your website, ready to preview</title>
+<style>
+/* ====== App shell (agency side) ====== */
+:root{--brand:#4f46e5;--brand2:#3730a3;--ink:#0f172a;--mut:#64748b;--line:#e2e8f0;--bg:#f6f7fb;--ok:#16a34a;--warn:#d97706;--bad:#dc2626}
+*{box-sizing:border-box}
+html,body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.5 system-ui,-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif}
+a{color:var(--brand)}
+.top{background:#fff;border-bottom:1px solid var(--line);position:sticky;top:0;z-index:20}
+.top .in{max-width:1080px;margin:0 auto;display:flex;align-items:center;gap:12px;padding:12px 18px}
+.mark{width:34px;height:34px;border-radius:10px;background:linear-gradient(135deg,#6366f1,#ec4899);display:grid;place-items:center;color:#fff;font-weight:800}
+.bname{font-weight:800;font-size:18px;letter-spacing:-.3px}
+.top .sp{flex:1}
+.steps{display:flex;gap:6px;font-size:12.5px;color:var(--mut)}
+.steps span{padding:4px 10px;border-radius:99px;background:#f1f5f9}
+.steps span.on{background:var(--brand);color:#fff}
+.wrap{max-width:1080px;margin:0 auto;padding:22px 18px 60px}
+.screen{display:none}.screen.on{display:block}
+.hero-a{text-align:center;padding:18px 0 8px}
+.hero-a h1{font-size:30px;margin:0 0 6px;letter-spacing:-.6px}
+.hero-a p{color:var(--mut);margin:0 auto;max-width:620px}
+.card{background:#fff;border:1px solid var(--line);border-radius:16px;padding:20px;margin:16px 0;box-shadow:0 1px 2px rgba(15,23,42,.04)}
+.card h2{font-size:17px;margin:0 0 4px}.card .hint{color:var(--mut);font-size:13px;margin:0 0 14px}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:12px 16px}
+.full{grid-column:1/-1}
+label{display:block;font-weight:600;font-size:13.5px;margin-bottom:4px}
+label .opt{font-weight:400;color:var(--mut)}
+label .req{color:var(--bad)}
+input[type=text],input[type=email],input[type=tel],input[type=url],select,textarea{width:100%;padding:10px 12px;border:1px solid #cbd5e1;border-radius:10px;font:inherit;background:#fff;color:inherit}
+textarea{min-height:90px;resize:vertical}
+input:focus,select:focus,textarea:focus{outline:2px solid #c7d2fe;border-color:var(--brand)}
+.err-msg{color:var(--bad);font-size:12.5px;margin-top:3px;display:none}
+.invalid input,.invalid select,.invalid textarea{border-color:var(--bad)}
+.invalid .err-msg{display:block}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;border:0;border-radius:11px;padding:11px 18px;font:inherit;font-weight:700;cursor:pointer;background:var(--brand);color:#fff;text-decoration:none}
+.btn:hover{background:var(--brand2)}
+.btn.ghost{background:#fff;color:var(--ink);border:1px solid #cbd5e1}
+.btn.ghost:hover{background:#f8fafc}
+.btn.green{background:var(--ok)}.btn.green:hover{background:#15803d}
+.btn.sm{padding:7px 12px;font-size:13px;border-radius:9px}
+.btn.big{padding:14px 24px;font-size:16px}
+.row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+.svc{display:grid;grid-template-columns:1.1fr 2fr .7fr auto;gap:8px;margin-bottom:8px;align-items:start}
+.svc button{height:42px}
+.logo-box{display:flex;gap:14px;align-items:center}
+.logo-prev{width:64px;height:64px;border-radius:12px;border:1px dashed #cbd5e1;display:grid;place-items:center;color:var(--mut);font-size:11px;overflow:hidden;background:#f8fafc;flex:none}
+.logo-prev img{max-width:100%;max-height:100%}
+.sticky-act{display:flex;gap:10px;justify-content:space-between;flex-wrap:wrap;align-items:center}
+.note{font-size:12.5px;color:var(--mut)}
+.banner-err{display:none;background:#fef2f2;color:#991b1b;border:1px solid #fecaca;padding:10px 14px;border-radius:10px;margin-top:12px}
+.pipe{display:grid;gap:14px;max-width:720px;margin:10px auto}
+.bot{display:flex;gap:14px;align-items:flex-start;background:#fff;border:1px solid var(--line);border-radius:16px;padding:16px 18px;opacity:.45;transition:.3s}
+.bot.run,.bot.done{opacity:1}
+.bot.run{border-color:#a5b4fc;box-shadow:0 0 0 4px #eef2ff}
+.bot .ic{width:44px;height:44px;border-radius:12px;background:#eef2ff;display:grid;place-items:center;font-weight:800;color:var(--brand);flex:none}
+.bot.done .ic{background:#dcfce7;color:var(--ok)}
+.bot h3{margin:0;font-size:15.5px}
+.bot .st{font-size:13px;color:var(--mut)}
+.bot ul{margin:8px 0 0;padding-left:18px;font:12.5px/1.6 ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;color:#334155}
+.spin{display:inline-block;width:14px;height:14px;border:2px solid #c7d2fe;border-top-color:var(--brand);border-radius:50%;animation:sp 0.8s linear infinite;vertical-align:-2px}
+@keyframes sp{to{transform:rotate(360deg)}}
+.arrow{text-align:center;color:#94a3b8;font-size:18px;line-height:1}
+.pv-head{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}
+.toggle{display:inline-flex;background:#e2e8f0;border-radius:10px;padding:3px}
+.toggle button{border:0;background:transparent;padding:7px 14px;border-radius:8px;font:inherit;font-weight:600;cursor:pointer;color:#334155}
+.toggle button.on{background:#fff;box-shadow:0 1px 2px rgba(0,0,0,.12);color:var(--ink)}
+.stage{margin-top:14px;display:flex;justify-content:center}
+.browser{width:100%;max-width:1000px;border-radius:14px;overflow:hidden;border:1px solid #cbd5e1;background:#fff;box-shadow:0 18px 40px -18px rgba(15,23,42,.35)}
+.browser .bar{display:flex;gap:6px;align-items:center;padding:9px 12px;background:#f1f5f9;border-bottom:1px solid #e2e8f0}
+.dot{width:10px;height:10px;border-radius:50%;background:#cbd5e1;flex:none}
+.url{flex:1;margin-left:8px;background:#fff;border-radius:7px;padding:4px 10px;font-size:12px;color:var(--mut);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.viewport{max-height:72vh;overflow:auto;position:relative;background:#fff}
+.phone{width:320px;border-radius:38px;padding:12px;background:#0f172a;box-shadow:0 18px 40px -18px rgba(15,23,42,.6)}
+.phone .viewport{border-radius:28px;max-height:620px}
+.pv-img{display:block;width:100%;height:auto;user-select:none;-webkit-user-select:none;-webkit-user-drag:none}
+.lock{position:absolute;inset:0;z-index:5}
+.locked-frame{position:relative;overflow:hidden}
+.locked-frame iframe{display:block;width:100%;border:0;pointer-events:none}
+.wm{position:absolute;inset:0;pointer-events:none;z-index:4;overflow:hidden}
+.wm span{position:absolute;left:50%;transform:translate(-50%,-50%) rotate(-30deg);font:900 90px/1 system-ui;color:rgba(15,23,42,.12);white-space:nowrap}
+.pill{display:inline-flex;align-items:center;gap:6px;font-size:12px;font-weight:700;padding:4px 10px;border-radius:99px;background:#fef3c7;color:#92400e}
+.pill.g{background:#dcfce7;color:#166534}.pill.b{background:#e0e7ff;color:#3730a3}.pill.r{background:#fee2e2;color:#991b1b}
+.actions{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-top:18px}
+.changes{display:none}.changes.on{display:block}
+.chips{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:10px}
+.chip{border:1px solid #cbd5e1;background:#fff;border-radius:99px;padding:5px 11px;font-size:12.5px;cursor:pointer}
+.chip:hover{border-color:var(--brand);color:var(--brand)}
+.ap{display:grid;grid-template-columns:1fr 1.1fr;gap:18px;align-items:start}
+.thumb{border-radius:12px;overflow:hidden;border:1px solid var(--line);max-height:360px}
+.thumb img{width:100%;display:block}
+.price{width:100%;border-collapse:collapse;font-size:14.5px}
+.price td{padding:10px 0;border-bottom:1px solid var(--line)}
+.price td:last-child{text-align:right;font-weight:700;white-space:nowrap}
+.price tr.tot td{font-size:17px;border-bottom:0;padding-top:14px}
+.opt-box{border:1px solid var(--line);border-radius:12px;padding:12px;margin:12px 0;display:grid;gap:8px}
+.opt-box label{font-weight:500;display:flex;gap:8px;align-items:flex-start;margin:0}
+.done-box{text-align:center;padding:30px 20px}
+.done-box .big-ic{width:64px;height:64px;border-radius:50%;background:#dcfce7;color:var(--ok);display:grid;place-items:center;font-size:30px;margin:0 auto 10px;font-weight:800}
+table.adm{width:100%;border-collapse:collapse;font-size:13.5px}
+table.adm th,table.adm td{padding:9px 8px;border-bottom:1px solid var(--line);text-align:left;vertical-align:top}
+table.adm th{font-size:12px;text-transform:uppercase;letter-spacing:.4px;color:var(--mut)}
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
+.stat{background:#fff;border:1px solid var(--line);border-radius:12px;padding:12px}
+.stat b{display:block;font-size:22px}.stat span{font-size:12px;color:var(--mut)}
+.modal{position:fixed;inset:0;background:rgba(15,23,42,.6);display:none;z-index:50;padding:20px}
+.modal.on{display:flex;align-items:center;justify-content:center}
+.modal .box{background:#fff;border-radius:16px;width:min(1100px,100%);max-height:92vh;display:flex;flex-direction:column;overflow:hidden}
+.modal .mh{display:flex;justify-content:space-between;align-items:center;padding:12px 16px;border-bottom:1px solid var(--line);gap:10px;flex-wrap:wrap}
+.modal iframe{width:100%;height:78vh;border:0}
+.foot{text-align:center;color:var(--mut);font-size:12px;padding:20px}
+@media (max-width:760px){
+ .grid2,.ap{grid-template-columns:1fr}
+ .svc{grid-template-columns:1fr 1fr auto}
+ .svc .d{grid-column:1/-1;order:3}
+ .steps{display:none}
+ .hero-a h1{font-size:24px}
+ .stats{grid-template-columns:1fr 1fr}
+ .phone{width:100%;max-width:330px}
+ table.adm .hide-m{display:none}
+}
+</style>
+</head>
+<body>
+<header class="top"><div class="in">
+  <div class="mark" data-brand-initial>S</div><div class="bname" data-brand>SiteSpark</div>
+  <div class="sp"></div>
+  <nav class="steps" id="stepsNav"><span>1 · Your details</span><span>2 · We build it</span><span>3 · Preview</span><span>4 · Go live</span></nav>
+</div></header>
+
+<main class="wrap">
+
+<!-- ========== STEP 1: INTAKE FORM ========== -->
+<section class="screen" id="screen-form">
+  <div class="hero-a">
+    <h1>Tell us about your business.<br>We'll build your website in minutes.</h1>
+    <p>Fill in the form, our bots build your site, and you see a preview straight away. You only pay if you like it.</p>
+  </div>
+  <form id="intake" novalidate>
+  <div class="card">
+    <div class="row" style="justify-content:space-between"><div><h2>1. The basics</h2><p class="hint">Fields marked <span style="color:var(--bad)">*</span> are required.</p></div>
+    <button type="button" class="btn ghost sm" id="fillExample">Fill example</button></div>
+    <div class="grid2">
+      <div class="f" data-f="name"><label>Business name <span class="req">*</span></label><input type="text" name="name" maxlength="60" placeholder="e.g. Smith &amp; Sons Plumbing"><div class="err-msg">Please enter your business name.</div></div>
+      <div class="f" data-f="industry"><label>Industry / trade <span class="req">*</span></label>
+        <select name="industry" id="industry"><option value="">Choose…</option></select>
+        <input type="text" name="industryOther" id="industryOther" placeholder="Type your trade" style="display:none;margin-top:8px" maxlength="40">
+        <div class="err-msg">Please choose your trade (or type it under "Other").</div></div>
+      <div class="f"><label>Town / area you serve <span class="opt">(optional)</span></label><input type="text" name="city" maxlength="40" placeholder="e.g. Leeds"></div>
+      <div class="f"><label>Logo <span class="opt">(optional – no logo? we'll make a text one)</span></label>
+        <div class="logo-box"><div class="logo-prev" id="logoPrev">No logo</div>
+        <div><input type="file" id="logoFile" accept="image/*"><br><button type="button" class="btn ghost sm" id="logoClear" style="display:none;margin-top:6px">Remove logo</button></div></div></div>
+      <div class="f full" data-f="about"><label>About your business <span class="req">*</span></label><textarea name="about" maxlength="900" placeholder="Who you are, how long you've been going, what makes you different…"></textarea><div class="err-msg">Please write at least a couple of sentences (30+ characters).</div></div>
+    </div>
+  </div>
+  <div class="card">
+    <h2>2. Your services <span style="color:var(--bad)">*</span></h2><p class="hint">Add at least one. Price is optional.</p>
+    <div id="svcList"></div>
+    <div class="f" data-f="services"><div class="err-msg">Please add at least one service with a name.</div></div>
+    <button type="button" class="btn ghost sm" id="addSvc">+ Add another service</button>
+  </div>
+  <div class="card">
+    <h2>3. Contact details</h2><p class="hint">These go on your website so customers can reach you.</p>
+    <div class="grid2">
+      <div class="f" data-f="phone"><label>Phone <span class="req">*</span></label><input type="tel" name="phone" maxlength="30" placeholder="+44 …"><div class="err-msg">Please enter a phone number.</div></div>
+      <div class="f" data-f="email"><label>Email <span class="req">*</span></label><input type="email" name="email" maxlength="80" placeholder="you@business.com"><div class="err-msg">Please enter a valid email address.</div></div>
+      <div class="f"><label>Address <span class="opt">(optional)</span></label><input type="text" name="address" maxlength="120" placeholder="Street, town, postcode"></div>
+      <div class="f"><label>Opening hours <span class="opt">(optional, one per line)</span></label><textarea name="hours" style="min-height:70px" maxlength="300" placeholder="Mon–Fri: 8am–6pm&#10;Sat: 9am–1pm"></textarea></div>
+    </div>
+  </div>
+  <div class="card">
+    <h2>4. Style &amp; social <span style="font-weight:400;color:var(--mut)">(optional)</span></h2>
+    <div class="grid2">
+      <div class="f"><label>Colour preference</label>
+        <select name="colour" id="colour"></select>
+        <input type="color" id="colourCustom" value="#0ea5e9" style="display:none;margin-top:8px;width:60px;height:38px;border:0;background:none"></div>
+      <div class="f"><label>Facebook page</label><input type="url" name="facebook" maxlength="120" placeholder="https://facebook.com/…"></div>
+      <div class="f"><label>Instagram</label><input type="url" name="instagram" maxlength="120" placeholder="https://instagram.com/…"></div>
+      <div class="f"><label>Other link (Google reviews, TikTok…)</label><input type="url" name="other" maxlength="120" placeholder="https://…"></div>
+    </div>
+  </div>
+  <div class="sticky-act">
+    <span class="note">Free to preview. No card needed.</span>
+    <button type="submit" class="btn big" id="buildBtn">Build my website →</button>
+  </div>
+  <div class="banner-err" id="formErr">Please fix the highlighted fields above.</div>
+  </form>
+</section>
+
+<!-- ========== STEP 2: PIPELINE ========== -->
+<section class="screen" id="screen-pipeline">
+  <div class="hero-a"><h1 id="pipeTitle">Building your website…</h1><p>Three bots pass your details along, one after the other.</p></div>
+  <div class="pipe">
+    <div class="bot" id="bot1"><div class="ic">1</div><div><h3>Intake bot</h3><div class="st">Waiting…</div><ul></ul></div></div>
+    <div class="arrow">↓</div>
+    <div class="bot" id="bot2"><div class="ic">2</div><div><h3>Builder bot</h3><div class="st">Waiting…</div><ul></ul></div></div>
+    <div class="arrow">↓</div>
+    <div class="bot" id="bot3"><div class="ic">3</div><div><h3>Preview bot</h3><div class="st">Waiting…</div><ul></ul></div></div>
+  </div>
+</section>
+
+<!-- ========== STEP 3: PREVIEW ========== -->
+<section class="screen" id="screen-preview">
+  <div class="pv-head">
+    <div><h1 style="margin:0;font-size:24px;letter-spacing:-.4px">Your website preview is ready</h1>
+    <div class="row" style="margin-top:4px"><span class="pill">🔒 View-only preview</span><span class="pill b" id="pvRev">Version 1</span><span class="note" id="pvMode"></span></div></div>
+    <div class="toggle" role="tablist"><button type="button" class="on" data-dev="desktop">Desktop</button><button type="button" data-dev="mobile">Mobile</button></div>
+  </div>
+  <div class="stage" id="stage"></div>
+  <div class="actions">
+    <button type="button" class="btn ghost big" id="reqBtn">Request changes</button>
+    <button type="button" class="btn green big" id="approveBtn">Approve &amp; go live →</button>
+  </div>
+  <div class="card changes" id="changes">
+    <h2>What would you like to change?</h2><p class="hint">Pick a quick option or describe it. The Builder bot re-runs with your changes.</p>
+    <div class="chips" id="chips">
+      <span class="chip" data-t="Make it darker">Make it darker</span>
+      <span class="chip" data-t="Try a warmer, friendlier style">Warmer style</span>
+      <span class="chip" data-t="More elegant, premium look">More elegant</span>
+      <span class="chip" data-t="Use green as the main colour">Green colour</span>
+      <span class="chip" data-t="Use blue as the main colour">Blue colour</span>
+    </div>
+    <div class="grid2">
+      <div><label>Style</label><select id="chTheme"><option value="">Keep current style</option></select></div>
+      <div><label>Main colour</label><select id="chColour"><option value="">Keep current colour</option></select></div>
+      <div class="full"><label>New headline <span class="opt">(optional)</span></label><input type="text" id="chHeadline" maxlength="90" placeholder="e.g. Leeds' friendliest plumbers"></div>
+      <div class="full"><label>Anything else?</label><textarea id="chNotes" maxlength="600" placeholder="e.g. Make it darker, mention we're Gas Safe registered…"></textarea></div>
+    </div>
+    <div class="row" style="margin-top:12px;justify-content:space-between">
+      <button type="button" class="btn ghost sm" id="editDetails">Edit my details instead</button>
+      <button type="button" class="btn" id="rerunBtn">Send to Builder bot ↻</button>
+    </div>
+    <p class="note" style="margin-top:10px">Demo: style, colour and headline changes apply automatically, and words like "dark", "warm", "elegant" or a colour name in your note are picked up. Other notes are saved for the team (the live version would pass them to the AI builder).</p>
+  </div>
+  <p class="note" style="text-align:center;margin:16px auto 0;max-width:760px">🔒 You're looking at a picture of your website, not the website files. The site is published for you once you approve.<br><i>Demo note: here the picture is drawn inside your browser. In the live version the preview is a screenshot made on our server (or a hosted, watermarked page), so the website code never reaches the visitor's browser at all.</i></p>
+</section>
+
+<!-- ========== STEP 4: APPROVE ========== -->
+<section class="screen" id="screen-approve">
+  <div class="hero-a"><h1>Great choice! Let's put it live.</h1><p>Here's exactly what you'll pay. Cancel the monthly plan any time.</p></div>
+  <div class="ap">
+    <div class="card"><h2 id="apName">Your website</h2><p class="hint">Approved version <span id="apRev"></span></p><div class="thumb" id="apThumb"></div></div>
+    <div class="card">
+      <h2>Your plan</h2>
+      <div class="opt-box">
+        <label><input type="radio" name="dom" value="free" checked> <span><b>Free web address</b><br><span class="note" id="freeSub">yourbusiness.sitespark.site</span></span></label>
+        <label><input type="radio" name="dom" value="connect"> <span><b>Connect my own domain</b> (<span id="domFee">+$10</span> one-time)<br><span class="note">You already own e.g. yourbusiness.co.uk and we connect it for you.</span></span></label>
+      </div>
+      <table class="price" id="priceTbl"></table>
+      <div class="f" style="margin-top:12px"><label>Email for your receipt</label><input type="email" id="payEmail"></div>
+      <button type="button" class="btn green big" id="payBtn" style="width:100%;margin-top:14px">Pay &amp; go live</button>
+      <p class="note" style="text-align:center;margin-top:8px">Monthly plan covers hosting, SSL, security updates and small text changes.</p>
+      <button type="button" class="btn ghost sm" id="backPreview">← Back to preview</button>
+    </div>
+  </div>
+</section>
+
+<!-- ========== THANKS (fake door result) ========== -->
+<section class="screen" id="screen-thanks">
+  <div class="card done-box">
+    <div class="big-ic">✓</div>
+    <h1 style="margin:0 0 6px">You're on the early-access list</h1>
+    <p style="max-width:560px;margin:0 auto 6px">Online payments aren't switched on yet, so <b>no money has been taken</b>. We've saved your approved website and we'll email <b id="thxEmail"></b> as soon as you can go live.</p>
+    <p class="note">(Demo fake door: this records that you'd pay, so we can measure real interest.)</p>
+    <div class="actions"><button type="button" class="btn ghost" id="startOver">Start a new website</button></div>
+  </div>
+</section>
+
+<!-- ========== ADMIN ========== -->
+<section class="screen" id="screen-admin">
+  <div class="row" style="justify-content:space-between">
+    <div><h1 style="margin:0;font-size:24px">Agency admin <span class="pill r">Internal</span></h1><p class="note" style="margin:2px 0 0">Submissions saved in this browser (localStorage). Only the agency side opens full sites.</p></div>
+    <div class="row"><a class="btn ghost sm" href="#">← Client view</a><button class="btn ghost sm" id="exportBtn">Export JSON</button><button class="btn ghost sm" id="clearBtn" style="color:var(--bad)">Clear all</button></div>
+  </div>
+  <div class="stats" style="margin-top:14px" id="stats"></div>
+  <div class="card" style="overflow-x:auto"><table class="adm" id="admTbl"></table></div>
+</section>
+</main>
+<div class="foot"><span data-brand>SiteSpark</span> demo · <a href="#admin">Admin</a></div>
+
+<div class="modal" id="siteModal"><div class="box">
+  <div class="mh"><b id="smTitle">Full site</b><div class="row"><span class="pill r">Agency only</span><button class="btn ghost sm" id="smOpen">Open in new tab</button><button class="btn sm" id="smClose">Close</button></div></div>
+  <iframe id="smFrame" sandbox="allow-same-origin" title="Full site"></iframe>
+</div></div>
+<script>
+/* =====================================================================
+   BRAND – rename the agency / change prices here; everything picks it up
+   ===================================================================== */
+const BRAND = { name: 'SiteSpark', domain: 'sitespark.site', setup: 50, monthly: 29, domainConnect: 10, currency: '$' };
+
+const STORE_KEY = 'sitespark_demo_v1';
+const $ = (s, r = document) => r.querySelector(s);
+const $$ = (s, r = document) => Array.from(r.querySelectorAll(s));
+const sleep = ms => new Promise(r => setTimeout(r, ms));
+const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const slug = s => String(s).toLowerCase().replace(/&/g,'and').replace(/\(.*?\)/g,'').replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'').slice(0,40) || 'yourbusiness';
+const money = n => BRAND.currency + n;
+const isEmail = s => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(s);
+
+$$('[data-brand]').forEach(e => e.textContent = BRAND.name);
+$$('[data-brand-initial]').forEach(e => e.textContent = BRAND.name[0]);
+document.title = BRAND.name + ' – Your website, ready to preview';
+
+/* ---------------- Industries, themes, colours ---------------- */
+// [key, label, category, noun used in copy]
+const INDUSTRIES = [
+  ['plumbing','Plumbing & heating','trades','Plumbing'],
+  ['electrical','Electrician','trades','Electrical work'],
+  ['building','Building & construction','trades','Building work'],
+  ['cleaning','Cleaning services','trades','Cleaning'],
+  ['landscaping','Gardening & landscaping','trades','Garden care'],
+  ['restaurant','Restaurant / takeaway','food','Restaurant'],
+  ['cafe','Café / coffee shop','food','Café'],
+  ['bakery','Bakery / cakes','food','Bakery'],
+  ['retail','Shop / retail','food','Shop'],
+  ['salon','Hair & beauty salon','beauty','Salon'],
+  ['photo','Photography / events','beauty','Photography'],
+  ['barber','Barber','active','Barbering'],
+  ['fitness','Gym / personal trainer','active','Fitness'],
+  ['auto','Garage / car repair','active','Car repairs'],
+  ['clinic','Dental / health clinic','pro','Healthcare'],
+  ['professional','Accountant / legal / consulting','pro','Professional services'],
+  ['other','Other (type it)','pro','Services'],
+];
+const THEMES = {
+  fresh:   { label:'Fresh (clean & bright)',   accent:'#2563eb' },
+  warm:    { label:'Warm (friendly & homely)', accent:'#c2410c' },
+  elegant: { label:'Elegant (premium & calm)', accent:'#9d174d' },
+  bold:    { label:'Bold (dark & strong)',     accent:'#f59e0b' },
+};
+const CAT_THEME = { trades:'fresh', food:'warm', beauty:'elegant', active:'bold', pro:'fresh' };
+const CAT_ACCENT = { pro:'#0d9488' };
+const COLOURS = [['','Auto – match my trade'],['#2563eb','Blue'],['#0d9488','Teal'],['#16a34a','Green'],['#dc2626','Red'],['#ea580c','Orange'],['#f59e0b','Gold'],['#7c3aed','Purple'],['#db2777','Pink'],['#111827','Black'],['custom','Pick my own…']];
+const COLOUR_WORDS = {blue:'#2563eb',teal:'#0d9488',green:'#16a34a',red:'#dc2626',orange:'#ea580c',gold:'#f59e0b',yellow:'#eab308',purple:'#7c3aed',pink:'#db2777',black:'#111827',navy:'#1e3a8a'};
+const ind = key => INDUSTRIES.find(i => i[0] === key) || INDUSTRIES[INDUSTRIES.length-1];
+const tradeLabel = d => d.industry === 'other' ? d.industryOther : ind(d.industry)[1];
+
+/* =====================================================================
+   LIVE VERSION HOOK – AI copywriting / building
+   In production this POSTs the intake data to our server, which calls an
+   LLM (prompt e.g. "Write website copy for this business: headline,
+   sub-headline, about, 3 'why choose us' points, call to action") and
+   returns JSON in the same shape as templateCopy() below.
+   The demo returns null, so the built-in templates are used. No network.
+   ===================================================================== */
+async function generateWithAI(data) {
+  // const res = await fetch('/api/generate-copy', { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify(data) });
+  // return await res.json();  // { trade, headline, sub, cta, aboutTitle, about, why:[[title,text],x3], ctaBand }
+  return null;
+}
+
+/* ---------------- Deterministic copy (demo builder) ---------------- */
+function templateCopy(d) {
+  const [, , cat, noun] = ind(d.industry);
+  const trade = d.industry === 'other' && d.industryOther ? d.industryOther : noun;
+  const inCity = d.city ? ` in ${d.city}` : '';
+  const names = d.services.map((s, i) => i && /^[A-Z][a-z]/.test(s.name) ? s.name[0].toLowerCase() + s.name.slice(1) : s.name).slice(0, 3);
+  const list = names.length > 1 ? names.slice(0,-1).join(', ') + ' and ' + names[names.length-1] : names[0];
+  const C = {
+    trades: { headline:`${trade} you can rely on${inCity}`, sub:`${list}, done properly by a friendly local team. Honest prices, tidy work and no surprises.`, cta:'Get a free quote',
+      why:[['Fast response','We reply quickly and turn up when we say we will.'],['Fully insured','Peace of mind on every job, big or small.'],['Clear pricing','You get the price before we start. No hidden extras.']] },
+    food: { headline:`Made fresh, served with care${inCity}`, sub:`${list} – and a warm welcome every time you visit.`, cta:'Visit us today',
+      why:[['Fresh every day','Good ingredients, never shortcuts.'],['A local favourite','Loved by regulars and newcomers alike.'],['Easy to reach','Pop in, call ahead or message us.']] },
+    beauty: { headline:`Look good. Feel even better.`, sub:`${d.name} offers ${list.toLowerCase()}${inCity}, in a calm and welcoming space.`, cta:'Book an appointment',
+      why:[['Experienced team','Skilled, trained and passionate about what we do.'],['Quality products','We only use products we trust.'],['Time for you','Relax, unwind and leave feeling your best.']] },
+    active: { headline:`${trade} done right${inCity}.`, sub:`${list}. No fuss, no nonsense – just results you can see.`, cta:'Book now',
+      why:[['Results first','We focus on what actually makes a difference.'],['Straight talking','Clear advice and fair, upfront prices.'],['Trusted locally','Customers keep coming back – and bring friends.']] },
+    pro: { headline:`${trade} you can trust${inCity}`, sub:`${list}, delivered with care, clear communication and fair fees.`, cta:'Book a consultation',
+      why:[['Qualified & experienced','Professional service backed by real expertise.'],['A personal approach','We take time to understand what you need.'],['Clear & fair','Straightforward fees, agreed up front.']] },
+  }[cat];
+  return { ...C, trade, aboutTitle:`About ${d.name}`, about:d.about,
+    ctaBand:`Call ${d.phone} or email ${d.email} – we'll get back to you quickly.` };
+}
+
+/* ---------------- Colour helpers ---------------- */
+function hexRgb(h){ h=h.replace('#',''); if(h.length===3) h=h.split('').map(c=>c+c).join(''); const n=parseInt(h,16); return [n>>16&255,n>>8&255,n&255]; }
+function mix(h, w, t){ const a=hexRgb(h), b=hexRgb(w); return '#'+a.map((v,i)=>Math.round(v+(b[i]-v)*t).toString(16).padStart(2,'0')).join(''); }
+function lum(h){ const [r,g,b]=hexRgb(h); return (0.299*r+0.587*g+0.114*b)/255; }
+
+/* =====================================================================
+   BUILDER BOT – returns one <div class="site …"> with its own <style>.
+   All CSS is scoped to .site and layout is decided by the device argument
+   (not media queries), so the same markup renders identically in an
+   iframe, a shadow root, or inside an SVG <foreignObject> (image preview).
+   ===================================================================== */
+function buildSite(d, copy, opts, device) {
+  const theme = opts.theme, dark = theme === 'bold', m = device === 'mobile';
+  let a = opts.accent;
+  if (dark && lum(a) < 0.25) a = mix(a, '#ffffff', 0.55);      // keep dark accents visible on dark theme
+  if (!dark && lum(a) > 0.85) a = mix(a, '#000000', 0.45);     // and very light ones on light themes
+  const onA = lum(a) > 0.62 ? '#111111' : '#ffffff';
+  const V = {
+    fresh:   {bg:'#ffffff', fg:'#0f172a', mut:'#475569', card:'#ffffff', alt:'#f8fafc', line:'#e2e8f0', hf:'system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif', hw:800, tt:'none', ls:'-.5px', r:'14px'},
+    warm:    {bg:'#fffaf3', fg:'#2b1d12', mut:'#6b5443', card:'#ffffff', alt:'#fdf1e3', line:'#f1e4d3', hf:'Georgia,"Times New Roman",serif', hw:700, tt:'none', ls:'-.3px', r:'18px'},
+    elegant: {bg:'#fbf8f6', fg:'#2a2230', mut:'#6d6273', card:'#ffffff', alt:'#f5eff1', line:'#ece4e8', hf:'"Palatino Linotype",Palatino,"Book Antiqua",Georgia,serif', hw:500, tt:'none', ls:'0', r:'99px'},
+    bold:    {bg:'#0c0c10', fg:'#f4f4f5', mut:'#a1a1aa', card:'#17171d', alt:'#111116', line:'#2a2a33', hf:'Impact,"Arial Black","Segoe UI",system-ui,sans-serif', hw:900, tt:'uppercase', ls:'.5px', r:'8px'},
+  }[theme];
+  const bf = 'system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif';
+  const tint = dark ? mix(a,'#0c0c10',0.78) : mix(a,'#ffffff',0.88);
+  const centred = theme !== 'fresh';
+  const initials = (d.name.replace(/\(.*?\)/g,'').split(/\s+/).filter(w => /^[A-Za-z0-9]/.test(w) && !/^(ltd|limited|co\.?|the|and|of)$/i.test(w)).slice(0,2).map(w => w[0].toUpperCase()).join('')) || d.name.trim()[0].toUpperCase();
+  const logo = d.logo ? `<img class="lg-img" src="${d.logo}" alt="logo"/>` : `<span class="lg-txt">${esc(initials)}</span>`;
+  const hours = (d.hours||'').split('\n').map(s=>s.trim()).filter(Boolean);
+  const socials = [['Facebook',d.facebook],['Instagram',d.instagram],['Reviews & more',d.other]].filter(s=>s[1]);
+  const headline = opts.headline || copy.headline;
+  const cols = m ? 1 : Math.min(3, Math.max(1, d.services.length));
+  const css = `
+.site{--a:${a};--on:${onA};--tint:${tint};background:${V.bg};color:${V.fg};font-family:${bf};font-size:${m?15:16}px;line-height:1.6;width:100%;margin:0}
+.site *{box-sizing:border-box}
+.site h1,.site h2,.site h3{font-family:${V.hf};font-weight:${V.hw};text-transform:${V.tt};letter-spacing:${V.ls};margin:0;line-height:1.15}
+.site .w{max-width:1120px;margin:0 auto;padding:0 ${m?20:40}px}
+.site .nav{display:flex;align-items:center;gap:12px;padding:${m?14:20}px 0}
+.site .lg{width:${m?40:48}px;height:${m?40:48}px;border-radius:${theme==='elegant'?'50%':'12px'};background:var(--a);color:var(--on);display:flex;align-items:center;justify-content:center;overflow:hidden;flex:none}
+.site .lg.has{background:transparent}
+.site .lg-img{max-width:100%;max-height:100%;display:block}
+.site .lg-txt{font-family:${V.hf};font-weight:800;font-size:${m?16:19}px;letter-spacing:0}
+.site .bn{font-family:${V.hf};font-weight:${theme==='elegant'?600:800};font-size:${m?16:20}px;flex:1;text-transform:${V.tt};line-height:1.2}
+.site .links{display:${m?'none':'flex'};gap:26px;color:${V.mut};font-size:15px}
+.site .call{background:var(--a);color:var(--on);padding:${m?'8px 14px':'10px 18px'};border-radius:${V.r};font-weight:700;font-size:${m?13:15}px;white-space:nowrap}
+.site .hero{padding:${m?'34px 0 46px':'72px 0 92px'};${theme==='warm'?`background:linear-gradient(180deg,${tint},${V.bg});`:''}${dark?`background:radial-gradient(ellipse at 80% 0%,${mix(a,'#0c0c10',0.55)} 0%,${V.bg} 62%);`:''}${theme==='elegant'?`background:linear-gradient(180deg,${V.alt},${V.bg});`:''}}
+.site .hgrid{display:${m||centred?'block':'grid'};grid-template-columns:1.3fr 1fr;gap:50px;align-items:center;${centred?'text-align:center;':''}}
+.site .eyebrow{display:inline-block;font-size:12.5px;font-weight:700;letter-spacing:1.6px;text-transform:uppercase;color:var(--a);margin-bottom:${m?12:16}px;font-family:${bf}}
+.site .hero h1{font-size:${m?(dark?36:33):(dark?70:58)}px;max-width:${centred?'900px':'none'};margin:0 ${centred?'auto':'0'}}
+.site .hero p.sub{font-size:${m?16:20}px;color:${V.mut};max-width:660px;margin:${m?16:22}px ${centred?'auto':'0'} 0}
+.site .btns{display:flex;gap:12px;flex-wrap:wrap;margin-top:${m?24:32}px;${centred?'justify-content:center;':''}}
+.site .b1{background:var(--a);color:var(--on);padding:${m?'13px 20px':'15px 28px'};border-radius:${V.r};font-weight:700}
+.site .b2{border:2px solid ${V.line};padding:${m?'11px 18px':'13px 26px'};border-radius:${V.r};font-weight:700}
+.site .hcard{background:${V.card};border:1px solid ${V.line};border-radius:20px;padding:28px;box-shadow:0 20px 50px -25px rgba(15,23,42,.35);margin-top:${m?30:0}px;text-align:left}
+.site .hcard h3{font-size:18px;margin-bottom:4px}
+.site .hcard .big{font-size:24px;font-weight:800;color:var(--a);margin:4px 0 12px}
+.site .hcard .l{color:${V.mut};font-size:15px;padding:3px 0;border-top:1px solid ${V.line}}
+.site .s{padding:${m?'48px 0':'84px 0'}}
+.site .alt{background:${V.alt};border-top:1px solid ${V.line};border-bottom:1px solid ${V.line}}
+.site .sh{text-align:center;margin-bottom:${m?28:46}px}
+.site .sh h2{font-size:${m?28:40}px}
+.site .sh p{color:${V.mut};margin:10px auto 0;max-width:600px}
+.site .cards{display:grid;grid-template-columns:repeat(${cols},1fr);gap:${m?14:22}px}
+.site .sc{background:${V.card};border:1px solid ${V.line};border-radius:18px;padding:${m?22:28}px}
+.site .sc .n{width:42px;height:42px;border-radius:12px;background:var(--tint);color:var(--a);font-weight:800;display:flex;align-items:center;justify-content:center;margin-bottom:16px;font-size:15px}
+.site .sc h3{font-size:${m?19:21}px;margin-bottom:8px;text-transform:none;letter-spacing:0;font-family:${dark?bf:V.hf};font-weight:${dark?800:V.hw}}
+.site .sc p{color:${V.mut};margin:0}
+.site .sc .pr{margin-top:14px;font-weight:800;color:var(--a);font-size:17px}
+.site .ab{display:${m?'block':'grid'};grid-template-columns:1.2fr 1fr;gap:56px;align-items:start}
+.site .ab h2{font-size:${m?28:38}px;margin-bottom:16px}
+.site .ab p.t{color:${V.mut};white-space:pre-line;margin:0;font-size:${m?16:17}px}
+.site .why{margin-top:${m?28:0}px}
+.site .wi{display:flex;gap:14px;background:${V.card};border:1px solid ${V.line};border-radius:16px;padding:18px;margin-bottom:14px}
+.site .wi .ck{width:30px;height:30px;border-radius:50%;background:var(--a);color:var(--on);display:flex;align-items:center;justify-content:center;font-weight:900;flex:none;font-size:14px}
+.site .wi b{display:block;margin-bottom:2px}
+.site .wi span{color:${V.mut};font-size:15px}
+.site .ct{display:grid;grid-template-columns:${m?'1fr':'repeat(3,1fr)'};gap:${m?14:22}px}
+.site .cc{background:${V.card};border:1px solid ${V.line};border-radius:18px;padding:24px}
+.site .cc .k{font-size:12px;font-weight:800;letter-spacing:1.2px;text-transform:uppercase;color:var(--a);margin-bottom:8px}
+.site .cc .v{font-weight:600;word-break:break-word}
+.site .cc .v div{padding:2px 0}
+.site .band{background:var(--a);color:var(--on);border-radius:${m?18:24}px;padding:${m?'30px 22px':'46px 56px'};display:${m?'block':'flex'};align-items:center;justify-content:space-between;gap:30px;margin-top:${m?30:46}px}
+.site .band h3{font-size:${m?24:32}px}
+.site .band p{margin:8px 0 0;opacity:.92}
+.site .band .bb{display:inline-block;background:var(--on);color:var(--a);padding:14px 26px;border-radius:${V.r};font-weight:800;white-space:nowrap;margin-top:${m?18:0}px}
+.site .soc{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
+.site .soc span{border:1px solid ${V.line};border-radius:99px;padding:4px 12px;font-size:13px;font-weight:600}
+.site .ft{padding:28px 0;color:${V.mut};font-size:13px}
+.site .ft .w{display:flex;justify-content:space-between;gap:8px;flex-wrap:wrap}
+`;
+  const svcCards = d.services.map((s,i)=>`<div class="sc"><div class="n">${String(i+1).padStart(2,'0')}</div><h3>${esc(s.name)}</h3><p>${esc(s.desc || 'Get in touch for details.')}</p>${s.price?`<div class="pr">${esc(s.price)}</div>`:''}</div>`).join('');
+  const hcard = theme==='fresh' ? `<div class="hcard"><h3>Talk to us today</h3><div class="big">${esc(d.phone)}</div>${hours.slice(0,3).map(h=>`<div class="l">${esc(h)}</div>`).join('')}${d.address?`<div class="l">${esc(d.address)}</div>`:''}</div>` : '';
+  return `<div class="site ${theme} ${m?'mob':'desk'}"><style>${css}</style>
+<div class="w"><div class="nav"><div class="lg${d.logo?' has':''}">${logo}</div><div class="bn">${esc(d.name)}</div><div class="links"><span>Services</span><span>About</span><span>Contact</span></div><div class="call">${m?'Call us':'Call '+esc(d.phone)}</div></div></div>
+<div class="hero"><div class="w"><div class="hgrid"><div><div class="eyebrow">${esc(copy.trade)}${d.city?' · '+esc(d.city):''}</div><h1>${esc(headline)}</h1><p class="sub">${esc(copy.sub)}</p><div class="btns"><span class="b1">${esc(copy.cta)}</span><span class="b2">Our services</span></div></div>${hcard}</div></div></div>
+<div class="s alt"><div class="w"><div class="sh"><h2>What we do</h2><p>Everything ${esc(d.name)} offers, in one place.</p></div><div class="cards">${svcCards}</div></div></div>
+<div class="s"><div class="w"><div class="ab"><div><div class="eyebrow">About us</div><h2>${esc(copy.aboutTitle)}</h2><p class="t">${esc(copy.about)}</p></div><div class="why">${copy.why.map(w=>`<div class="wi"><div class="ck">✓</div><div><b>${esc(w[0])}</b><span>${esc(w[1])}</span></div></div>`).join('')}</div></div></div></div>
+<div class="s alt"><div class="w"><div class="sh"><h2>Get in touch</h2><p>We'd love to hear from you.</p></div><div class="ct">
+<div class="cc"><div class="k">Call or email</div><div class="v"><div>${esc(d.phone)}</div><div>${esc(d.email)}</div></div></div>
+<div class="cc"><div class="k">Opening hours</div><div class="v">${hours.length?hours.map(h=>`<div>${esc(h)}</div>`).join(''):'<div>Call us to check availability</div>'}</div></div>
+<div class="cc"><div class="k">Find us</div><div class="v"><div>${esc(d.address || (d.city ? 'Serving '+d.city+' and nearby' : 'Get in touch for directions'))}</div></div>${socials.length?`<div class="soc">${socials.map(s=>`<span>${s[0]}</span>`).join('')}</div>`:''}</div>
+</div><div class="band"><div><h3>${esc(copy.cta)}</h3><p>${esc(copy.ctaBand)}</p></div><span class="bb">Call ${esc(d.phone)}</span></div></div></div>
+<div class="ft"><div class="w"><span>© ${new Date().getFullYear()} ${esc(d.name)}. All rights reserved.</span><span>Website by ${esc(BRAND.name)}</span></div></div>
+</div>`;
+}
+function fullDoc(markup, title){ return `<!DOCTYPE html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>${esc(title)}</title><style>html,body{margin:0}</style></head><body>${markup}</body></html>`; }
+
+/* =====================================================================
+   PREVIEW BOT – rasterise the site to a PNG inside the browser:
+   markup -> measure height in a shadow root -> XHTML inside SVG
+   <foreignObject> -> <img> -> <canvas> (+ watermark) -> PNG data URL.
+   Only the PNG goes on the page; the markup string is dropped.
+   Fallback: locked, sandboxed iframe + click/selection blocker + watermark.
+   ===================================================================== */
+function measure(markup, width){
+  const host = document.createElement('div');
+  host.style.cssText = `position:absolute;left:-20000px;top:0;width:${width}px;visibility:hidden`;
+  document.body.appendChild(host);
+  const root = host.attachShadow({mode:'open'});
+  root.innerHTML = markup;
+  const h = Math.ceil(root.querySelector('.site').getBoundingClientRect().height);
+  host.remove();
+  return h;
+}
+function toXhtml(markup){
+  const doc = document.implementation.createHTMLDocument('');
+  doc.body.innerHTML = markup;
+  return new XMLSerializer().serializeToString(doc.body.querySelector('.site'));
+}
+function stampWatermark(ctx, w, h, s){
+  ctx.save();
+  ctx.fillStyle = 'rgba(128,128,140,0.14)';
+  ctx.font = `900 ${Math.round(54*s)}px system-ui, Arial, sans-serif`;
+  ctx.textAlign = 'center';
+  ctx.translate(w/2, h/2); ctx.rotate(-Math.PI/6);
+  const R = Math.hypot(w, h), gx = 640*s, gy = 260*s; let row = 0;
+  for (let y = -R; y < R; y += gy, row++) for (let x = -R; x < R; x += gx) ctx.fillText(`PREVIEW · ${BRAND.name.toUpperCase()}`, x + (row % 2 ? gx/2 : 0), y);
+  ctx.restore();
+  const rh = 34*s;
+  ctx.fillStyle = 'rgba(15,23,42,0.85)'; ctx.fillRect(0, h-rh, w, rh);
+  ctx.fillStyle = '#fff'; ctx.font = `600 ${Math.round(13*s)}px system-ui, Arial, sans-serif`; ctx.textAlign = 'center';
+  ctx.fillText(`Preview only · approve to go live · ${BRAND.name}`, w/2, h - rh/2 + 5*s);
+}
+async function rasterise(markup, width, scale){
+  const height = measure(markup, width);
+  const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="${width}" height="${height}"><foreignObject x="0" y="0" width="${width}" height="${height}">${toXhtml(markup)}</foreignObject></svg>`;
+  const img = new Image();
+  await new Promise((res, rej) => { img.onload = res; img.onerror = () => rej(new Error('SVG image failed to load')); img.src = 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(svg); });
+  const c = document.createElement('canvas');
+  c.width = Math.round(width*scale); c.height = Math.round(height*scale);
+  const ctx = c.getContext('2d');
+  ctx.fillStyle = '#fff'; ctx.fillRect(0,0,c.width,c.height);
+  ctx.drawImage(img, 0, 0, c.width, c.height);
+  // blank check (also throws if the canvas got tainted -> fallback)
+  const px = ctx.getImageData(0, 0, c.width, Math.min(c.height, 600)).data;
+  let ink = 0; for (let i = 0; i < px.length; i += 4*53) if (px[i] < 235 || px[i+1] < 235 || px[i+2] < 235) ink++;
+  if (ink < 20) throw new Error('rendered picture came out blank');
+  stampWatermark(ctx, c.width, c.height, scale);
+  return { url: c.toDataURL('image/png'), w: c.width, h: c.height };
+}
+
+/* ---------------- State & storage ---------------- */
+let editing = false, services = [], logoData = '', current = null, previews = null, device = 'desktop';
+const forceFallback = /[?&]preview=iframe/.test(location.search);   // test hook for the locked-frame fallback
+function load(){ try { return JSON.parse(localStorage.getItem(STORE_KEY)) || []; } catch { return []; } }
+function save(list){ try { localStorage.setItem(STORE_KEY, JSON.stringify(list)); } catch(e){ console.warn('Storage full', e); } }
+function upsert(sub){ const l = load(); const i = l.findIndex(x => x.id === sub.id); sub.updatedAt = new Date().toISOString(); if (i >= 0) l[i] = sub; else l.unshift(sub); save(l); }
+
+/* ---------------- Intake form ---------------- */
+$('#industry').innerHTML += INDUSTRIES.map(i => `<option value="${i[0]}">${esc(i[1])}</option>`).join('');
+$('#colour').innerHTML = COLOURS.map(c => `<option value="${c[0]}">${c[1]}</option>`).join('');
+$('#chTheme').innerHTML += Object.entries(THEMES).map(([k,v]) => `<option value="${k}">${esc(v.label)}</option>`).join('');
+$('#chColour').innerHTML += COLOURS.filter(c => c[0] && c[0] !== 'custom').map(c => `<option value="${c[0]}">${c[1]}</option>`).join('');
+const syncIndustry = () => { $('#industryOther').style.display = $('#industry').value === 'other' ? 'block' : 'none'; };
+const syncColour = () => { $('#colourCustom').style.display = $('#colour').value === 'custom' ? 'block' : 'none'; };
+$('#industry').onchange = syncIndustry; $('#colour').onchange = syncColour;
+
+function renderSvcs(){
+  $('#svcList').innerHTML = services.map((s,i) => `<div class="svc" data-i="${i}">
+   <input type="text" placeholder="Service name" value="${esc(s.name)}" data-k="name" maxlength="50" aria-label="Service name">
+   <input class="d" type="text" placeholder="Short description" value="${esc(s.desc)}" data-k="desc" maxlength="160" aria-label="Description">
+   <input type="text" placeholder="Price (optional)" value="${esc(s.price)}" data-k="price" maxlength="30" aria-label="Price">
+   <button type="button" class="btn ghost sm" data-rm="${i}" title="Remove" ${services.length < 2 ? 'disabled' : ''}>✕</button></div>`).join('');
+}
+$('#svcList').addEventListener('input', e => { const r = e.target.closest('.svc'); if (r && e.target.dataset.k) services[+r.dataset.i][e.target.dataset.k] = e.target.value; });
+$('#svcList').addEventListener('click', e => { const i = e.target.dataset.rm; if (i !== undefined && services.length > 1) { services.splice(+i, 1); renderSvcs(); } });
+$('#addSvc').onclick = () => { if (services.length < 9) { services.push({name:'',desc:'',price:''}); renderSvcs(); } };
+
+function setLogo(url){
+  logoData = url || '';
+  $('#logoPrev').innerHTML = logoData ? `<img src="${logoData}" alt="logo">` : 'No logo';
+  $('#logoClear').style.display = logoData ? 'inline-flex' : 'none';
+}
+$('#logoFile').onchange = e => {
+  const f = e.target.files[0]; if (!f) return;
+  const r = new FileReader();
+  r.onload = () => {                      // read as data URL, then shrink to max 256px PNG so it stays small
+    const im = new Image();
+    im.onload = () => { const s = Math.min(1, 256 / Math.max(im.width, im.height)); const c = document.createElement('canvas');
+      c.width = Math.max(1, Math.round(im.width*s)); c.height = Math.max(1, Math.round(im.height*s));
+      c.getContext('2d').drawImage(im, 0, 0, c.width, c.height); setLogo(c.toDataURL('image/png')); };
+    im.onerror = () => alert('Sorry, that image could not be read. Try a PNG or JPG.');
+    im.src = r.result;
+  };
+  r.readAsDataURL(f);
+};
+$('#logoClear').onclick = () => { setLogo(''); $('#logoFile').value = ''; };
+
+function fillForm(d){
+  const f = $('#intake').elements;
+  ['name','city','about','phone','email','address','hours','facebook','instagram','other','industryOther'].forEach(k => f[k].value = d[k] || '');
+  f.industry.value = d.industry || ''; syncIndustry();
+  const known = COLOURS.some(c => c[0] === (d.colour || ''));
+  f.colour.value = known ? (d.colour || '') : 'custom'; if (!known) $('#colourCustom').value = d.colour; syncColour();
+  services = (d.services || []).map(s => ({...s})); if (!services.length) services = [{name:'',desc:'',price:''}]; renderSvcs();
+  setLogo(d.logo || '');
+  $$('#intake .invalid').forEach(el => el.classList.remove('invalid')); $('#formErr').style.display = 'none';
+}
+const EXAMPLE = {
+  name:'Example Plumbing Co. (Demo)', industry:'plumbing', city:'Leeds',
+  about:'We are a family-run plumbing and heating team that has been looking after homes around Leeds for over 12 years.\nFrom a dripping tap to a brand-new boiler, we turn up on time, keep your home tidy and explain everything in plain English. (This is a made-up example business.)',
+  services:[{name:'Emergency call-outs',desc:'Burst pipe or no hot water? We aim to be with you within 2 hours, 7 days a week.',price:'From £79'},
+            {name:'Boiler installation',desc:'New A-rated boilers fitted by qualified engineers, with up to 10 years warranty.',price:'From £1,850'},
+            {name:'Bathroom fitting',desc:'Full bathroom design and installation, from tiles to taps.',price:'Free quote'}],
+  phone:'+44 20 7946 0000', email:'hello@example.com', address:'1 Sample Street, Leeds LS1 0AA',
+  hours:'Mon–Fri: 8am–6pm\nSat: 9am–2pm\nEmergencies: 24/7', colour:'', facebook:'https://facebook.com/example', instagram:'', other:'' };
+$('#fillExample').onclick = () => fillForm(EXAMPLE);
+
+function readForm(){
+  const f = $('#intake').elements, g = k => f[k].value.trim();
+  return { name:g('name'), industry:f.industry.value, industryOther:g('industryOther'), city:g('city'), about:g('about'),
+    services: services.map(s => ({name:s.name.trim(), desc:s.desc.trim(), price:s.price.trim()})).filter(s => s.name),
+    phone:g('phone'), email:g('email'), address:g('address'), hours:f.hours.value.trim(),
+    colour: f.colour.value === 'custom' ? $('#colourCustom').value : f.colour.value,
+    facebook:g('facebook'), instagram:g('instagram'), other:g('other'), logo:logoData };
+}
+function validate(d){
+  const bad = { name:!d.name, industry:!d.industry || (d.industry === 'other' && !d.industryOther), about:d.about.length < 30,
+    services:!d.services.length, phone:d.phone.replace(/\D/g,'').length < 6, email:!isEmail(d.email) };
+  $$('#intake .f[data-f]').forEach(el => el.classList.toggle('invalid', !!bad[el.dataset.f]));
+  const ok = !Object.values(bad).some(Boolean);
+  $('#formErr').style.display = ok ? 'none' : 'block';
+  if (!ok) $('#intake .invalid').scrollIntoView({behavior:'smooth', block:'center'});
+  return ok;
+}
+$('#intake').onsubmit = e => {
+  e.preventDefault();
+  const d = readForm();
+  if (!validate(d)) return;
+  const cat = ind(d.industry)[2], theme = CAT_THEME[cat];
+  const keep = editing && current ? current : null;   // 'Edit my details' keeps the same request
+  editing = false;
+  current = keep ? { ...keep, data:d, version:keep.version + 1, revisions:[...keep.revisions, {at:new Date().toISOString(), notes:'Edited details in the form'}] }
+                 : { id:'S' + Date.now().toString(36).toUpperCase(), createdAt:new Date().toISOString(), data:d, version:1, revisions:[], status:'building', interest:null,
+                     opts:{ theme, accent:d.colour || CAT_ACCENT[cat] || THEMES[theme].accent, headline:'' } };
+  if (keep && d.colour) current.opts = { ...current.opts, accent:d.colour };
+  runPipeline(keep ? { summary:['Updated details from the form'] } : null);
+};
+
+/* ---------------- Pipeline animation ---------------- */
+function botSet(n, state, status, lines){
+  const b = $('#bot' + n); b.className = 'bot ' + state;
+  $('.st', b).innerHTML = (state === 'run' ? '<span class="spin"></span> ' : '') + esc(status);
+  if (lines) $('ul', b).innerHTML = lines.map(l => `<li>${esc(l)}</li>`).join('');
+  $('.ic', b).textContent = state === 'done' ? '✓' : n;
+}
+let running = false;
+async function runPipeline(change){
+  if (running) return; running = true;
+  try {
+    show('pipeline');
+    $('#pipeTitle').textContent = change ? 'Updating your website…' : 'Building your website…';
+    [1,2,3].forEach(n => botSet(n, '', 'Waiting…', []));
+    const d = current.data, t0 = performance.now();
+    // 1 · Intake bot
+    botSet(1, 'run', 'Checking your details…');
+    await sleep(800);
+    botSet(1, 'done', 'Details received', change ? [`Change request for ${current.id} (version ${current.version})`, ...change.summary, 'Passed to Builder bot'] : [
+      `New request ${current.id}: "${d.name}"`,
+      `Trade: ${tradeLabel(d)}${d.city ? ' · ' + d.city : ''}`,
+      `${d.services.length} service${d.services.length > 1 ? 's' : ''}; ${d.hours ? d.hours.split('\n').filter(Boolean).length + ' opening-hours lines' : 'no opening hours'}`,
+      `Logo: ${d.logo ? 'uploaded (resized to PNG)' : 'none, so a text logo will be made'}`,
+      'Details packaged and passed to Builder bot']);
+    // 2 · Builder bot
+    botSet(2, 'run', 'Writing copy and generating your website…');
+    await sleep(1000);
+    const ai = await generateWithAI(d);
+    const copy = ai || templateCopy(d);
+    const mD = buildSite(d, copy, current.opts, 'desktop'), mM = buildSite(d, copy, current.opts, 'mobile');
+    const words = mD.replace(/<style>[\s\S]*?<\/style>/, '').replace(/<[^>]+>/g, ' ').split(/\s+/).filter(Boolean).length;
+    botSet(2, 'done', 'Website generated', [
+      `Template: ${THEMES[current.opts.theme].label}, main colour ${current.opts.accent}`,
+      ai ? 'Copy written by AI' : 'Copy: AI hook not connected in this demo, so built-in templates wrote it',
+      `Sections: header, hero, ${d.services.length} service card${d.services.length > 1 ? 's' : ''}, about + 3 "why us" points, contact, call to action, footer`,
+      `About ${words} words; desktop and mobile layouts built`,
+      'Website files kept on our side; passed to Preview bot']);
+    // 3 · Preview bot
+    botSet(3, 'run', 'Taking pictures of your website…');
+    await sleep(300);
+    const log = [];
+    try {
+      if (forceFallback) throw new Error('forced with ?preview=iframe');
+      const desk = await rasterise(mD, 1280, 1), mob = await rasterise(mM, 390, 2);
+      previews = { mode:'image', desktop:desk, mobile:mob };
+      log.push(`Desktop picture: ${desk.w}×${desk.h}px PNG`, `Mobile picture: ${mob.w}×${mob.h}px PNG (2× sharp)`, '"PREVIEW" watermark stamped on both', 'Website code dropped: only the pictures are sent to you');
+    } catch (err) {
+      console.warn('Picture preview unavailable, using locked frame:', err.message);
+      previews = { mode:'frame', desktop:{doc:fullDoc(mD, d.name)}, mobile:{doc:fullDoc(mM, d.name)} };
+      log.push(`Picture not possible in this browser (${err.message})`, 'Using a locked preview frame instead: no clicking, selecting or right-click, watermark on top');
+    }
+    await sleep(500);
+    botSet(3, 'done', 'Preview ready', [...log, `Total time: ${((performance.now() - t0)/1000).toFixed(1)}s`]);
+    current.status = change ? 'changes applied, awaiting approval' : 'preview sent, awaiting approval';
+    upsert(current);
+    await sleep(800);
+    device = 'desktop';
+    $('#changes').classList.remove('on');
+    show('preview'); renderPreview();      // render after showing so the locked-frame fallback can measure its width
+  } finally { running = false; }
+}
+
+/* ---------------- Preview (client side, view-only) ---------------- */
+function blockEvents(el){ ['contextmenu','dragstart','selectstart','copy'].forEach(ev => el.addEventListener(ev, e => e.preventDefault())); }
+function renderPreview(){
+  $$('.toggle button').forEach(b => b.classList.toggle('on', b.dataset.dev === device));
+  $('#pvRev').textContent = 'Version ' + current.version;
+  $('#pvMode').textContent = previews.mode === 'image' ? 'Shown as a picture' : 'Shown in a locked frame';
+  const p = previews[device], host = `${slug(current.data.name)}.${BRAND.domain}`;
+  const inner = previews.mode === 'image'
+    ? `<img class="pv-img" id="pvImg" alt="Picture of your website (preview)" src="${p.url}" draggable="false">`
+    : `<div class="locked-frame" id="lockedFrame"><iframe sandbox="" title="Locked preview" scrolling="no" tabindex="-1"></iframe><div class="wm" id="wm"></div><div class="lock"></div></div>`;
+  $('#stage').innerHTML = device === 'desktop'
+    ? `<div class="browser"><div class="bar"><span class="dot"></span><span class="dot"></span><span class="dot"></span><span class="url">🔒 ${esc(host)} · preview</span></div><div class="viewport">${inner}</div></div>`
+    : `<div class="phone"><div class="viewport">${inner}</div></div>`;
+  if (previews.mode === 'frame') {
+    // Fallback: render real HTML in a script-less sandboxed iframe, scaled to fit, with a click/selection blocker + watermark on top.
+    const box = $('#lockedFrame'), fr = $('iframe', box), vw = device === 'mobile' ? 390 : 1280;
+    const h = measure(p.doc.match(/<body>([\s\S]*)<\/body>/)[1], vw);
+    const k = box.parentElement.clientWidth / vw;
+    fr.style.cssText = `width:${vw}px;height:${h}px;transform:scale(${k});transform-origin:0 0`;
+    box.style.height = Math.ceil(h * k) + 'px';
+    fr.srcdoc = p.doc;
+    const wm = $('#wm'); for (let y = 200; y < h * k; y += 420) wm.insertAdjacentHTML('beforeend', `<span style="top:${y}px">PREVIEW</span>`);
+  }
+  blockEvents($('#stage'));
+}
+$$('.toggle button').forEach(b => b.onclick = () => { device = b.dataset.dev; renderPreview(); });
+
+/* ---------------- Request changes -> re-run builder ---------------- */
+$('#reqBtn').onclick = () => { $('#changes').classList.toggle('on'); if ($('#changes').classList.contains('on')) $('#changes').scrollIntoView({behavior:'smooth'}); };
+$('#chips').onclick = e => { const t = e.target.dataset.t; if (t) { const n = $('#chNotes'); n.value = (n.value.trim() ? n.value.trim().replace(/[.]?$/, '. ') : '') + t; } };
+$('#editDetails').onclick = () => { editing = true; fillForm(current.data); show('form'); };
+$('#rerunBtn').onclick = () => {
+  const notes = $('#chNotes').value.trim(), lower = notes.toLowerCase(), headline = $('#chHeadline').value.trim();
+  let theme = $('#chTheme').value, accent = $('#chColour').value;
+  if (!theme) theme = /dark|black|bold|strong/.test(lower) ? 'bold' : /warm|friendl|homely|cosy|cozy/.test(lower) ? 'warm' : /elegan|premium|luxur|classy/.test(lower) ? 'elegant' : /fresh|clean|bright|simple/.test(lower) ? 'fresh' : '';
+  if (!accent) { const w = Object.keys(COLOUR_WORDS).find(w => new RegExp('\\b' + w + '\\b').test(lower)); if (w && w !== 'black') accent = COLOUR_WORDS[w]; }
+  if (!theme && !accent && !headline && !notes) { $('#chNotes').focus(); $('#chNotes').placeholder = 'Tell us what to change first…'; return; }
+  const summary = [];
+  if (theme && theme !== current.opts.theme) {
+    if (!accent && Object.values(THEMES).some(t => t.accent === current.opts.accent)) accent = THEMES[theme].accent;  // swap default accents with the style
+    current.opts.theme = theme; summary.push(`Style → ${THEMES[theme].label}`);
+  }
+  if (accent && accent !== current.opts.accent) { current.opts.accent = accent; summary.push(`Main colour → ${accent}`); }
+  if (headline) { current.opts.headline = headline; summary.push(`Headline → "${headline}"`); }
+  if (notes) summary.push(`Note saved for the team: "${notes.length > 90 ? notes.slice(0, 90) + '…' : notes}"`);
+  current.version++;
+  current.revisions.push({ at:new Date().toISOString(), theme, accent, headline, notes });
+  ['chTheme','chColour','chHeadline','chNotes'].forEach(id => $('#' + id).value = '');
+  runPipeline({ summary: summary.length ? summary : ['No automatic change matched, so the note is saved for the team'] });
+};
+
+/* ---------------- Approve & go live (fake door, no payment) ---------------- */
+function priceRows(){
+  const dom = $('input[name=dom]:checked').value === 'connect';
+  const today = BRAND.setup + BRAND.monthly + (dom ? BRAND.domainConnect : 0);
+  $('#priceTbl').innerHTML = `<tr><td>Website setup <span class="note">(one-time)</span></td><td>${money(BRAND.setup)}</td></tr>
+   <tr><td>Hosting &amp; maintenance <span class="note">(first month)</span></td><td>${money(BRAND.monthly)}/mo</td></tr>
+   ${dom ? `<tr><td>Connect your own domain <span class="note">(one-time)</span></td><td>${money(BRAND.domainConnect)}</td></tr>` : ''}
+   <tr class="tot"><td>Due today</td><td>${money(today)}</td></tr>
+   <tr><td class="note" colspan="2" style="text-align:left;font-weight:400">Then ${money(BRAND.monthly)}/month. Cancel any time.</td></tr>`;
+  $('#payBtn').textContent = `Pay ${money(today)} & go live`;
+  return { dom, today };
+}
+$('#domFee').textContent = '+' + money(BRAND.domainConnect);
+$$('input[name=dom]').forEach(r => r.onchange = priceRows);
+$('#approveBtn').onclick = () => {
+  $('#apName').textContent = current.data.name; $('#apRev').textContent = current.version;
+  $('#freeSub').textContent = `${slug(current.data.name)}.${BRAND.domain}`;
+  $('#apThumb').innerHTML = previews.mode === 'image' ? `<img src="${previews.desktop.url}" alt="Approved preview" draggable="false">` : '<div class="note" style="padding:20px">Approved preview (locked frame)</div>';
+  blockEvents($('#apThumb'));
+  $('#payEmail').value = current.data.email; $('#payEmail').style.borderColor = '';
+  priceRows();
+  current.status = 'approved, viewing price'; current.approvedAt = new Date().toISOString(); upsert(current);
+  show('approve');
+};
+$('#backPreview').onclick = () => show('preview');
+$('#payBtn').onclick = () => {
+  const email = $('#payEmail').value.trim();
+  if (!isEmail(email)) { $('#payEmail').style.borderColor = 'var(--bad)'; $('#payEmail').focus(); return; }
+  const { dom, today } = priceRows();
+  current.status = 'clicked pay (fake door)';
+  current.interest = { at:new Date().toISOString(), email, domain: dom ? 'connect own domain' : 'free subdomain', dueToday: today };
+  upsert(current);
+  $('#thxEmail').textContent = email;
+  show('thanks');
+};
+$('#startOver').onclick = () => { $('#intake').reset(); services = [{name:'',desc:'',price:''}]; renderSvcs(); setLogo(''); syncIndustry(); syncColour(); current = null; previews = null; show('form'); };
+
+/* ---------------- Admin (#admin) ---------------- */
+function renderAdmin(){
+  const l = load(), n = f => l.filter(f).length;
+  $('#stats').innerHTML = [[l.length,'Submissions'],[n(x => x.revisions.length),'Asked for changes'],[n(x => x.approvedAt),'Approved'],[n(x => x.interest),'Clicked pay']]
+    .map(s => `<div class="stat"><b>${s[0]}</b><span>${s[1]}</span></div>`).join('');
+  const pill = s => /pay/.test(s) ? 'g' : /approved/.test(s) ? 'b' : '';
+  $('#admTbl').innerHTML = `<tr><th>When</th><th>Business</th><th class="hide-m">Contact</th><th class="hide-m">Style</th><th>Status</th><th></th></tr>` +
+   (l.length ? l.map(s => `<tr><td>${esc(new Date(s.createdAt).toLocaleString([], {dateStyle:'medium', timeStyle:'short'}))}<div class="note">${esc(s.id)}</div></td>
+     <td><b>${esc(s.data.name)}</b><div class="note">${esc(tradeLabel(s.data))}${s.data.city ? ' · ' + esc(s.data.city) : ''}${s.data.logo ? ' · logo' : ''}</div></td>
+     <td class="hide-m">${esc(s.data.email)}<div class="note">${esc(s.data.phone)}</div></td>
+     <td class="hide-m">${esc(s.opts.theme)} <span style="display:inline-block;width:12px;height:12px;border-radius:3px;background:${esc(s.opts.accent)};vertical-align:-1px"></span><div class="note">v${s.version} · ${s.revisions.length} change${s.revisions.length === 1 ? '' : 's'}</div></td>
+     <td><span class="pill ${pill(s.status)}">${esc(s.status)}</span>${s.interest ? `<div class="note">${esc(s.interest.email)} · ${esc(s.interest.domain)} · ${money(s.interest.dueToday)} today</div>` : ''}${s.revisions.length ? `<div class="note">Last request: ${esc(s.revisions[s.revisions.length-1].notes || [s.revisions[s.revisions.length-1].theme, s.revisions[s.revisions.length-1].headline].filter(Boolean).join(', ') || '–')}</div>` : ''}</td>
+     <td><button class="btn sm" data-view="${esc(s.id)}">View full site</button></td></tr>`).join('')
+   : `<tr><td colspan="6" class="note" style="text-align:center;padding:30px">No submissions yet. Open the client view and build a site.</td></tr>`);
+}
+let smUrl = null;
+$('#admTbl').onclick = e => {
+  const id = e.target.dataset.view; if (!id) return;
+  const s = load().find(x => x.id === id); if (!s) return;
+  const doc = fullDoc(buildSite(s.data, templateCopy(s.data), s.opts, window.innerWidth < 700 ? 'mobile' : 'desktop'), s.data.name);
+  $('#smTitle').textContent = `${s.data.name}: full site (v${s.version})`;
+  $('#smFrame').srcdoc = doc;
+  if (smUrl) URL.revokeObjectURL(smUrl);
+  smUrl = URL.createObjectURL(new Blob([doc], {type:'text/html'}));
+  $('#siteModal').classList.add('on');
+};
+$('#smOpen').onclick = () => smUrl && window.open(smUrl, '_blank');
+$('#smClose').onclick = () => $('#siteModal').classList.remove('on');
+$('#exportBtn').onclick = () => {
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(new Blob([JSON.stringify(load(), null, 2)], {type:'application/json'}));
+  a.download = `${slug(BRAND.name)}-submissions-${new Date().toISOString().slice(0,10)}.json`;
+  document.body.appendChild(a); a.click(); a.remove();
+};
+$('#clearBtn').onclick = () => { if (confirm('Delete all saved submissions in this browser?')) { localStorage.removeItem(STORE_KEY); renderAdmin(); } };
+
+/* ---------------- Router ---------------- */
+function show(name){
+  $$('.screen').forEach(s => s.classList.toggle('on', s.id === 'screen-' + name));
+  const idx = name === 'thanks' ? 3 : ['form','pipeline','preview','approve'].indexOf(name);
+  $$('#stepsNav span').forEach((s,i) => s.classList.toggle('on', i === idx));
+  $('#stepsNav').style.visibility = name === 'admin' ? 'hidden' : 'visible';
+  window.scrollTo(0, 0);
+}
+function route(){
+  if (location.hash === '#admin') { renderAdmin(); show('admin'); }
+  else if (!$('.screen.on') || $('#screen-admin').classList.contains('on')) show(current && previews ? 'preview' : 'form');
+}
+window.addEventListener('hashchange', route);
+services = [{name:'',desc:'',price:''}]; renderSvcs();
+route();
+</script>
+</body>
+</html>

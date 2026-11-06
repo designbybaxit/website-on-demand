@@ -1,0 +1,685 @@
+{
+ "title": "Homepage – DentalKit",
+ "url": "https://point.moxcreative.com/dentalkit/template-kit/homepage/?storefront=envato-elements",
+ "height": 8482,
+ "bg": [
+  [
+   "rgb(255, 255, 255)",
+   25
+  ],
+  [
+   "rgb(9, 181, 133)",
+   8
+  ],
+  [
+   "rgb(0, 135, 99)",
+   8
+  ],
+  [
+   "rgba(0, 135, 99, 0)",
+   6
+  ],
+  [
+   "rgba(2, 1, 1, 0)",
+   5
+  ],
+  [
+   "rgb(247, 247, 247)",
+   5
+  ],
+  [
+   "rgba(255, 255, 255, 0.17)",
+   4
+  ],
+  [
+   "rgb(254, 215, 0)",
+   3
+  ]
+ ],
+ "fg": [
+  [
+   "rgb(80, 87, 94)",
+   68
+  ],
+  [
+   "rgb(255, 255, 255)",
+   62
+  ],
+  [
+   "rgb(34, 34, 34)",
+   36
+  ],
+  [
+   "rgb(0, 135, 99)",
+   21
+  ],
+  [
+   "rgb(254, 215, 0)",
+   2
+  ]
+ ],
+ "fonts": [
+  [
+   "Inter",
+   189
+  ]
+ ],
+ "heads": [
+  [
+   "H2|Inter|700|48px",
+   7
+  ],
+  [
+   "H3|Inter|700|24px",
+   6
+  ],
+  [
+   "H3|Inter|700|36px",
+   5
+  ],
+  [
+   "H1|Inter|700|72px",
+   1
+  ]
+ ],
+ "btns": [
+  {
+   "t": "Discover more",
+   "bg": "rgba(0, 0, 0, 0)",
+   "c": "rgb(80, 87, 94)",
+   "r": "0px",
+   "pad": "0px",
+   "ff": "Inter",
+   "fw": "400",
+   "tt": "none",
+   "border": "0px none rgb(80, 87, 94)"
+  },
+  {
+   "t": "Discover more",
+   "bg": "rgba(0, 0, 0, 0)",
+   "c": "rgb(80, 87, 94)",
+   "r": "0px",
+   "pad": "0px",
+   "ff": "Inter",
+   "fw": "400",
+   "tt": "none",
+   "border": "0px none rgb(80, 87, 94)"
+  },
+  {
+   "t": "Discover more",
+   "bg": "rgb(9, 181, 133)",
+   "c": "rgb(255, 255, 255)",
+   "r": "5px",
+   "pad": "20px 40px",
+   "ff": "Inter",
+   "fw": "500",
+   "tt": "none",
+   "border": "0px solid rgb(0, 135, 99)"
+  },
+  {
+   "t": "Discover more",
+   "bg": "rgba(0, 0, 0, 0)",
+   "c": "rgb(255, 255, 255)",
+   "r": "0px",
+   "pad": "0px",
+   "ff": "Inter",
+   "fw": "500",
+   "tt": "none",
+   "border": "0px none rgb(255, 255, 255)"
+  },
+  {
+   "t": "Discover more",
+   "bg": "rgba(0, 0, 0, 0)",
+   "c": "rgb(255, 255, 255)",
+   "r": "0px",
+   "pad": "0px",
+   "ff": "Inter",
+   "fw": "500",
+   "tt": "none",
+   "border": "0px none rgb(255, 255, 255)"
+  },
+  {
+   "t": "Name\nPhone\nEmail\nDoctor\nNichol",
+   "bg": "rgba(0, 0, 0, 0)",
+   "c": "rgb(80, 87, 94)",
+   "r": "0px",
+   "pad": "0px",
+   "ff": "Inter",
+   "fw": "400",
+   "tt": "none",
+   "border": "0px none rgb(80, 87, 94)"
+  },
+  {
+   "t": "Book Appointments",
+   "bg": "rgba(0, 0, 0, 0)",
+   "c": "rgb(80, 87, 94)",
+   "r": "0px",
+   "pad": "0px 5px",
+   "ff": "Inter",
+   "fw": "400",
+   "tt": "none",
+   "border": "0px none rgb(80, 87, 94)"
+  },
+  {
+   "t": "Book Appointments",
+   "bg": "rgb(0, 135, 99)",
+   "c": "rgb(255, 255, 255)",
+   "r": "5px",
+   "pad": "15px 30px",
+   "ff": "Inter",
+   "fw": "500",
+   "tt": "none",
+   "border": "1px solid rgb(0, 135, 99)"
+  },
+  {
+   "t": "Book Appointments",
+   "bg": "rgba(0, 0, 0, 0)",
+   "c": "rgb(255, 255, 255)",
+   "r": "0px",
+   "pad": "0px",
+   "ff": "Inter",
+   "fw": "500",
+   "tt": "none",
+   "border": "0px none rgb(255, 255, 255)"
+  },
+  {
+   "t": "Book Appointments",
+   "bg": "rgba(0, 0, 0, 0)",
+   "c": "rgb(255, 255, 255)",
+   "r": "0px",
+   "pad": "0px",
+   "ff": "Inter",
+   "fw": "500",
+   "tt": "none",
+   "border": "0px none rgb(255, 255, 255)"
+  },
+  {
+   "t": "Discover more",
+   "bg": "rgba(0, 0, 0, 0)",
+   "c": "rgb(80, 87, 94)",
+   "r": "0px",
+   "pad": "0px",
+   "ff": "Inter",
+   "fw": "400",
+   "tt": "none",
+   "border": "0px none rgb(80, 87, 94)"
+  },
+  {
+   "t": "Discover more",
+   "bg": "rgba(0, 0, 0, 0)",
+   "c": "rgb(80, 87, 94)",
+   "r": "0px",
+   "pad": "0px",
+   "ff": "Inter",
+   "fw": "400",
+   "tt": "none",
+   "border": "0px none rgb(80, 87, 94)"
+  }
+ ],
+ "sections": [
+  {
+   "tag": "SECTION",
+   "cls": "elementor-section elementor-top-section elementor-element elementor-element-ffe5743 elementor-sectio",
+   "y": 0,
+   "h": 117,
+   "bg": "rgba(0, 0, 0, 0)",
+   "bgimg": "none",
+   "heads": [],
+   "imgs": 1,
+   "inputs": 0,
+   "widgets": [
+    "image.default",
+    "icon-list.default",
+    "nav-menu.default",
+    "icon-box.default"
+   ],
+   "swipers": 0,
+   "counters": 0,
+   "accordions": 4,
+   "videos": 0,
+   "anims": [
+    "slideInDown"
+   ]
+  },
+  {
+   "tag": "SECTION",
+   "cls": "elementor-section elementor-top-section elementor-element elementor-element-278b52c elementor-sectio",
+   "y": 117,
+   "h": 772,
+   "bg": "rgba(0, 0, 0, 0)",
+   "bgimg": "url(\"https://point.moxcreative.com/dentalkit/wp-co",
+   "heads": [
+    "H1: Best medical care for your smile"
+   ],
+   "imgs": 0,
+   "inputs": 0,
+   "widgets": [
+    "heading.default",
+    "text-editor.default",
+    "button.default"
+   ],
+   "swipers": 0,
+   "counters": 0,
+   "accordions": 0,
+   "videos": 0,
+   "anims": [
+    "slideInLeft"
+   ]
+  },
+  {
+   "tag": "SECTION",
+   "cls": "elementor-section elementor-inner-section elementor-element elementor-element-24b51c6 elementor-sect",
+   "y": 761,
+   "h": 122,
+   "bg": "rgba(0, 0, 0, 0)",
+   "bgimg": "none",
+   "heads": [],
+   "imgs": 0,
+   "inputs": 0,
+   "widgets": [
+    "icon-box.default"
+   ],
+   "swipers": 0,
+   "counters": 0,
+   "accordions": 0,
+   "videos": 0,
+   "anims": []
+  },
+  {
+   "tag": "SECTION",
+   "cls": "elementor-section elementor-top-section elementor-element elementor-element-9238da0 elementor-sectio",
+   "y": 890,
+   "h": 792,
+   "bg": "rgba(0, 0, 0, 0)",
+   "bgimg": "none",
+   "heads": [
+    "H6: WHO WE ARE",
+    "H2: We passionately care form your smile."
+   ],
+   "imgs": 19,
+   "inputs": 0,
+   "widgets": [
+    "image.default",
+    "heading.default",
+    "text-editor.default",
+    "button.default",
+    "image-carousel.default"
+   ],
+   "swipers": 1,
+   "counters": 0,
+   "accordions": 0,
+   "videos": 0,
+   "anims": [
+    "fadeInLeft",
+    "fadeInRight",
+    "fadeInUp"
+   ]
+  },
+  {
+   "tag": "SECTION",
+   "cls": "elementor-section elementor-top-section elementor-element elementor-element-d918616 elementor-sectio",
+   "y": 1682,
+   "h": 606,
+   "bg": "rgba(0, 0, 0, 0)",
+   "bgimg": "none",
+   "heads": [],
+   "imgs": 1,
+   "inputs": 0,
+   "widgets": [
+    "counter.default",
+    "text-editor.default",
+    "image.default"
+   ],
+   "swipers": 0,
+   "counters": 14,
+   "accordions": 0,
+   "videos": 0,
+   "anims": [
+    "fadeInLeft",
+    "fadeInUp",
+    "fadeInRight"
+   ]
+  },
+  {
+   "tag": "SECTION",
+   "cls": "elementor-section elementor-top-section elementor-element elementor-element-df3f5b5 elementor-sectio",
+   "y": 2289,
+   "h": 1211,
+   "bg": "rgba(0, 0, 0, 0)",
+   "bgimg": "url(\"https://point.moxcreative.com/dentalkit/wp-co",
+   "heads": [
+    "H6: WHAT WE OFFER",
+    "H2: A personalized and comfortable dental care",
+    "H3: Teeth Cleaning",
+    "H3: Dental Fillings",
+    "H3: Teeth Braces",
+    "H3: Implants",
+    "H3: Whitening",
+    "H3: Tooth Extraction"
+   ],
+   "imgs": 6,
+   "inputs": 0,
+   "widgets": [
+    "heading.default",
+    "text-editor.default",
+    "elementskit-icon-box.default"
+   ],
+   "swipers": 0,
+   "counters": 0,
+   "accordions": 0,
+   "videos": 0,
+   "anims": [
+    "fadeInUp",
+    "fadeInLeft",
+    "fadeInRight"
+   ]
+  },
+  {
+   "tag": "SECTION",
+   "cls": "elementor-section elementor-top-section elementor-element elementor-element-dbbb201 elementor-sectio",
+   "y": 3500,
+   "h": 732,
+   "bg": "rgb(0, 135, 99)",
+   "bgimg": "url(\"https://point.moxcreative.com/dentalkit/wp-co",
+   "heads": [
+    "H6: WHY CHOOSE US",
+    "H2: A better day starts with a better smile.",
+    "H4: Certified Doctor",
+    "H4: Amenities",
+    "H4: 24/7 Support"
+   ],
+   "imgs": 0,
+   "inputs": 0,
+   "widgets": [
+    "heading.default",
+    "icon-box.default",
+    "button.default"
+   ],
+   "swipers": 0,
+   "counters": 0,
+   "accordions": 0,
+   "videos": 0,
+   "anims": [
+    "fadeInUp",
+    "fadeInLeft",
+    "fadeInDown",
+    "fadeInRight"
+   ]
+  },
+  {
+   "tag": "SECTION",
+   "cls": "elementor-section elementor-top-section elementor-element elementor-element-ddeeb66 elementor-sectio",
+   "y": 4232,
+   "h": 797,
+   "bg": "rgba(0, 0, 0, 0)",
+   "bgimg": "none",
+   "heads": [
+    "H6: EASY WAY TO GET SERVICES",
+    "H2: Because your smile is our passion.",
+    "H5: Consultation",
+    "H5: Choose Package",
+    "H5: Pick a date",
+    "H5: Get a services"
+   ],
+   "imgs": 0,
+   "inputs": 0,
+   "widgets": [
+    "heading.default",
+    "text-editor.default",
+    "icon-list.default",
+    "icon-box.default"
+   ],
+   "swipers": 0,
+   "counters": 0,
+   "accordions": 0,
+   "videos": 0,
+   "anims": [
+    "fadeInLeft",
+    "fadeInRight"
+   ]
+  },
+  {
+   "tag": "SECTION",
+   "cls": "elementor-section elementor-top-section elementor-element elementor-element-27b58a2 elementor-sectio",
+   "y": 5029,
+   "h": 1431,
+   "bg": "rgb(247, 247, 247)",
+   "bgimg": "none",
+   "heads": [
+    "H6: PRICING PLAN",
+    "H2: Bring a healthy smile with the best price",
+    "H3: Personal",
+    "H5: Simple package for personal services",
+    "H3: Family",
+    "H5: Protection for your family members*",
+    "H6: MOST POPULAR",
+    "H3: Couple"
+   ],
+   "imgs": 3,
+   "inputs": 0,
+   "widgets": [
+    "heading.default",
+    "text-editor.default",
+    "button.default",
+    "divider.default",
+    "icon-list.default",
+    "image.default"
+   ],
+   "swipers": 0,
+   "counters": 0,
+   "accordions": 0,
+   "videos": 0,
+   "anims": [
+    "fadeInLeft",
+    "fadeInRight",
+    "fadeIn",
+    "fadeInDown"
+   ]
+  },
+  {
+   "tag": "SECTION",
+   "cls": "elementor-section elementor-top-section elementor-element elementor-element-148a820 elementor-sectio",
+   "y": 6460,
+   "h": 718,
+   "bg": "rgba(0, 0, 0, 0)",
+   "bgimg": "linear-gradient(45deg, rgb(0, 135, 99) 0%, rgb(9, ",
+   "heads": [
+    "H6: DENTALKIT AT GLANCE",
+    "H2: Caring for all your family’s dental needs."
+   ],
+   "imgs": 0,
+   "inputs": 0,
+   "widgets": [
+    "heading.default",
+    "text-editor.default",
+    "counter.default"
+   ],
+   "swipers": 0,
+   "counters": 28,
+   "accordions": 0,
+   "videos": 0,
+   "anims": [
+    "fadeInDown",
+    "fadeInLeft",
+    "fadeInRight",
+    "fadeInUp"
+   ]
+  },
+  {
+   "tag": "SECTION",
+   "cls": "elementor-section elementor-top-section elementor-element elementor-element-b6289ec elementor-sectio",
+   "y": 7177,
+   "h": 201,
+   "bg": "rgba(0, 0, 0, 0)",
+   "bgimg": "none",
+   "heads": [
+    "H4: Consultation",
+    "H4: Need Help?",
+    "H4: Insight"
+   ],
+   "imgs": 0,
+   "inputs": 0,
+   "widgets": [
+    "icon-box.default",
+    "button.default"
+   ],
+   "swipers": 0,
+   "counters": 0,
+   "accordions": 0,
+   "videos": 0,
+   "anims": [
+    "fadeInUp"
+   ]
+  },
+  {
+   "tag": "SECTION",
+   "cls": "elementor-section elementor-top-section elementor-element elementor-element-becac3a elementor-sectio",
+   "y": 7378,
+   "h": 635,
+   "bg": "rgba(0, 0, 0, 0)",
+   "bgimg": "none",
+   "heads": [
+    "H2: What they say about us"
+   ],
+   "imgs": 6,
+   "inputs": 0,
+   "widgets": [
+    "image.default",
+    "icon.default",
+    "heading.default",
+    "testimonial-carousel.default"
+   ],
+   "swipers": 1,
+   "counters": 0,
+   "accordions": 0,
+   "videos": 0,
+   "anims": [
+    "fadeInUp",
+    "fadeInRight"
+   ]
+  },
+  {
+   "tag": "SECTION",
+   "cls": "elementor-section elementor-top-section elementor-element elementor-element-d28efe3 elementor-sectio",
+   "y": 8013,
+   "h": 469,
+   "bg": "rgb(9, 181, 133)",
+   "bgimg": "url(\"https://point.moxcreative.com/dentalkit/wp-co",
+   "heads": [
+    "H4: Company",
+    "H4: Company",
+    "H4: Newsletter"
+   ],
+   "imgs": 2,
+   "inputs": 5,
+   "widgets": [
+    "image.default",
+    "icon-list.default",
+    "social-icons.default",
+    "heading.default",
+    "form.default"
+   ],
+   "swipers": 0,
+   "counters": 0,
+   "accordions": 0,
+   "videos": 0,
+   "anims": []
+  }
+ ],
+ "scripts": [
+  "jquery/jquery.min.js",
+  "jquery/jquery-migrate.min.js",
+  "public/template-kit-export-public.js",
+  "chunks/section-stretched-section.min.js",
+  "chunks/background-slideshow.min.js",
+  "chunks/background-video.min.js",
+  "chunks/text-editor.min.js",
+  "chunks/image-carousel.min.js",
+  "chunks/counter.min.js",
+  "js/wp-emoji-release.min.js",
+  "js/hello-frontend.min.js",
+  "js/webpack.runtime.min.js",
+  "js/frontend-modules.min.js",
+  "ui/core.min.js",
+  "js/frontend.min.js",
+  "smartmenus/jquery.smartmenus.min.js",
+  "v8/swiper.min.js",
+  "jquery-numerator/jquery-numerator.min.js",
+  "flatpickr/flatpickr.min.js",
+  "js/webpack-pro.runtime.min.js",
+  "dist/hooks.min.js",
+  "dist/i18n.min.js",
+  "js/frontend.min.js",
+  "js/elements-handlers.min.js"
+ ],
+ "fontLinks": [
+  "http://point.moxcreative.com/dentalkit/wp-content/uploads/sites/29/elementor/google-fonts/css/inter.css?ver=1744839467",
+  "https://point.moxcreative.com/dentalkit/wp-content/plugins/elementor/assets/lib/font-awesome/css/fontawesome.min.css?ver=5.15.3",
+  "https://point.moxcreative.com/dentalkit/wp-content/plugins/elementor/assets/lib/font-awesome/css/solid.min.css?ver=5.15.3",
+  "https://point.moxcreative.com/dentalkit/wp-content/plugins/elementor/assets/lib/font-awesome/css/regular.min.css?ver=5.15.3",
+  "https://point.moxcreative.com/dentalkit/wp-content/plugins/elementor/assets/lib/font-awesome/css/brands.min.css?ver=5.15.3"
+ ],
+ "fontFaces": [
+  "eicons 400 normal loaded",
+  "swiper-icons 400 normal unloaded",
+  "Material Icons 400 normal loaded",
+  "simple-line-icons normal normal loaded",
+  "Line Awesome Brands 400 normal unloaded",
+  "Line Awesome Free 400 normal unloaded",
+  "Line Awesome Free 900 normal loaded",
+  "Font Awesome 5 Free 900 normal loaded",
+  "Material Design Icons normal normal loaded",
+  "Font Awesome 5 Free 400 normal loaded",
+  "iconic normal normal loaded",
+  "elementskit 400 normal loaded",
+  "Linearicons-Free normal normal loaded",
+  "Font Awesome 5 Brands 400 normal loaded"
+ ],
+ "vars": {
+  "--wp--preset--color--black": "#000000",
+  "--wp--preset--color--cyan-bluish-gray": "#abb8c3",
+  "--wp--preset--color--white": "#ffffff",
+  "--wp--preset--color--pale-pink": "#f78da7",
+  "--wp--preset--color--vivid-red": "#cf2e2e",
+  "--wp--preset--color--luminous-vivid-orange": "#ff6900",
+  "--wp--preset--color--luminous-vivid-amber": "#fcb900",
+  "--wp--preset--color--light-green-cyan": "#7bdcb5",
+  "--wp--preset--color--vivid-green-cyan": "#00d084",
+  "--wp--preset--color--pale-cyan-blue": "#8ed1fc",
+  "--wp--preset--color--vivid-cyan-blue": "#0693e3",
+  "--wp--preset--color--vivid-purple": "#9b51e0",
+  "--e-global-color-primary": "#50575E",
+  "--e-global-color-secondary": "#222222",
+  "--e-global-color-text": "#FFFFFF",
+  "--e-global-color-accent": "#FFFFFF2B",
+  "--e-global-color-d49ac81": "#008763",
+  "--e-global-color-332724a": "#09B585",
+  "--e-global-color-4d462f5": "#DCDCDE",
+  "--e-global-color-cfa1f76": "#F7F7F7",
+  "--e-global-color-044b931": "#222222",
+  "--e-global-color-bb890b8": "#008763",
+  "--e-global-color-639e8dd": "#09B585",
+  "--e-global-color-7dba3a4": "#FED700",
+  "--e-global-typography-primary-font-family": "\"Inter\"",
+  "--e-global-typography-secondary-font-family": "\"Inter\"",
+  "--e-global-typography-text-font-family": "\"Inter\"",
+  "--e-global-typography-accent-font-family": "\"Inter\"",
+  "--e-global-typography-b2ce6af-font-family": "\"Inter\"",
+  "--e-global-typography-69c152f-font-family": "\"Inter\"",
+  "--e-global-typography-520c191-font-family": "\"Inter\"",
+  "--e-global-typography-583e54c-font-family": "\"Inter\"",
+  "--e-global-typography-5d167aa-font-family": "\"Inter\"",
+  "--e-global-typography-d3dae9a-font-family": "\"Inter\"",
+  "--e-global-typography-83682a1-font-family": "\"Inter\"",
+  "--e-global-typography-7044a64-font-family": "\"Inter\"",
+  "--e-global-typography-84ca66e-font-family": "\"Inter\"",
+  "--e-global-typography-112b6c4-font-family": "\"Inter\"",
+  "--e-global-typography-a435f28-font-family": "\"Inter\"",
+  "--swiper-theme-color": "#007aff"
+ },
+ "cssAnims": [
+  "animated-fast animated",
+  "animated"
+ ],
+ "httpStatus": 202
+}

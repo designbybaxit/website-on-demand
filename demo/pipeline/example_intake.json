@@ -1,0 +1,17 @@
+{
+  "id": "REQ-0001",
+  "name": "Example Plumbing Co. (Demo)",
+  "industry": "Plumbing & heating",
+  "city": "Leeds",
+  "about": "We are a family-run plumbing and heating team that has been looking after homes around Leeds for over 12 years. (Made-up example business.)",
+  "services": [
+    {"name": "Emergency call-outs", "desc": "Burst pipe or no hot water? We aim to be with you within 2 hours.", "price": "From £79"},
+    {"name": "Boiler installation", "desc": "New A-rated boilers with up to 10 years warranty.", "price": "From £1,850"},
+    {"name": "Bathroom fitting", "desc": "Full bathroom design and installation.", "price": "Free quote"}
+  ],
+  "phone": "+44 20 7946 0000",
+  "email": "hello@example.com",
+  "address": "1 Sample Street, Leeds LS1 0AA",
+  "hours": ["Mon–Fri: 8am–6pm", "Sat: 9am–2pm", "Emergencies: 24/7"],
+  "accent": "#2563eb"
+}
