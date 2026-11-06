@@ -341,6 +341,28 @@ INDUSTRY_JS = r"""(()=>{
     photoSplit: office.M.ph.heroId !== house.M.ph.heroId,
     recipes: ['salon','barber','spa','plumbing','electric','cleaning','pressure','local'].every(id => LIB.industries[id] && LIB.industries[id].kits.length >= 3),
     restaurant: LIB.industries.restaurant && LIB.industries.restaurant.profiles.includes('restaurant'),
+    quotes: (() => {
+      const vis = doc => doc.replace(/<script[\s\S]*?<\/script>/gi, '').replace(/<style[\s\S]*?<\/style>/gi, '');
+      const job = (about, services) => ({ name:'Plain Pipe Co', industry:'other', industryOther:'Plumber', country:'UK', city:'Leeds', about, phone:'0113 496 0000', email:'hi@example.com', mainAction:'quote', hours:'Mon–Fri: 8am–6pm', services });
+      const paid = [{ name:'Leak repair', desc:'Find and fix a leak.', price:'85' }, { name:'Tap replacement', price:'70' }];
+      const plain = buildSite(job('We fix leaks and boilers in Leeds.', paid));
+      const plainLive = buildSite(job('We fix leaks and boilers in Leeds.', paid), {}, null, { live:true, leadUrl:'https://x/api/lead' });
+      const said = buildSite(job('We fix leaks. Free quotes, with the price agreed before we start.', paid));
+      const saidLive = buildSite(job('We fix leaks. Free quotes, with the price agreed before we start.', paid), {}, null, { live:true, leadUrl:'https://x/api/lead' });
+      const priced = buildSite(job('We fix leaks and boilers.', [{ name:'Bathroom fitting', desc:'Full installation.', price:'Free quote' }]));
+      const consult = buildSite(job('Free consultations, then a written price.', paid));
+      const trades = ['Electrician','House cleaning','Pressure washing'].map(trade => buildSite({ name:'Plain '+trade, industry:'other', industryOther:trade, country:'UK', city:'Leeds', about:'A small local team.', phone:'0113 496 0000', mainAction:'quote', services:[{ name:'Standard visit', price:'90' }] }));
+      const cta = M => ({ button:M.primary.label, title:M.U.quoteTitle, submit:M.U.formSubmit, lead:M.U.actQuote, free:M.freeQuote });
+      const noFreeWords = doc => !/free quote/i.test(vis(doc));
+      return {
+        plain: cta(plain.M), plainClean: noFreeWords(plain.doc), plainLive: cta(plainLive.M), plainLiveClean: noFreeWords(plainLive.doc),
+        said: cta(said.M), saidHas: /Get a free quote/.test(vis(said.doc)) && /Get my free quote/.test(vis(said.doc)),
+        saidLive: cta(saidLive.M), saidLiveHas: /Get a free quote/.test(vis(saidLive.doc)) && /Get my free quote/.test(vis(saidLive.doc)),
+        priced: cta(priced.M), pricedText: priced.M.services.map(s => s.priceT),
+        consult: cta(consult.M),
+        trades: trades.map(B => cta(B.M)),
+      };
+    })(),
   };
 })()"""
 
@@ -360,6 +382,12 @@ async def industry_library_checks(b):
     check(all(r['customHas'].values()) and all(r['emptyHas'].values()), f'fallback pages are complete and keep typed prices/durations {r["customHas"]} {r["emptyHas"]}')
     check(r['liveClean'] and r['persist'] and r['photoSplit'], f'live sample strip, design persistence, office vs home photos {r["liveClean"]} {r["persist"]} {r["photoSplit"]}')
     check(r['recipes'] and r['restaurant'], 'split recipes each have 3+ kits and the restaurant recipe is unchanged')
+    q = r['quotes']
+    check(q['plain'] == {'button':'Get a quote','title':'Get a quote','submit':'Get my quote','lead':'Get a quote in two quick steps.','free':False} and q['plainClean'] and q['plainLive'] == q['plain'] and q['plainLiveClean'], f'quote CTA stays "Get a quote" in preview and live unless the client said quotes are free {q["plain"]} {q["plainLive"]}')
+    check(q['said']['free'] and q['said']['button'] == 'Get a free quote' and q['said']['title'] == 'Get a free quote' and q['said']['submit'] == 'Get my free quote' and q['saidHas'] and q['saidLive'] == q['said'] and q['saidLiveHas'], f'an explicit free-quote offer is kept on the preview and the live page {q["said"]}')
+    check(q['priced']['free'] and q['priced']['button'] == 'Get a free quote' and q['pricedText'] == ['Free quote'], f'a typed price of "Free quote" is kept exactly and counts as the client offering it {q["priced"]} {q["pricedText"]}')
+    check(q['consult']['button'] == 'Get a quote' and not q['consult']['free'], f'a free consultation is not treated as a free quote {q["consult"]}')
+    check(all(t['button'] == 'Get a quote' and not t['free'] for t in q['trades']), f'electrician, cleaning and pressure washing default to Get a quote {q["trades"]}')
 
 async def site_checks(b):
     # write the full generated sites (what goes live), then check each one

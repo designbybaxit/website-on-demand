@@ -142,7 +142,7 @@ function heroHTML(M) {
 /* Floating chips carry real facts from the form only */
 function heroChips(M) {
   const out = [], s = M.services;
-  if (M.primary.kind === 'form') out.push(['calendar', M.ctaKey === 'quote' ? 'Free and quick' : 'Book online', M.ctaKey === 'reserve' ? 'Reserve in seconds' : M.ctaKey === 'quote' ? M.U.chipQuote : 'In under a minute']);
+  if (M.primary.kind === 'form') out.push(['calendar', M.ctaKey === 'quote' ? (M.freeQuote ? 'Free quote' : 'Get a quote') : 'Book online', M.ctaKey === 'reserve' ? 'Reserve in seconds' : M.ctaKey === 'quote' ? M.U.chipQuote : 'In under a minute']);
   else if (M.primary.kind === 'wa') out.push(['phone', 'Message us', 'On WhatsApp']);
   else out.push(['phone', 'Call us', M.d.phone]);
   const pr = s.find(x => x.priceT && /\d/.test(x.priceT));

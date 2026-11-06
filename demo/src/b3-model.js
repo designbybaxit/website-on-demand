@@ -27,11 +27,28 @@ function paletteFor(S, key, opts) {
   return p;
 }
 
+/* True only when the client themselves said quotes or estimates are free (about, trade, service name, description or a typed price). */
+function offersFreeQuote(d) {
+  const services = d && d.services || [];
+  const raw = [d && d.about, d && d.industryOther, d && d.name, ...services.map(s => [s && s.name, s && s.desc, s && s.price].filter(Boolean).join(' '))].filter(Boolean).join(' ');
+  const text = String(raw).replace(/\(.*?made-up.*?\)/ig, '');
+  return /\bfree\s+(?:quotes?|estimates?)\b|\bquotes?\s+(?:are|is)\s+free\b|\bno[- ](?:charge|fee)\s+(?:for\s+)?quotes?\b/i.test(text);
+}
 function siteModel(d, opts = {}, ai = null) {
   // content + imagery follow the real business; the look is the nearest of the six styles
   const prof = detectProfile(d);
   const key = opts.style && STYLES[opts.style] ? opts.style : (d.industry && d.industry !== 'other' && STYLES[d.industry] ? d.industry : prof.style);
   let { C, U, native } = copyFor(prof, key);
+  C = { ...C, cta: { ...(C.cta || {}) }, eyebrow: { ...(C.eyebrow || {}) }, h2: { ...(C.h2 || {}) } };
+  U = { ...U };
+  const freeQuote = offersFreeQuote(d);
+  if (freeQuote) {
+    if (C.cta.quote === 'Get a quote') C.cta.quote = 'Get a free quote';
+    if (U.quoteTitle === 'Get a quote') U.quoteTitle = 'Get a free quote';
+    if (U.formSubmit === 'Get my quote') U.formSubmit = 'Get my free quote';
+    if (U.actQuote === 'Get a quote in two quick steps.') U.actQuote = 'Get a free quote in two quick steps.';
+    if (C.eyebrow.book === 'Get a quote') C.eyebrow.book = 'Free quote';
+  }
   const fam = prof.fam;
   // TEMPLATE LIBRARY: kit (look) + hero + section variants + order, seeded by name + industry (+ opts.design)
   const design = pickDesign({ d, prof, key, opts, fam, profK: prof.k });
@@ -60,6 +77,7 @@ function siteModel(d, opts = {}, ai = null) {
   // copy variants (lib/50-copy.js): headline, lead opener, section titles and why-us titles, seeded like the design
   const cx = copyX(prof, design.seed, { facts, services, place, d });
   C = { ...C, eyebrow: { insurance: 'Paying for treatment', beforeafter: 'Before & after', ...C.eyebrow }, h2: { insurance: 'Cover, plans and *payment.*', beforeafter: 'See the *difference.*', ...C.h2, ...cx.h2 } };
+  if (freeQuote && C.h2.book === 'Get your *quote.*') C.h2.book = 'Get your *free* quote.';
   if (prof.fam !== 'dental' && prof.fam !== 'health') C.eyebrow.insurance = 'Paying';
   if (cx.lead) C.leadOpen = cx.lead;
   const h1Pool = fam === 'dental' && !hasDental && C.h1Health ? C.h1Health : (cx.h1Pool || C.h1);
@@ -168,7 +186,7 @@ function siteModel(d, opts = {}, ai = null) {
   // food without table booking: visit steps, not "reserve / arrive"
   const steps = fam === 'food' && ctaKey !== 'reserve' ? [['Find us', d.address ? d.address + '.' : place ? `We're in ${place}.` : 'Our details are below.'], ['Drop in', hours.length ? `${hours[0][0] ? hours[0][0] + ': ' : ''}${hours[0][1]}.`.replace('..', '.') : 'Pop in whenever we\'re open.'], ['Enjoy', plainNames.length ? `Try the ${lowerFirst(plainNames[0])}.` : 'Pull up a seat and enjoy.']] : C.steps;
   const heroQuote = ['fullbleed', 'panel'].includes(heroV) && (['trade', 'auto'].includes(fam) || prof.k === 'cleaning') && primary.kind === 'form' && ctaKey === 'quote';
-  return { key, prof, order, heroV, V, design, kit, facts, pricesClear, q2, steps, heroQuote, fam, native, U, S, C, P, d, opts, seed, name, logoBold, logoRest, initials, services, plainNames, wa, waLink, primary, ctaKey, place, cur,
+  return { key, prof, order, heroV, V, design, kit, facts, pricesClear, freeQuote, q2, steps, heroQuote, fam, native, U, S, C, P, d, opts, seed, name, logoBold, logoRest, initials, services, plainNames, wa, waLink, primary, ctaKey, place, cur,
     ba, ins, emergency, week, cx,
     h1, eyebrow, lead, ph, stock, reviews, stats, hours, why: whyFinal, faq: faqFinal, placeholders, svcList, anyPrice };
 }
