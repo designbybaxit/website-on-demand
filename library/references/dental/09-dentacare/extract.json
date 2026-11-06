@@ -1,0 +1,715 @@
+{
+ "title": "Homepage – DentaCare",
+ "url": "https://demo.moxcreative.com/dentacare/template-kit/homepage/?storefront=envato-elements",
+ "height": 8592,
+ "bg": [
+  [
+   "rgb(124, 185, 40)",
+   43
+  ],
+  [
+   "rgb(255, 255, 255)",
+   29
+  ],
+  [
+   "rgb(244, 247, 251)",
+   8
+  ],
+  [
+   "rgb(247, 249, 251)",
+   5
+  ],
+  [
+   "rgb(0, 114, 188)",
+   3
+  ],
+  [
+   "rgb(0, 0, 0)",
+   2
+  ],
+  [
+   "rgb(0, 152, 219)",
+   1
+  ],
+  [
+   "rgb(252, 252, 252)",
+   1
+  ]
+ ],
+ "fg": [
+  [
+   "rgb(23, 34, 77)",
+   102
+  ],
+  [
+   "rgb(255, 255, 255)",
+   69
+  ],
+  [
+   "rgb(124, 185, 40)",
+   10
+  ]
+ ],
+ "fonts": [
+  [
+   "Heebo",
+   130
+  ],
+  [
+   "Poppins",
+   51
+  ]
+ ],
+ "heads": [
+  [
+   "H2|Poppins|600|48px",
+   8
+  ],
+  [
+   "H3|Poppins|600|36px",
+   3
+  ],
+  [
+   "H1|Poppins|600|72px",
+   2
+  ]
+ ],
+ "btns": [
+  {
+   "t": "Book An Appointment",
+   "bg": "rgba(0, 0, 0, 0)",
+   "c": "rgb(23, 34, 77)",
+   "r": "0px",
+   "pad": "0px",
+   "ff": "Heebo",
+   "fw": "400",
+   "tt": "none",
+   "border": "0px none rgb(23, 34, 77)"
+  },
+  {
+   "t": "Book An Appointment",
+   "bg": "rgba(0, 0, 0, 0)",
+   "c": "rgb(23, 34, 77)",
+   "r": "0px",
+   "pad": "0px",
+   "ff": "Heebo",
+   "fw": "400",
+   "tt": "none",
+   "border": "0px none rgb(23, 34, 77)"
+  },
+  {
+   "t": "Book An Appointment",
+   "bg": "rgb(124, 185, 40)",
+   "c": "rgb(255, 255, 255)",
+   "r": "30px",
+   "pad": "15px 30px",
+   "ff": "Heebo",
+   "fw": "500",
+   "tt": "none",
+   "border": "1px solid rgb(124, 185, 40)"
+  },
+  {
+   "t": "Book An Appointment",
+   "bg": "rgba(0, 0, 0, 0)",
+   "c": "rgb(255, 255, 255)",
+   "r": "0px",
+   "pad": "0px",
+   "ff": "Heebo",
+   "fw": "500",
+   "tt": "none",
+   "border": "0px none rgb(255, 255, 255)"
+  },
+  {
+   "t": "",
+   "bg": "rgba(0, 0, 0, 0)",
+   "c": "rgb(255, 255, 255)",
+   "r": "0px",
+   "pad": "0px",
+   "ff": "Heebo",
+   "fw": "500",
+   "tt": "none",
+   "border": "0px none rgb(255, 255, 255)"
+  },
+  {
+   "t": "Book An Appointment",
+   "bg": "rgba(0, 0, 0, 0)",
+   "c": "rgb(255, 255, 255)",
+   "r": "0px",
+   "pad": "0px",
+   "ff": "Heebo",
+   "fw": "500",
+   "tt": "none",
+   "border": "0px none rgb(255, 255, 255)"
+  },
+  {
+   "t": "Discover More",
+   "bg": "rgba(0, 0, 0, 0)",
+   "c": "rgb(23, 34, 77)",
+   "r": "0px",
+   "pad": "0px",
+   "ff": "Heebo",
+   "fw": "400",
+   "tt": "none",
+   "border": "0px none rgb(23, 34, 77)"
+  },
+  {
+   "t": "Discover More",
+   "bg": "rgba(0, 0, 0, 0)",
+   "c": "rgb(23, 34, 77)",
+   "r": "0px",
+   "pad": "0px",
+   "ff": "Heebo",
+   "fw": "400",
+   "tt": "none",
+   "border": "0px none rgb(23, 34, 77)"
+  },
+  {
+   "t": "Discover More",
+   "bg": "rgb(124, 185, 40)",
+   "c": "rgb(255, 255, 255)",
+   "r": "30px",
+   "pad": "20px 40px",
+   "ff": "Heebo",
+   "fw": "500",
+   "tt": "none",
+   "border": "0px solid rgb(255, 255, 255)"
+  },
+  {
+   "t": "Discover More",
+   "bg": "rgba(0, 0, 0, 0)",
+   "c": "rgb(255, 255, 255)",
+   "r": "0px",
+   "pad": "0px",
+   "ff": "Heebo",
+   "fw": "500",
+   "tt": "none",
+   "border": "0px none rgb(255, 255, 255)"
+  },
+  {
+   "t": "",
+   "bg": "rgba(0, 0, 0, 0)",
+   "c": "rgb(255, 255, 255)",
+   "r": "0px",
+   "pad": "0px",
+   "ff": "Heebo",
+   "fw": "500",
+   "tt": "none",
+   "border": "0px none rgb(255, 255, 255)"
+  },
+  {
+   "t": "Discover More",
+   "bg": "rgba(0, 0, 0, 0)",
+   "c": "rgb(255, 255, 255)",
+   "r": "0px",
+   "pad": "0px",
+   "ff": "Heebo",
+   "fw": "500",
+   "tt": "none",
+   "border": "0px none rgb(255, 255, 255)"
+  }
+ ],
+ "sections": [
+  {
+   "tag": "SECTION",
+   "cls": "ob-is-breaking-bad elementor-section elementor-top-section elementor-element elementor-element-8e2e5",
+   "y": 58,
+   "h": 97,
+   "bg": "rgb(0, 114, 188)",
+   "bgimg": "none",
+   "heads": [],
+   "imgs": 1,
+   "inputs": 0,
+   "widgets": [
+    "image.default",
+    "nav-menu.default",
+    "button.default"
+   ],
+   "swipers": 0,
+   "counters": 0,
+   "accordions": 4,
+   "videos": 0,
+   "anims": []
+  },
+  {
+   "tag": "SECTION",
+   "cls": "ob-is-breaking-bad elementor-section elementor-top-section elementor-element elementor-element-5be44",
+   "y": 156,
+   "h": 666,
+   "bg": "rgba(0, 0, 0, 0)",
+   "bgimg": "linear-gradient(135deg, rgb(0, 114, 188) 0%, rgb(1",
+   "heads": [
+    "H4: Welcome",
+    "H1: Caring for you & your smile."
+   ],
+   "imgs": 1,
+   "inputs": 0,
+   "widgets": [
+    "heading.default",
+    "text-editor.default",
+    "button.default",
+    "image.default"
+   ],
+   "swipers": 0,
+   "counters": 0,
+   "accordions": 0,
+   "videos": 0,
+   "anims": [
+    "bounceInDown",
+    "bounceInUp"
+   ]
+  },
+  {
+   "tag": "SECTION",
+   "cls": "ob-is-breaking-bad elementor-section elementor-top-section elementor-element elementor-element-6fdd2",
+   "y": 821,
+   "h": 229,
+   "bg": "rgba(0, 0, 0, 0)",
+   "bgimg": "none",
+   "heads": [
+    "H3: Emergency?",
+    "H5: Please Call Us at",
+    "H3: +6221.2002.2012",
+    "H4: Opening Hours",
+    "H5: Monday - Thursday",
+    "H5: Friday - Saturday",
+    "H5: Sunday",
+    "H4: Book an Appointment"
+   ],
+   "imgs": 0,
+   "inputs": 8,
+   "widgets": [
+    "heading.default",
+    "divider.default",
+    "eael-feature-list.default",
+    "text-editor.default",
+    "form.default"
+   ],
+   "swipers": 0,
+   "counters": 0,
+   "accordions": 0,
+   "videos": 0,
+   "anims": [
+    "fadeInLeft"
+   ]
+  },
+  {
+   "tag": "SECTION",
+   "cls": "ob-is-breaking-bad elementor-section elementor-top-section elementor-element elementor-element-00c04",
+   "y": 1130,
+   "h": 413,
+   "bg": "rgba(0, 0, 0, 0)",
+   "bgimg": "none",
+   "heads": [
+    "H2: Trusted by International Company"
+   ],
+   "imgs": 0,
+   "inputs": 0,
+   "widgets": [
+    "heading.default",
+    "text-editor.default",
+    "premium-counter.default"
+   ],
+   "swipers": 0,
+   "counters": 24,
+   "accordions": 0,
+   "videos": 0,
+   "anims": []
+  },
+  {
+   "tag": "SECTION",
+   "cls": "ob-is-breaking-bad elementor-section elementor-top-section elementor-element elementor-element-c92a3",
+   "y": 1623,
+   "h": 1409,
+   "bg": "rgb(244, 247, 251)",
+   "bgimg": "none",
+   "heads": [
+    "H6: SERVICE",
+    "H2: What We Offer",
+    "H4: Teeth Cleaning",
+    "H4: Dental Fillings",
+    "H4: Teeth Braces",
+    "H4: Implants",
+    "H4: Whitening",
+    "H4: Tooth Extraction"
+   ],
+   "imgs": 9,
+   "inputs": 0,
+   "widgets": [
+    "heading.default",
+    "text-editor.default",
+    "elementskit-icon-box.default"
+   ],
+   "swipers": 0,
+   "counters": 0,
+   "accordions": 0,
+   "videos": 0,
+   "anims": [
+    "fadeInLeft",
+    "fadeInRight",
+    "fadeInDown",
+    "zoomIn",
+    "fadeInUp"
+   ]
+  },
+  {
+   "tag": "SECTION",
+   "cls": "ob-is-breaking-bad elementor-section elementor-top-section elementor-element elementor-element-bcf9f",
+   "y": 3032,
+   "h": 546,
+   "bg": "rgba(0, 0, 0, 0)",
+   "bgimg": "url(\"https://demo.moxcreative.com/dentacare/wp-con",
+   "heads": [
+    "H1: Emergency?",
+    "H3: Get Help Now by Calling Our Emergency Service"
+   ],
+   "imgs": 0,
+   "inputs": 0,
+   "widgets": [
+    "heading.default",
+    "divider.default",
+    "button.default"
+   ],
+   "swipers": 0,
+   "counters": 0,
+   "accordions": 0,
+   "videos": 0,
+   "anims": [
+    "zoomInUp"
+   ]
+  },
+  {
+   "tag": "SECTION",
+   "cls": "ob-is-breaking-bad elementor-section elementor-top-section elementor-element elementor-element-e158a",
+   "y": 3578,
+   "h": 935,
+   "bg": "rgb(244, 247, 251)",
+   "bgimg": "none",
+   "heads": [
+    "H6: WHY CHOOSE US",
+    "H2: Caring for all your family’s dental needs.",
+    "H4: Certified",
+    "H4: Facilities",
+    "H4: Professional",
+    "H4: Support"
+   ],
+   "imgs": 1,
+   "inputs": 0,
+   "widgets": [
+    "heading.default",
+    "text-editor.default",
+    "button.default",
+    "image.default",
+    "elementskit-icon-box.default"
+   ],
+   "swipers": 0,
+   "counters": 0,
+   "accordions": 0,
+   "videos": 0,
+   "anims": [
+    "bounceInDown",
+    "fadeInDown",
+    "fadeInRight",
+    "fadeInLeft",
+    "fadeInUp"
+   ]
+  },
+  {
+   "tag": "SECTION",
+   "cls": "ob-is-breaking-bad elementor-section elementor-top-section elementor-element elementor-element-71e18",
+   "y": 4513,
+   "h": 751,
+   "bg": "rgba(0, 0, 0, 0)",
+   "bgimg": "url(\"https://demo.moxcreative.com/dentacare/wp-con",
+   "heads": [
+    "H6: ABOUT OUR DOCTOR",
+    "H2: Dedicated to excellence. Dedicated to your smile.",
+    "H5: John N Bedoya"
+   ],
+   "imgs": 1,
+   "inputs": 0,
+   "widgets": [
+    "heading.default",
+    "text-editor.default",
+    "image.default"
+   ],
+   "swipers": 0,
+   "counters": 0,
+   "accordions": 0,
+   "videos": 0,
+   "anims": [
+    "fadeInLeft"
+   ]
+  },
+  {
+   "tag": "SECTION",
+   "cls": "ob-is-breaking-bad elementor-section elementor-top-section elementor-element elementor-element-d134c",
+   "y": 5264,
+   "h": 683,
+   "bg": "rgb(244, 247, 251)",
+   "bgimg": "none",
+   "heads": [
+    "H6: TESTIMONIAL",
+    "H2: What They Say"
+   ],
+   "imgs": 10,
+   "inputs": 0,
+   "widgets": [
+    "heading.default",
+    "testimonial-carousel.default"
+   ],
+   "swipers": 1,
+   "counters": 0,
+   "accordions": 0,
+   "videos": 0,
+   "anims": [
+    "fadeInRight",
+    "fadeInLeft",
+    "fadeInUp"
+   ]
+  },
+  {
+   "tag": "SECTION",
+   "cls": "ob-is-breaking-bad elementor-section elementor-top-section elementor-element elementor-element-3293d",
+   "y": 5946,
+   "h": 773,
+   "bg": "rgba(0, 0, 0, 0)",
+   "bgimg": "url(\"https://demo.moxcreative.com/dentacare/wp-con",
+   "heads": [
+    "H6: PROFESSIONAL TEAM",
+    "H2: Let us take care of you and your smile."
+   ],
+   "imgs": 0,
+   "inputs": 0,
+   "widgets": [
+    "heading.default",
+    "text-editor.default",
+    "elementskit-progressbar.default",
+    "elementskit-video.default"
+   ],
+   "swipers": 0,
+   "counters": 0,
+   "accordions": 0,
+   "videos": 3,
+   "anims": [
+    "fadeInLeft",
+    "fadeInRight"
+   ]
+  },
+  {
+   "tag": "SECTION",
+   "cls": "ob-is-breaking-bad elementor-section elementor-top-section elementor-element elementor-element-8744b",
+   "y": 6719,
+   "h": 941,
+   "bg": "rgb(255, 255, 255)",
+   "bgimg": "none",
+   "heads": [
+    "H6: FAQ",
+    "H2: Frequently Ask Questions"
+   ],
+   "imgs": 0,
+   "inputs": 0,
+   "widgets": [
+    "heading.default",
+    "text-editor.default",
+    "elementskit-accordion.default"
+   ],
+   "swipers": 0,
+   "counters": 0,
+   "accordions": 38,
+   "videos": 0,
+   "anims": [
+    "fadeInLeft",
+    "fadeInRight"
+   ]
+  },
+  {
+   "tag": "SECTION",
+   "cls": "ob-is-breaking-bad elementor-section elementor-top-section elementor-element elementor-element-02be3",
+   "y": 7740,
+   "h": 357,
+   "bg": "rgba(0, 0, 0, 0)",
+   "bgimg": "none",
+   "heads": [
+    "H2: Need Help?",
+    "H4: Please, call our customer service or get an appointment with our docto"
+   ],
+   "imgs": 1,
+   "inputs": 0,
+   "widgets": [
+    "heading.default",
+    "button.default",
+    "image.default"
+   ],
+   "swipers": 0,
+   "counters": 0,
+   "accordions": 0,
+   "videos": 0,
+   "anims": [
+    "fadeInLeft",
+    "fadeInUp"
+   ]
+  },
+  {
+   "tag": "SECTION",
+   "cls": "ob-is-breaking-bad elementor-section elementor-top-section elementor-element elementor-element-00365",
+   "y": 8097,
+   "h": 495,
+   "bg": "rgb(0, 114, 188)",
+   "bgimg": "none",
+   "heads": [
+    "H4: Company",
+    "H4: Support",
+    "H4: Location"
+   ],
+   "imgs": 1,
+   "inputs": 0,
+   "widgets": [
+    "image.default",
+    "text-editor.default",
+    "heading.default",
+    "icon-list.default",
+    "social-icons.default"
+   ],
+   "swipers": 0,
+   "counters": 0,
+   "accordions": 0,
+   "videos": 0,
+   "anims": []
+  }
+ ],
+ "scripts": [
+  "jquery/jquery.min.js",
+  "jquery/jquery-migrate.min.js",
+  "public/template-kit-export-public.js",
+  "js/v4-shims.min.js",
+  "chunks/section-stretched-section.min.js",
+  "chunks/background-slideshow.min.js",
+  "chunks/background-video.min.js",
+  "chunks/text-editor.min.js",
+  "js/wp-emoji-release.min.js",
+  "js/webpack.runtime.min.js",
+  "js/frontend-modules.min.js",
+  "ui/core.min.js",
+  "js/frontend.min.js",
+  "smartmenus/jquery.smartmenus.min.js",
+  "sticky/jquery.sticky.min.js",
+  "view/general.min.js",
+  "essential-addons-elementor/eael-839.js",
+  "premium-addons-elementor/pafe-839.js",
+  "js/ooohboi-steroids.js",
+  "jquery-numerator/jquery-numerator.min.js",
+  "v8/swiper.min.js",
+  "widgets/animate-numbers.js",
+  "widgets/core.js",
+  "widgets/progressbar.js",
+  "widgets/video.js",
+  "mediaelement/mediaelement-and-player.min.js",
+  "mediaelement/mediaelement-migrate.min.js",
+  "mediaelement/wp-mediaelement.min.js",
+  "magnific-popup/jquery.magnific-popup.min.js",
+  "js/ekit-ui.js",
+  "widgets/accordion.js",
+  "min-js/elements-handler.min.js",
+  "flatpickr/flatpickr.min.js",
+  "js/webpack-pro.runtime.min.js",
+  "dist/hooks.min.js",
+  "dist/i18n.min.js",
+  "js/frontend.min.js",
+  "js/elements-handlers.min.js",
+  "js/glider-min.js",
+  "js/spacerat-min.js",
+  "js/hoveranimator.js",
+  "js/pseudo-min.js"
+ ],
+ "fontLinks": [
+  "https://demo.moxcreative.com/dentacare/wp-content/plugins/elementor/assets/lib/font-awesome/css/all.min.css?ver=4.11.117",
+  "https://demo.moxcreative.com/dentacare/wp-content/plugins/elementor/assets/lib/font-awesome/css/v4-shims.min.css?ver=4.3.5",
+  "https://demo.moxcreative.com/dentacare/wp-content/uploads/sites/54/elementor/google-fonts/css/roboto.css?ver=1744843259",
+  "https://demo.moxcreative.com/dentacare/wp-content/uploads/sites/54/elementor/google-fonts/css/robotoslab.css?ver=1744843260",
+  "https://demo.moxcreative.com/dentacare/wp-content/uploads/sites/54/elementor/google-fonts/css/heebo.css?ver=1744843261",
+  "https://demo.moxcreative.com/dentacare/wp-content/uploads/sites/54/elementor/google-fonts/css/poppins.css?ver=1744843261",
+  "https://demo.moxcreative.com/dentacare/wp-content/plugins/elementor/assets/lib/font-awesome/css/fontawesome.min.css?ver=5.15.3",
+  "https://demo.moxcreative.com/dentacare/wp-content/plugins/elementor/assets/lib/font-awesome/css/regular.min.css?ver=5.15.3",
+  "https://demo.moxcreative.com/dentacare/wp-content/plugins/elementor/assets/lib/font-awesome/css/solid.min.css?ver=5.15.3",
+  "https://demo.moxcreative.com/dentacare/wp-content/plugins/elementor/assets/lib/font-awesome/css/brands.min.css?ver=5.15.3"
+ ],
+ "fontFaces": [
+  "eicons 400 normal loaded",
+  "Font Awesome 5 Brands 400 normal loaded",
+  "Font Awesome 5 Free 400 normal loaded",
+  "Font Awesome 5 Free 900 normal loaded",
+  "swiper-icons 400 normal unloaded",
+  "Roboto 100 italic unloaded",
+  "Roboto 200 italic unloaded",
+  "Roboto 300 italic unloaded",
+  "Roboto 400 italic unloaded",
+  "Roboto 500 italic unloaded",
+  "Roboto 600 italic unloaded",
+  "Roboto 700 italic unloaded",
+  "Roboto 800 italic unloaded",
+  "Roboto 900 italic unloaded",
+  "Roboto 100 normal unloaded",
+  "Roboto 200 normal unloaded",
+  "Roboto 300 normal unloaded",
+  "Roboto 400 normal unloaded",
+  "Roboto 500 normal unloaded",
+  "Roboto 600 normal unloaded",
+  "Roboto 700 normal unloaded",
+  "Roboto 800 normal unloaded",
+  "Roboto 900 normal unloaded",
+  "Roboto Slab 100 normal unloaded",
+  "Roboto Slab 200 normal unloaded",
+  "Roboto Slab 300 normal unloaded",
+  "Roboto Slab 400 normal unloaded",
+  "Roboto Slab 500 normal unloaded",
+  "Roboto Slab 600 normal unloaded",
+  "Roboto Slab 700 normal unloaded"
+ ],
+ "vars": {
+  "--wp--preset--color--black": "#000000",
+  "--wp--preset--color--cyan-bluish-gray": "#abb8c3",
+  "--wp--preset--color--white": "#ffffff",
+  "--wp--preset--color--pale-pink": "#f78da7",
+  "--wp--preset--color--vivid-red": "#cf2e2e",
+  "--wp--preset--color--luminous-vivid-orange": "#ff6900",
+  "--wp--preset--color--luminous-vivid-amber": "#fcb900",
+  "--wp--preset--color--light-green-cyan": "#7bdcb5",
+  "--wp--preset--color--vivid-green-cyan": "#00d084",
+  "--wp--preset--color--pale-cyan-blue": "#8ed1fc",
+  "--wp--preset--color--vivid-cyan-blue": "#0693e3",
+  "--wp--preset--color--vivid-purple": "#9b51e0",
+  "--e-global-color-primary": "#6EC1E4",
+  "--e-global-color-secondary": "#54595F",
+  "--e-global-color-text": "#7A7A7A",
+  "--e-global-color-accent": "#61CE70",
+  "--e-global-color-dea41e4": "#17224D",
+  "--e-global-color-a185853": "#7CB928",
+  "--e-global-color-308e809": "#F4F7FB",
+  "--e-global-color-a291686": "#FFFFFF",
+  "--e-global-color-91455cb": "#EFFFFF",
+  "--e-global-color-190265c": "#0072BC",
+  "--e-global-color-0b57598": "#0098DB",
+  "--e-global-typography-primary-font-family": "\"Roboto\"",
+  "--e-global-typography-secondary-font-family": "\"Roboto Slab\"",
+  "--e-global-typography-text-font-family": "\"Roboto\"",
+  "--e-global-typography-accent-font-family": "\"Roboto\"",
+  "--e-global-typography-b2ce6af-font-family": "\"Heebo\"",
+  "--e-global-typography-69c152f-font-family": "\"Heebo\"",
+  "--e-global-typography-520c191-font-family": "\"Heebo\"",
+  "--e-global-typography-583e54c-font-family": "\"Poppins\"",
+  "--e-global-typography-5d167aa-font-family": "\"Poppins\"",
+  "--e-global-typography-d3dae9a-font-family": "\"Poppins\"",
+  "--e-global-typography-83682a1-font-family": "\"Poppins\"",
+  "--e-global-typography-7044a64-font-family": "\"Poppins\"",
+  "--e-global-typography-84ca66e-font-family": "\"Poppins\"",
+  "--e-global-typography-112b6c4-font-family": "\"Heebo\"",
+  "--swiper-theme-color": "#007aff"
+ },
+ "cssAnims": [
+  "animated",
+  "animated-fast animated",
+  "animated-slow animated",
+  "animate"
+ ],
+ "httpStatus": 202
+}

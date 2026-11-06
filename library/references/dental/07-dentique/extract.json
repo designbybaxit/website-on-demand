@@ -1,0 +1,700 @@
+{
+ "title": "Dentique – Dentist & Dental Clinic Elementor Template Kit",
+ "url": "https://www.wordpress-dev.codeinsolution.com/dentique/?storefront=envato-elements",
+ "height": 7627,
+ "bg": [
+  [
+   "rgb(23, 157, 194)",
+   16
+  ],
+  [
+   "rgb(255, 209, 0)",
+   16
+  ],
+  [
+   "rgba(2, 1, 1, 0)",
+   15
+  ],
+  [
+   "rgb(255, 255, 255)",
+   11
+  ],
+  [
+   "rgb(234, 234, 235)",
+   4
+  ],
+  [
+   "rgb(225, 249, 255)",
+   2
+  ],
+  [
+   "rgba(246, 247, 250, 0)",
+   2
+  ],
+  [
+   "rgb(255, 246, 205)",
+   1
+  ],
+  [
+   "rgb(228, 250, 255)",
+   1
+  ],
+  [
+   "rgba(238, 238, 238, 0)",
+   1
+  ]
+ ],
+ "fg": [
+  [
+   "rgb(90, 117, 148)",
+   76
+  ],
+  [
+   "rgb(7, 68, 92)",
+   72
+  ],
+  [
+   "rgb(23, 157, 194)",
+   23
+  ],
+  [
+   "rgb(62, 89, 121)",
+   18
+  ],
+  [
+   "rgb(255, 255, 255)",
+   7
+  ],
+  [
+   "rgb(218, 218, 219)",
+   4
+  ],
+  [
+   "rgb(255, 209, 0)",
+   2
+  ],
+  [
+   "rgb(237, 237, 237)",
+   1
+  ]
+ ],
+ "fonts": [
+  [
+   "Poppins",
+   149
+  ],
+  [
+   "\"Plus Jakarta Sans\"",
+   54
+  ]
+ ],
+ "heads": [
+  [
+   "H2|\"Plus Jakarta Sans\"|600|24px",
+   16
+  ],
+  [
+   "H2|\"Plus Jakarta Sans\"|600|54px",
+   6
+  ],
+  [
+   "H2|Poppins|400|16px",
+   5
+  ],
+  [
+   "H2|Poppins|500|45px",
+   4
+  ],
+  [
+   "H3|\"Plus Jakarta Sans\"|600|16px",
+   4
+  ],
+  [
+   "H2|Poppins|500|27px",
+   3
+  ],
+  [
+   "H2|Poppins|600|15px",
+   2
+  ],
+  [
+   "H1|Poppins|400|16px",
+   1
+  ],
+  [
+   "H2|\"Plus Jakarta Sans\"|600|21px",
+   1
+  ],
+  [
+   "H2|Poppins|400|18px",
+   1
+  ]
+ ],
+ "btns": [
+  {
+   "t": "APPOINTMENT",
+   "bg": "rgba(0, 0, 0, 0)",
+   "c": "rgb(90, 117, 148)",
+   "r": "0px",
+   "pad": "0px",
+   "ff": "Poppins",
+   "fw": "400",
+   "tt": "none",
+   "border": "0px none rgb(90, 117, 148)"
+  },
+  {
+   "t": "APPOINTMENT",
+   "bg": "rgba(0, 0, 0, 0)",
+   "c": "rgb(90, 117, 148)",
+   "r": "0px",
+   "pad": "0px",
+   "ff": "Poppins",
+   "fw": "400",
+   "tt": "none",
+   "border": "0px none rgb(90, 117, 148)"
+  },
+  {
+   "t": "APPOINTMENT",
+   "bg": "rgb(23, 157, 194)",
+   "c": "rgb(255, 255, 255)",
+   "r": "8px",
+   "pad": "20px 30px",
+   "ff": "Poppins",
+   "fw": "600",
+   "tt": "uppercase",
+   "border": "0px none rgb(255, 255, 255)"
+  },
+  {
+   "t": "GET STARTED",
+   "bg": "rgba(0, 0, 0, 0)",
+   "c": "rgb(90, 117, 148)",
+   "r": "0px",
+   "pad": "0px",
+   "ff": "Poppins",
+   "fw": "400",
+   "tt": "none",
+   "border": "0px none rgb(90, 117, 148)"
+  },
+  {
+   "t": "GET STARTED",
+   "bg": "rgba(0, 0, 0, 0)",
+   "c": "rgb(90, 117, 148)",
+   "r": "0px",
+   "pad": "0px",
+   "ff": "Poppins",
+   "fw": "400",
+   "tt": "none",
+   "border": "0px none rgb(90, 117, 148)"
+  },
+  {
+   "t": "GET STARTED",
+   "bg": "rgb(255, 209, 0)",
+   "c": "rgb(7, 68, 92)",
+   "r": "8px",
+   "pad": "20px 30px",
+   "ff": "Poppins",
+   "fw": "600",
+   "tt": "uppercase",
+   "border": "0px none rgb(7, 68, 92)"
+  },
+  {
+   "t": "",
+   "bg": "rgba(0, 0, 0, 0)",
+   "c": "rgb(90, 117, 148)",
+   "r": "0px",
+   "pad": "0px",
+   "ff": "Poppins",
+   "fw": "400",
+   "tt": "none",
+   "border": "0px none rgb(90, 117, 148)"
+  },
+  {
+   "t": "",
+   "bg": "rgba(0, 0, 0, 0)",
+   "c": "rgb(90, 117, 148)",
+   "r": "0px",
+   "pad": "0px",
+   "ff": "Poppins",
+   "fw": "400",
+   "tt": "none",
+   "border": "0px none rgb(90, 117, 148)"
+  },
+  {
+   "t": "MORE ABOUT US",
+   "bg": "rgba(0, 0, 0, 0)",
+   "c": "rgb(90, 117, 148)",
+   "r": "0px",
+   "pad": "0px",
+   "ff": "Poppins",
+   "fw": "400",
+   "tt": "none",
+   "border": "0px none rgb(90, 117, 148)"
+  },
+  {
+   "t": "MORE ABOUT US",
+   "bg": "rgba(0, 0, 0, 0)",
+   "c": "rgb(90, 117, 148)",
+   "r": "0px",
+   "pad": "0px",
+   "ff": "Poppins",
+   "fw": "400",
+   "tt": "none",
+   "border": "0px none rgb(90, 117, 148)"
+  },
+  {
+   "t": "MORE ABOUT US",
+   "bg": "rgb(255, 209, 0)",
+   "c": "rgb(7, 68, 92)",
+   "r": "8px",
+   "pad": "20px 30px",
+   "ff": "Poppins",
+   "fw": "600",
+   "tt": "uppercase",
+   "border": "0px none rgb(7, 68, 92)"
+  },
+  {
+   "t": "LEARN MORE",
+   "bg": "rgba(0, 0, 0, 0)",
+   "c": "rgb(90, 117, 148)",
+   "r": "0px",
+   "pad": "0px",
+   "ff": "Poppins",
+   "fw": "400",
+   "tt": "none",
+   "border": "0px none rgb(90, 117, 148)"
+  }
+ ],
+ "sections": [
+  {
+   "tag": "HEADER",
+   "cls": "",
+   "y": 50,
+   "h": 85,
+   "bg": "rgba(0, 0, 0, 0)",
+   "bgimg": "none",
+   "heads": [],
+   "imgs": 2,
+   "inputs": 0,
+   "widgets": [
+    "image.default",
+    "jkit_nav_menu.default",
+    "jkit_button.default"
+   ],
+   "swipers": 0,
+   "counters": 0,
+   "accordions": 0,
+   "videos": 0,
+   "anims": []
+  },
+  {
+   "tag": "SECTION",
+   "cls": "elementor-section elementor-top-section elementor-element elementor-element-2ee4f02 elementor-sectio",
+   "y": 0,
+   "h": 978,
+   "bg": "rgba(0, 0, 0, 0)",
+   "bgimg": "linear-gradient(rgb(142, 235, 250) 0%, rgb(228, 25",
+   "heads": [
+    "H1: Healthy Teeth Happy Life",
+    "H2: PLAY VIDEO",
+    "H2: Active Member",
+    "H2: Years Of Experience",
+    "H2: Dentist Specialist",
+    "H2: Patient Satisfaction"
+   ],
+   "imgs": 6,
+   "inputs": 0,
+   "widgets": [
+    "jkit_animated_text.default",
+    "text-editor.default",
+    "jkit_button.default",
+    "jkit_video_button.default",
+    "heading.default",
+    "image.default",
+    "jkit_fun_fact.default"
+   ],
+   "swipers": 0,
+   "counters": 0,
+   "accordions": 0,
+   "videos": 3,
+   "anims": []
+  },
+  {
+   "tag": "SECTION",
+   "cls": "elementor-section elementor-top-section elementor-element elementor-element-4564de9 elementor-sectio",
+   "y": 1078,
+   "h": 110,
+   "bg": "rgba(0, 0, 0, 0)",
+   "bgimg": "none",
+   "heads": [
+    "H2: Service Satisfaction",
+    "H2: Latest Technology",
+    "H2: Professional Dentist"
+   ],
+   "imgs": 0,
+   "inputs": 0,
+   "widgets": [
+    "jkit_icon_box.default"
+   ],
+   "swipers": 0,
+   "counters": 0,
+   "accordions": 0,
+   "videos": 0,
+   "anims": []
+  },
+  {
+   "tag": "SECTION",
+   "cls": "elementor-section elementor-top-section elementor-element elementor-element-2ea59b2 elementor-sectio",
+   "y": 1338,
+   "h": 611,
+   "bg": "rgba(0, 0, 0, 0)",
+   "bgimg": "none",
+   "heads": [
+    "H2: Trusted By More Than 100+ Customers",
+    "H2: The Best Dental Clinic That Can Help Solve Your Problems",
+    "H2: Our Vision",
+    "H2: Our Mission",
+    "H2: Bill Mcdaniel",
+    "H2: CEO Dentique"
+   ],
+   "imgs": 1,
+   "inputs": 0,
+   "widgets": [
+    "spacer.default",
+    "jkit_icon_box.default",
+    "heading.default",
+    "text-editor.default",
+    "divider.default",
+    "jkit_button.default",
+    "image.default"
+   ],
+   "swipers": 0,
+   "counters": 0,
+   "accordions": 0,
+   "videos": 0,
+   "anims": []
+  },
+  {
+   "tag": "SECTION",
+   "cls": "elementor-section elementor-top-section elementor-element elementor-element-efe0a22 elementor-sectio",
+   "y": 2100,
+   "h": 732,
+   "bg": "rgba(0, 0, 0, 0)",
+   "bgimg": "none",
+   "heads": [
+    "H2: What Services Do We Provide For You?",
+    "H2: Root Canal Treatment",
+    "H2: Oral Surgery",
+    "H2: Cosmetic Dentistry"
+   ],
+   "imgs": 6,
+   "inputs": 0,
+   "widgets": [
+    "heading.default",
+    "text-editor.default",
+    "image.default",
+    "jkit_icon_box.default"
+   ],
+   "swipers": 0,
+   "counters": 0,
+   "accordions": 0,
+   "videos": 0,
+   "anims": []
+  },
+  {
+   "tag": "SECTION",
+   "cls": "elementor-section elementor-top-section elementor-element elementor-element-a28d09e elementor-sectio",
+   "y": 2981,
+   "h": 765,
+   "bg": "rgba(0, 0, 0, 0)",
+   "bgimg": "linear-gradient(rgb(142, 235, 250) 10%, rgb(228, 2",
+   "heads": [
+    "H2: What People Say"
+   ],
+   "imgs": 22,
+   "inputs": 0,
+   "widgets": [
+    "jkit_testimonials.default",
+    "heading.default",
+    "text-editor.default",
+    "jkit_button.default"
+   ],
+   "swipers": 0,
+   "counters": 0,
+   "accordions": 0,
+   "videos": 0,
+   "anims": []
+  },
+  {
+   "tag": "SECTION",
+   "cls": "elementor-section elementor-top-section elementor-element elementor-element-3d92b97 elementor-sectio",
+   "y": 3896,
+   "h": 600,
+   "bg": "rgba(0, 0, 0, 0)",
+   "bgimg": "none",
+   "heads": [
+    "H2: We Will Help You Find The Best Solutions",
+    "H2: Work Hours",
+    "H2: PLAY VIDEO"
+   ],
+   "imgs": 0,
+   "inputs": 0,
+   "widgets": [
+    "heading.default",
+    "text-editor.default",
+    "jkit_progress_bar.default",
+    "spacer.default",
+    "icon-list.default",
+    "jkit_button.default",
+    "jkit_video_button.default"
+   ],
+   "swipers": 0,
+   "counters": 0,
+   "accordions": 0,
+   "videos": 3,
+   "anims": []
+  },
+  {
+   "tag": "SECTION",
+   "cls": "elementor-section elementor-top-section elementor-element elementor-element-e2cd77e elementor-sectio",
+   "y": 4646,
+   "h": 538,
+   "bg": "rgba(0, 0, 0, 0)",
+   "bgimg": "none",
+   "heads": [
+    "H2: Easy Steps To Find The Best Solutions",
+    "H2: Make Appointment",
+    "H2: 01",
+    "H2: Meet Our Dentist",
+    "H2: 02",
+    "H2: Get The Solutions",
+    "H2: 03",
+    "H2: Perform Treatment"
+   ],
+   "imgs": 0,
+   "inputs": 0,
+   "widgets": [
+    "heading.default",
+    "text-editor.default",
+    "jkit_icon_box.default"
+   ],
+   "swipers": 0,
+   "counters": 0,
+   "accordions": 0,
+   "videos": 0,
+   "anims": []
+  },
+  {
+   "tag": "SECTION",
+   "cls": "elementor-section elementor-top-section elementor-element elementor-element-232a9f5 elementor-sectio",
+   "y": 5184,
+   "h": 822,
+   "bg": "rgba(0, 0, 0, 0)",
+   "bgimg": "none",
+   "heads": [
+    "H2: Make Appointment"
+   ],
+   "imgs": 2,
+   "inputs": 8,
+   "widgets": [
+    "image.default",
+    "metform.default",
+    "heading.default",
+    "mf-text.default",
+    "mf-email.default",
+    "mf-date.default",
+    "mf-select.default",
+    "mf-textarea.default",
+    "jkit_button.default"
+   ],
+   "swipers": 0,
+   "counters": 0,
+   "accordions": 0,
+   "videos": 0,
+   "anims": []
+  },
+  {
+   "tag": "SECTION",
+   "cls": "elementor-section elementor-top-section elementor-element elementor-element-6558fdb elementor-sectio",
+   "y": 6156,
+   "h": 658,
+   "bg": "rgba(0, 0, 0, 0)",
+   "bgimg": "none",
+   "heads": [
+    "H2: Latest Blog & Article",
+    "H3: Cosmetic Dentistry Has Revolutionized",
+    "H3: Health Needs Change Throughout Life",
+    "H3: Dental Health Plays A Crucial Role",
+    "H3: Dental Emergencies Can Occur"
+   ],
+   "imgs": 4,
+   "inputs": 0,
+   "widgets": [
+    "heading.default",
+    "text-editor.default",
+    "jkit_button.default",
+    "jkit_post_block.default"
+   ],
+   "swipers": 0,
+   "counters": 0,
+   "accordions": 0,
+   "videos": 0,
+   "anims": []
+  },
+  {
+   "tag": "FOOTER",
+   "cls": "",
+   "y": 6944,
+   "h": 683,
+   "bg": "rgba(0, 0, 0, 0)",
+   "bgimg": "none",
+   "heads": [
+    "H2: Subscribe Our Newsletter",
+    "H2: Quick Links",
+    "H2: Features Page",
+    "H2: Contact Info",
+    "H2: © 2023 codeinsolutions. All rights reserved"
+   ],
+   "imgs": 1,
+   "inputs": 1,
+   "widgets": [
+    "heading.default",
+    "text-editor.default",
+    "jkit_mailchimp.default",
+    "image.default",
+    "social-icons.default",
+    "icon-list.default"
+   ],
+   "swipers": 0,
+   "counters": 0,
+   "accordions": 0,
+   "videos": 0,
+   "anims": []
+  }
+ ],
+ "scripts": [
+  "js/v4-shims.min.js",
+  "jquery/jquery.min.js",
+  "jquery/jquery-migrate.min.js",
+  "public/template-kit-export-public.js",
+  "chunks/section-stretched-section.min.js",
+  "chunks/background-slideshow.min.js",
+  "chunks/background-video.min.js",
+  "chunks/text-editor.min.js",
+  "js/wp-emoji-release.min.js",
+  "vendor/react.min.js",
+  "vendor/react-dom.min.js",
+  "vendor/react-jsx-runtime.min.js",
+  "dist/escape-html.min.js",
+  "dist/element.min.js",
+  "dist/hooks.min.js",
+  "dist/i18n.min.js",
+  "htm/htm.js",
+  "app/index.js",
+  "widget-bootstrap/index.js",
+  "cute-alert/cute-alert.js",
+  "js/hello-frontend.js",
+  "js/webpack.runtime.min.js",
+  "js/frontend-modules.min.js",
+  "ui/core.min.js",
+  "js/frontend.min.js",
+  "elements/nav-menu.js",
+  "elements/animated-text.js",
+  "elements/video-button.js",
+  "sweetalert2/sweetalert2.min.js",
+  "elements/fun-fact.js",
+  "elements/testimonials.js",
+  "tiny-slider/tiny-slider.js",
+  "elements/progress-bar.js",
+  "elements/post-pagination.js",
+  "elements/mailchimp.js"
+ ],
+ "fontLinks": [
+  "https://www.wordpress-dev.codeinsolution.com/dentique/wp-content/plugins/elementor/assets/lib/font-awesome/css/all.min.css?ver=4.3.5",
+  "https://www.wordpress-dev.codeinsolution.com/dentique/wp-content/plugins/elementor/assets/lib/font-awesome/css/v4-shims.min.css?ver=4.3.5",
+  "https://fonts.googleapis.com/css?family=Plus+Jakarta+Sans:100,100italic,200,200italic,300,300italic,400,400italic,500,500italic,600,600italic,700,700italic,800,800italic,900,900italic&display=swap",
+  "https://fonts.googleapis.com/css?family=Poppins:100,100italic,200,200italic,300,300italic,400,400italic,500,500italic,600,600italic,700,700italic,800,800italic,900,900italic&display=swap",
+  "https://www.wordpress-dev.codeinsolution.com/dentique/wp-content/plugins/elementor/assets/lib/font-awesome/css/fontawesome.min.css?ver=5.15.3",
+  "https://www.wordpress-dev.codeinsolution.com/dentique/wp-content/plugins/elementor/assets/lib/font-awesome/css/solid.min.css?ver=5.15.3",
+  "https://www.wordpress-dev.codeinsolution.com/dentique/wp-content/plugins/jeg-elementor-kit/assets/fonts/jkiticon/jkiticon.css?ver=3.2.23",
+  "https://www.wordpress-dev.codeinsolution.com/dentique/wp-content/plugins/elementor/assets/lib/font-awesome/css/brands.min.css?ver=5.15.3"
+ ],
+ "fontFaces": [
+  "Font Awesome 5 Brands 400 normal loaded",
+  "Font Awesome 5 Free 400 normal unloaded",
+  "Font Awesome 5 Free 900 normal loaded",
+  "eicons 400 normal unloaded",
+  "Plus Jakarta Sans 200 italic unloaded",
+  "Plus Jakarta Sans 300 italic unloaded",
+  "Plus Jakarta Sans 400 italic unloaded",
+  "Plus Jakarta Sans 500 italic unloaded",
+  "Plus Jakarta Sans 600 italic unloaded",
+  "Plus Jakarta Sans 700 italic unloaded",
+  "Plus Jakarta Sans 800 italic unloaded",
+  "Plus Jakarta Sans 200 normal unloaded",
+  "Plus Jakarta Sans 300 normal unloaded",
+  "Plus Jakarta Sans 400 normal unloaded",
+  "Plus Jakarta Sans 500 normal unloaded",
+  "Plus Jakarta Sans 600 normal unloaded",
+  "Plus Jakarta Sans 600 normal loaded",
+  "Plus Jakarta Sans 700 normal unloaded",
+  "Plus Jakarta Sans 700 normal loaded",
+  "Plus Jakarta Sans 800 normal unloaded",
+  "Poppins 100 italic unloaded",
+  "Poppins 200 italic unloaded",
+  "Poppins 300 italic unloaded",
+  "Poppins 400 italic unloaded",
+  "Poppins 500 italic unloaded",
+  "Poppins 600 italic unloaded",
+  "Poppins 700 italic unloaded",
+  "Poppins 800 italic unloaded",
+  "Poppins 900 italic unloaded",
+  "Poppins 100 normal unloaded"
+ ],
+ "vars": {
+  "--wp--preset--color--black": "#000000",
+  "--wp--preset--color--cyan-bluish-gray": "#abb8c3",
+  "--wp--preset--color--white": "#ffffff",
+  "--wp--preset--color--pale-pink": "#f78da7",
+  "--wp--preset--color--vivid-red": "#cf2e2e",
+  "--wp--preset--color--luminous-vivid-orange": "#ff6900",
+  "--wp--preset--color--luminous-vivid-amber": "#fcb900",
+  "--wp--preset--color--light-green-cyan": "#7bdcb5",
+  "--wp--preset--color--vivid-green-cyan": "#00d084",
+  "--wp--preset--color--pale-cyan-blue": "#8ed1fc",
+  "--wp--preset--color--vivid-cyan-blue": "#0693e3",
+  "--wp--preset--color--vivid-purple": "#9b51e0",
+  "--e-global-color-primary": "#8EEBFA",
+  "--e-global-color-secondary": "#07445C",
+  "--e-global-color-text": "#5A7594",
+  "--e-global-color-accent": "#FFD100",
+  "--e-global-color-11141e9": "#E4FAFF",
+  "--e-global-color-7c74c0d": "#179DC2",
+  "--e-global-color-ab76890": "#FFFFFF",
+  "--e-global-color-442b13f": "#DADADB",
+  "--e-global-color-0e7b8b3": "#3E5979",
+  "--e-global-color-aed7c48": "#EDEDED",
+  "--e-global-color-6886020": "#C1C1C1",
+  "--e-global-color-3c3d318": "#FFF6CD",
+  "--e-global-color-3fdd9c7": "#E1F9FF",
+  "--e-global-typography-primary-font-family": "\"Plus Jakarta Sans\"",
+  "--e-global-typography-secondary-font-family": "\"Plus Jakarta Sans\"",
+  "--e-global-typography-text-font-family": "\"Poppins\"",
+  "--e-global-typography-accent-font-family": "\"Plus Jakarta Sans\"",
+  "--e-global-typography-c1b4352-font-family": "\"Poppins\"",
+  "--e-global-typography-96083f8-font-family": "\"Poppins\"",
+  "--e-global-typography-170be2a-font-family": "\"Poppins\"",
+  "--e-global-typography-7e151b6-font-family": "\"Poppins\"",
+  "--e-global-typography-37efb55-font-family": "\"Poppins\"",
+  "--e-global-typography-5360b6d-font-family": "\"Plus Jakarta Sans\"",
+  "--e-global-typography-7adff55-font-family": "\"Poppins\"",
+  "--e-global-typography-74c2621-font-family": "\"Plus Jakarta Sans\""
+ },
+ "cssAnims": [
+  "elementor-widget-jkit_animated_text",
+  "jkit-animated-text",
+  "animated-text",
+  "hover-from-left",
+  "animate"
+ ],
+ "httpStatus": 200
+}

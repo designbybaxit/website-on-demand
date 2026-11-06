@@ -1,0 +1,378 @@
+{
+ "title": "Timan – Dental Clinic & Medical WordPress Theme",
+ "url": "https://demo.casethemes.net/timan/?storefront=envato-elements",
+ "height": 8923,
+ "bg": [
+  [
+   "rgb(255, 255, 255)",
+   22
+  ],
+  [
+   "rgba(97, 67, 121, 0.8)",
+   13
+  ],
+  [
+   "rgb(97, 67, 121)",
+   7
+  ],
+  [
+   "rgba(0, 0, 0, 0.23)",
+   6
+  ],
+  [
+   "rgb(244, 247, 247)",
+   4
+  ],
+  [
+   "rgb(17, 17, 17)",
+   4
+  ],
+  [
+   "rgb(255, 138, 139)",
+   3
+  ],
+  [
+   "rgba(0, 0, 0, 0.16)",
+   2
+  ],
+  [
+   "rgba(255, 255, 255, 0.5)",
+   1
+  ],
+  [
+   "rgba(255, 138, 140, 0)",
+   1
+  ],
+  [
+   "rgb(255, 138, 140)",
+   1
+  ],
+  [
+   "rgb(251, 246, 255)",
+   1
+  ],
+  [
+   "rgba(7, 10, 34, 0.95)",
+   1
+  ]
+ ],
+ "fg": [
+  [
+   "rgb(255, 255, 255)",
+   50
+  ],
+  [
+   "rgb(143, 139, 184)",
+   45
+  ],
+  [
+   "rgb(162, 169, 199)",
+   36
+  ],
+  [
+   "rgb(7, 10, 34)",
+   30
+  ],
+  [
+   "rgb(105, 111, 162)",
+   24
+  ],
+  [
+   "rgb(255, 138, 139)",
+   9
+  ],
+  [
+   "rgb(191, 154, 220)",
+   6
+  ],
+  [
+   "rgb(195, 175, 212)",
+   6
+  ],
+  [
+   "rgb(177, 154, 196)",
+   4
+  ],
+  [
+   "rgb(246, 247, 255)",
+   3
+  ]
+ ],
+ "fonts": [
+  [
+   "rubik",
+   165
+  ],
+  [
+   "poppins",
+   53
+  ],
+  [
+   "Rubik",
+   3
+  ],
+  [
+   "Poppins",
+   1
+  ]
+ ],
+ "heads": [
+  [
+   "H3|poppins|600|26px",
+   19
+  ],
+  [
+   "H3|poppins|600|18px",
+   4
+  ],
+  [
+   "H3|poppins|600|60px",
+   4
+  ],
+  [
+   "H3|rubik|500|14px",
+   4
+  ],
+  [
+   "H2|poppins|600|30px",
+   4
+  ],
+  [
+   "H3|poppins|600|22px",
+   3
+  ],
+  [
+   "H3|rubik|500|18px",
+   3
+  ],
+  [
+   "H3|poppins|600|50px",
+   1
+  ],
+  [
+   "H3|poppins|600|70px",
+   1
+  ]
+ ],
+ "btns": [
+  {
+   "t": "GET APPOINTMENT",
+   "bg": "rgb(97, 67, 121)",
+   "c": "rgb(255, 255, 255)",
+   "r": "0px",
+   "pad": "0px 70px",
+   "ff": "rubik",
+   "fw": "500",
+   "tt": "uppercase",
+   "border": "0px none rgb(255, 255, 255)"
+  },
+  {
+   "t": "",
+   "bg": "rgba(0, 0, 0, 0)",
+   "c": "rgb(143, 139, 184)",
+   "r": "0px",
+   "pad": "45px 0px 0px",
+   "ff": "rubik",
+   "fw": "400",
+   "tt": "none",
+   "border": "0px none rgb(143, 139, 184)"
+  },
+  {
+   "t": "",
+   "bg": "rgba(0, 0, 0, 0)",
+   "c": "rgb(143, 139, 184)",
+   "r": "0px",
+   "pad": "45px 0px 0px",
+   "ff": "rubik",
+   "fw": "400",
+   "tt": "none",
+   "border": "0px none rgb(143, 139, 184)"
+  },
+  {
+   "t": "",
+   "bg": "rgba(0, 0, 0, 0)",
+   "c": "rgb(143, 139, 184)",
+   "r": "0px",
+   "pad": "45px 0px 0px",
+   "ff": "rubik",
+   "fw": "400",
+   "tt": "none",
+   "border": "0px none rgb(143, 139, 184)"
+  },
+  {
+   "t": "",
+   "bg": "rgba(0, 0, 0, 0)",
+   "c": "rgb(255, 255, 255)",
+   "r": "0px",
+   "pad": "5px 0px 5px 5px",
+   "ff": "rubik",
+   "fw": "500",
+   "tt": "uppercase",
+   "border": "0px none rgb(255, 255, 255)"
+  }
+ ],
+ "sections": [
+  {
+   "tag": "HEADER",
+   "cls": "header-main",
+   "y": 0,
+   "h": 100,
+   "bg": "rgba(0, 0, 0, 0)",
+   "bgimg": "none",
+   "heads": [],
+   "imgs": 2,
+   "forms": 1,
+   "inputs": 1,
+   "widgets": [],
+   "swipers": 0,
+   "counters": 0,
+   "accordions": 8,
+   "videos": 0,
+   "anims": []
+  },
+  {
+   "tag": "FOOTER",
+   "cls": "site-footer footer-layout1 bg-image",
+   "y": 8398,
+   "h": 526,
+   "bg": "rgba(0, 0, 0, 0)",
+   "bgimg": "none",
+   "heads": [
+    "H2: More Pages",
+    "H2: Quick Links",
+    "H2: Social Links",
+    "H2: Photo Gallery"
+   ],
+   "imgs": 6,
+   "forms": 0,
+   "inputs": 0,
+   "widgets": [],
+   "swipers": 0,
+   "counters": 0,
+   "accordions": 0,
+   "videos": 0,
+   "anims": []
+  }
+ ],
+ "scripts": [
+  "jquery/jquery.min.js",
+  "jquery/jquery-migrate.min.js",
+  "siteground-optimizer-assets/ct-demo-toolbar.min.js",
+  "js/rbtools.min.js",
+  "js/rs6.min.js",
+  "jquery-blockui/jquery.blockUI.min.js",
+  "frontend/add-to-cart.min.js",
+  "js-cookie/js.cookie.min.js",
+  "frontend/woocommerce.min.js",
+  "flatpickr/flatpickr.min.js",
+  "select2/select2.min.js",
+  "siteground-optimizer-assets/vc_woocommerce-add-to-cart-js.min.js",
+  "siteground-optimizer-assets/booked-wc-fe-functions.min.js",
+  "js/wp-emoji-release.min.js",
+  "ui/core.min.js",
+  "ui/datepicker.min.js",
+  "js/spin.min.js",
+  "siteground-optimizer-assets/booked-spin-jquery.min.js",
+  "js/jquery.tooltipster.min.js",
+  "siteground-optimizer-assets/booked-functions.min.js",
+  "dist/hooks.min.js",
+  "dist/i18n.min.js",
+  "siteground-optimizer-assets/swv.min.js",
+  "siteground-optimizer-assets/contact-form-7.min.js",
+  "siteground-optimizer-assets/ct-front-js.min.js",
+  "js/frontend.min.js",
+  "siteground-optimizer-assets/booked-fea-js.min.js",
+  "js/bootstrap.min.js",
+  "js/nice-select.min.js",
+  "siteground-optimizer-assets/enscroll.min.js",
+  "siteground-optimizer-assets/match-height.min.js",
+  "siteground-optimizer-assets/timan-sidebar-fixed.min.js",
+  "js/magnific-popup.min.js",
+  "siteground-optimizer-assets/timan-main.min.js",
+  "siteground-optimizer-assets/newsletter.min.js",
+  "sourcebuster/sourcebuster.min.js",
+  "frontend/order-attribution.min.js",
+  "dist/js_composer_front.min.js",
+  "vc_waypoints/vc-waypoints.min.js",
+  "js/datetimepicker.min.js",
+  "siteground-optimizer-assets/ct-datetime.min.js",
+  "dist/isotope.pkgd.min.js",
+  "js/imagesloaded.min.js",
+  "siteground-optimizer-assets/timan-isotope.min.js",
+  "js/waypoints.min.js",
+  "js/owl.carousel.min.js",
+  "siteground-optimizer-assets/timan-carousel.min.js",
+  "js/counter.min.js",
+  "siteground-optimizer-assets/timan-counter.min.js"
+ ],
+ "fontLinks": [
+  "https://demo.casethemes.net/timan/wp-content/themes/timan/assets/css/font-awesome.min.css?ver=4.7.0",
+  "https://demo.casethemes.net/timan/wp-content/plugins/js_composer/assets/lib/bower/font-awesome/css/v4-shims.min.css?ver=7.5",
+  "https://demo.casethemes.net/timan/wp-content/plugins/js_composer/assets/lib/bower/font-awesome/css/all.min.css?ver=7.5",
+  "https://demo.casethemes.net/timan/wp-content/themes/timan/assets/css/material-design-iconic-font.min.css?ver=2.2.0",
+  "https://demo.casethemes.net/timan/wp-content/themes/timan/assets/css/font-etline-icon.min.css?ver=1.0.0"
+ ],
+ "fontFaces": [
+  "Poppins 300 italic unloaded",
+  "Poppins 400 italic unloaded",
+  "Poppins 500 italic unloaded",
+  "Poppins 600 italic unloaded",
+  "Poppins 700 italic unloaded",
+  "Poppins 200 normal unloaded",
+  "Poppins 300 normal unloaded",
+  "Poppins 400 normal unloaded",
+  "Poppins 500 normal unloaded",
+  "Poppins 600 normal loaded",
+  "Poppins 700 normal unloaded",
+  "Roboto 400 normal unloaded",
+  "Rubik 300 italic unloaded",
+  "Rubik 400 italic loaded",
+  "Rubik 500 italic unloaded",
+  "Rubik 700 italic unloaded",
+  "Rubik 900 italic unloaded",
+  "Rubik 300 normal loaded",
+  "Rubik 400 normal loaded",
+  "Rubik 500 normal loaded",
+  "Rubik 700 normal unloaded",
+  "Rubik 900 normal unloaded",
+  "bookedicons 400 normal unloaded",
+  "star 400 normal unloaded",
+  "WooCommerce 400 normal unloaded",
+  "Material Icons 400 normal unloaded",
+  "FontAwesome normal normal loaded",
+  "Font Awesome 5 Brands 400 normal unloaded",
+  "Font Awesome 5 Free 400 normal loaded",
+  "Font Awesome 5 Free 900 normal loaded"
+ ],
+ "vars": {
+  "--wp-block-synced-color": "#7a00df",
+  "--wp-block-synced-color--rgb": "122,0,223",
+  "--wp-bound-block-color": "var(--wp-block-synced-color)",
+  "--wp-admin-theme-color": "#007cba",
+  "--wp-admin-theme-color--rgb": "0,124,186",
+  "--wp-admin-theme-color-darker-10": "#006ba1",
+  "--wp-admin-theme-color-darker-10--rgb": "0,107,160.5",
+  "--wp-admin-theme-color-darker-20": "#005a87",
+  "--wp-admin-theme-color-darker-20--rgb": "0,90,135",
+  "--wp--preset--color--black": "#000000",
+  "--wp--preset--color--cyan-bluish-gray": "#abb8c3",
+  "--wp--preset--color--white": "#ffffff",
+  "--wp--preset--color--pale-pink": "#f78da7",
+  "--wp--preset--color--vivid-red": "#cf2e2e",
+  "--wp--preset--color--luminous-vivid-orange": "#ff6900",
+  "--wp--preset--color--luminous-vivid-amber": "#fcb900",
+  "--wp--preset--color--light-green-cyan": "#7bdcb5",
+  "--wp--preset--color--vivid-green-cyan": "#00d084",
+  "--wp--preset--color--pale-cyan-blue": "#8ed1fc",
+  "--wp--preset--color--vivid-cyan-blue": "#0693e3",
+  "--wp--preset--color--vivid-purple": "#9b51e0",
+  "--wc-form-border-color": "rgba(32, 7, 7, 0.8)",
+  "--font-family-sans-serif": "-apple-system,BlinkMacSystemFont,\"Segoe UI\",Roboto,\"Helvetica Neue\",Arial,sans-serif,\"Apple Color Emoji\",\"Segoe UI Emoji\",\"Segoe UI Symbol\"",
+  "--font-family-monospace": "\"SFMono-Regular\",Menlo,Monaco,Consolas,\"Liberation Mono\",\"Courier New\",monospace"
+ },
+ "cssAnims": [
+  "rs-parallax-wrap",
+  "wpb_animate_when_almost_visible animated"
+ ],
+ "httpStatus": 200
+}

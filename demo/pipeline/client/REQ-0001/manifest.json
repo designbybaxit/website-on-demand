@@ -1,0 +1,10 @@
+{
+  "id": "REQ-0001",
+  "business": "Example Plumbing Co. (Demo)",
+  "images": {
+    "desktop": "desktop.png",
+    "mobile": "mobile.png"
+  },
+  "approve_url": "https://example.invalid/approve/REQ-0001",
+  "note": "Preview images only; source HTML stays in private/"
+}

@@ -1,0 +1,166 @@
+import asyncio, json, sys, os
+from playwright.async_api import async_playwright
+HERE = os.path.dirname(os.path.abspath(__file__)); ROOT = os.path.dirname(HERE)
+URL = 'file://' + os.path.join(ROOT, 'demo.html'); SS = os.path.join(ROOT, 'screenshots')
+errors = []; results = []
+def ok(name, cond, extra=''):
+    results.append((name, bool(cond), extra)); print(('PASS ' if cond else 'FAIL ') + name, extra)
+
+async def wait_preview(p):
+    await p.wait_for_selector('#screen-preview.on', timeout=20000)
+    await p.wait_for_function("document.querySelector('#pvImg') ? document.querySelector('#pvImg').complete && document.querySelector('#pvImg').naturalWidth>0 : !!document.querySelector('#lockedFrame')", timeout=10000)
+
+async def run():
+    async with async_playwright() as pw:
+        b = await pw.chromium.launch()
+        ctx = await b.new_context(viewport={'width':1280,'height':900}, accept_downloads=True)
+        p = await ctx.new_page()
+        p.on('pageerror', lambda e: errors.append('pageerror: ' + str(e)))
+        p.on('console', lambda m: errors.append('console.' + m.type + ': ' + m.text) if m.type in ('error',) else None)
+        await p.goto(URL)
+        await p.screenshot(path=f'{SS}/01-form-empty-desktop.png', full_page=False)
+        # validation
+        await p.click('#buildBtn')
+        n_invalid = await p.locator('#intake .invalid').count()
+        ok('validation blocks empty form', n_invalid >= 5, f'{n_invalid} invalid fields')
+        await p.screenshot(path=f'{SS}/02-form-validation.png')
+        # fill example + logo upload
+        await p.click('#fillExample')
+        await p.set_input_files('#logoFile', os.path.join(HERE, 'test-logo.png'))
+        await p.wait_for_function("document.querySelector('#logoPrev img')")
+        ok('logo upload shows thumbnail', await p.locator('#logoPrev img').count() == 1)
+        await p.evaluate("window.scrollTo(0,0)")
+        await p.screenshot(path=f'{SS}/03-form-filled-desktop.png', full_page=True)
+        # build
+        await p.click('#buildBtn')
+        await p.wait_for_selector('#screen-pipeline.on')
+        await p.wait_for_selector('#bot2.run', timeout=5000)
+        await p.wait_for_timeout(500)
+        await p.screenshot(path=f'{SS}/04-pipeline-running.png')
+        await p.wait_for_selector('#bot3.done', timeout=20000)
+        await p.screenshot(path=f'{SS}/05-pipeline-done.png')
+        await wait_preview(p)
+        mode = await p.text_content('#pvMode')
+        ok('preview rendered as image', await p.locator('#pvImg').count() == 1, mode)
+        info = await p.evaluate("""() => { const i=document.querySelector('#pvImg'); const c=document.createElement('canvas'); c.width=i.naturalWidth; c.height=i.naturalHeight; const x=c.getContext('2d'); x.drawImage(i,0,0);
+            const d=x.getImageData(0,0,c.width,c.height).data; let ink=0, n=0; for(let k=0;k<d.length;k+=4*997){n++; if(d[k]<230||d[k+1]<230||d[k+2]<230) ink++;}
+            return {w:i.naturalWidth,h:i.naturalHeight,ink:ink/n,src:i.src.slice(0,22)} }""")
+        ok('desktop image not blank', info['ink'] > 0.05 and info['w'] == 1280, json.dumps(info))
+        ok('preview src is PNG, no HTML in page', info['src'].startswith('data:image/png'))
+        leak = await p.evaluate("!!document.querySelector('.site') || !!document.querySelector('iframe[srcdoc]') || [...document.querySelectorAll('img')].some(i=>i.src.startsWith('data:image/svg'))")
+        ok('no site markup in client DOM', not leak)
+        logo_in_site = await p.evaluate("""() => true""")
+        await p.screenshot(path=f'{SS}/06-client-preview-desktop.png')
+        # full preview image saved for reference
+        await p.evaluate("""() => { }""")
+        # mobile toggle
+        await p.click('.toggle button[data-dev=mobile]')
+        await p.wait_for_function("document.querySelector('#pvImg') && document.querySelector('#pvImg').naturalWidth===780")
+        ok('mobile toggle shows 780px-wide (2x of 390) image', True)
+        await p.screenshot(path=f'{SS}/07-client-preview-mobile-toggle.png')
+        # dump preview pngs to files
+        for dev in ['desktop','mobile']:
+            data = await p.evaluate(f"previews.{dev}.url")
+            import base64
+            open(f'{SS}/preview-image-{dev}.png','wb').write(base64.b64decode(data.split(',')[1]))
+        # request changes
+        await p.click('.toggle button[data-dev=desktop]')
+        await p.click('#reqBtn')
+        await p.click('.chip[data-t="Make it darker"]')
+        await p.fill('#chHeadline', "Leeds' friendliest plumbers")
+        await p.screenshot(path=f'{SS}/08-request-changes.png', full_page=False)
+        await p.click('#rerunBtn')
+        await p.wait_for_selector('#screen-pipeline.on')
+        await p.wait_for_selector('#bot3.done', timeout=20000)
+        log1 = await p.inner_text('#bot1 ul')
+        await wait_preview(p)
+        rev = await p.text_content('#pvRev')
+        theme = await p.evaluate("current.opts.theme")
+        ok('request changes re-runs builder (v2, bold theme, headline)', rev == 'Version 2' and theme == 'bold' and 'friendliest' in log1, f'{rev} {theme}')
+        await p.screenshot(path=f'{SS}/09-preview-after-changes.png')
+        # approve
+        await p.click('#approveBtn')
+        await p.wait_for_selector('#screen-approve.on')
+        t1 = await p.text_content('#payBtn')
+        await p.check('input[name=dom][value=connect]')
+        t2 = await p.text_content('#payBtn')
+        ok('pricing: $79 today, $89 with domain', '$79' in t1 and '$89' in t2, f'{t1} / {t2}')
+        await p.screenshot(path=f'{SS}/10-approve-pricing-desktop.png')
+        await p.click('#payBtn')
+        await p.wait_for_selector('#screen-thanks.on')
+        await p.screenshot(path=f'{SS}/11-fake-door-thanks.png')
+        st = await p.evaluate("JSON.parse(localStorage.sitespark_demo_v1)[0]")
+        ok('fake door recorded interest', st['status'] == 'clicked pay (fake door)' and st['interest']['dueToday'] == 89 and st['data']['logo'].startswith('data:image/png'), st['status'])
+        # admin
+        await p.goto(URL + '#admin'); await p.wait_for_selector('#screen-admin.on')
+        rows = await p.locator('#admTbl button[data-view]').count()
+        ok('admin lists submission', rows == 1)
+        await p.screenshot(path=f'{SS}/12-admin-desktop.png')
+        await p.click('#admTbl button[data-view]')
+        await p.wait_for_timeout(800)
+        fr = p.frame_locator('#smFrame')
+        has_logo = await fr.locator('.lg-img').count()
+        h1 = await fr.locator('h1').inner_text()
+        ok('admin full site opens (agency side) with uploaded logo', has_logo == 1 and 'friendliest' in h1.lower(), h1)
+        await p.screenshot(path=f'{SS}/13-admin-full-site.png')
+        await p.click('#smClose')
+        async with p.expect_download() as dl:
+            await p.click('#exportBtn')
+        d = await dl.value; path = os.path.join(HERE, 'export.json'); await d.save_as(path)
+        ok('export JSON', len(json.load(open(path))) == 1, d.suggested_filename)
+
+        # ---------- second pass: no logo, salon -> elegant, custom colour, other industry ----------
+        await p.goto(URL); 
+        await p.fill('[name=name]', 'Sample Salon Studio'); await p.select_option('#industry', 'salon')
+        await p.fill('[name=about]', 'A small, friendly salon offering cuts, colour and nails in a relaxed space since 2019.')
+        await p.fill('#svcList input[data-k=name]', 'Cut & finish')
+        await p.fill('[name=phone]', '+353 1 555 0100'); await p.fill('[name=email]', 'hi@example.org')
+        await p.click('#buildBtn'); await wait_preview(p)
+        t = await p.evaluate("current.opts.theme")
+        ok('salon -> elegant theme, text logo', t == 'elegant')
+        await p.screenshot(path=f'{SS}/14-preview-salon-elegant-textlogo.png')
+        await p.evaluate("previews.desktop.url").then if False else None
+        import base64
+        open(f'{SS}/preview-image-salon-desktop.png','wb').write(base64.b64decode((await p.evaluate("previews.desktop.url")).split(',')[1]))
+        # 'other' industry + bakery warm via another
+        await p.goto(URL)
+        await p.fill('[name=name]', 'Demo Bakehouse'); await p.select_option('#industry', 'bakery'); await p.fill('[name=city]', 'Dublin')
+        await p.fill('[name=about]', 'Small-batch sourdough, pastries and celebration cakes baked fresh every morning.')
+        await p.fill('#svcList input[data-k=name]', 'Sourdough loaves'); await p.click('#addSvc')
+        await p.fill('#svcList .svc:nth-child(2) input[data-k=name]', 'Celebration cakes'); await p.fill('#svcList .svc:nth-child(2) input[data-k=price]', 'From €45')
+        await p.fill('[name=phone]', '+353 1 555 0199'); await p.fill('[name=email]', 'bake@example.org')
+        await p.click('#buildBtn'); await wait_preview(p)
+        ok('bakery -> warm theme', await p.evaluate("current.opts.theme") == 'warm')
+        open(f'{SS}/preview-image-bakery-desktop.png','wb').write(base64.b64decode((await p.evaluate("previews.desktop.url")).split(',')[1]))
+        # fallback mode
+        await p.goto(URL + '?preview=iframe')
+        await p.click('#fillExample'); await p.click('#buildBtn'); await wait_preview(p)
+        fb = await p.evaluate("previews.mode")
+        blocked = await p.evaluate("""() => { const r=document.querySelector('#lockedFrame').getBoundingClientRect(); const el=document.elementFromPoint(r.left+100, Math.min(r.top+100, innerHeight-10)); return el && el.classList.contains('lock'); }""")
+        ok('fallback locked frame works and overlay blocks clicks', fb == 'frame' and blocked)
+        await p.screenshot(path=f'{SS}/15-fallback-locked-frame.png')
+        await ctx.close()
+
+        # ---------- mobile 390 ----------
+        m = await b.new_context(viewport={'width':390,'height':844}, device_scale_factor=2, is_mobile=True, has_touch=True)
+        q = await m.new_page()
+        q.on('pageerror', lambda e: errors.append('mobile pageerror: ' + str(e)))
+        await q.goto(URL)
+        await q.click('#fillExample')
+        await q.screenshot(path=f'{SS}/m1-form-mobile.png')
+        await q.click('#buildBtn'); await q.wait_for_selector('#bot2.run'); await q.wait_for_timeout(400)
+        await q.screenshot(path=f'{SS}/m2-pipeline-mobile.png')
+        await wait_preview(q)
+        await q.screenshot(path=f'{SS}/m3-preview-desktop-view-on-phone.png')
+        await q.click('.toggle button[data-dev=mobile]'); await q.wait_for_timeout(300)
+        await q.screenshot(path=f'{SS}/m4-preview-mobile.png')
+        await q.click('#approveBtn'); await q.wait_for_selector('#screen-approve.on')
+        await q.screenshot(path=f'{SS}/m5-approve-mobile.png', full_page=True)
+        sw = await q.evaluate("document.documentElement.scrollWidth")
+        ok('mobile: no horizontal overflow', sw <= 391, str(sw))
+        await q.goto(URL + '#admin'); await q.wait_for_selector('#screen-admin.on')
+        await q.screenshot(path=f'{SS}/m6-admin-mobile.png')
+        await b.close()
+    ok('no JS errors', not errors, '; '.join(errors))
+    print('\n%d/%d passed' % (sum(r[1] for r in results), len(results)))
+asyncio.run(run())

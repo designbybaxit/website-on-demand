@@ -1,0 +1,611 @@
+{
+ "title": "Shinental",
+ "url": "https://show.creativemox.com/shinental/?storefront=envato-elements",
+ "height": 6527,
+ "bg": [
+  [
+   "rgb(125, 166, 60)",
+   23
+  ],
+  [
+   "rgb(255, 255, 255)",
+   13
+  ],
+  [
+   "rgb(214, 214, 214)",
+   4
+  ],
+  [
+   "rgb(235, 235, 235)",
+   3
+  ],
+  [
+   "rgb(116, 153, 55)",
+   1
+  ],
+  [
+   "rgba(125, 166, 60, 0)",
+   1
+  ],
+  [
+   "rgba(255, 255, 255, 0.17)",
+   1
+  ],
+  [
+   "rgb(237, 244, 225)",
+   1
+  ]
+ ],
+ "fg": [
+  [
+   "rgb(131, 131, 131)",
+   48
+  ],
+  [
+   "rgb(54, 53, 57)",
+   39
+  ],
+  [
+   "rgb(255, 255, 255)",
+   29
+  ],
+  [
+   "rgb(125, 166, 60)",
+   10
+  ],
+  [
+   "rgb(90, 155, 203)",
+   5
+  ],
+  [
+   "rgb(0, 0, 0)",
+   4
+  ]
+ ],
+ "fonts": [
+  [
+   "Onest",
+   68
+  ],
+  [
+   "\"Golos Text\"",
+   63
+  ],
+  [
+   "\"Public Sans\"",
+   4
+  ]
+ ],
+ "heads": [
+  [
+   "H2|Onest|700|44px",
+   6
+  ],
+  [
+   "H1|Onest|700|56px",
+   1
+  ]
+ ],
+ "btns": [
+  {
+   "t": "Get now",
+   "bg": "rgba(0, 0, 0, 0)",
+   "c": "rgb(131, 131, 131)",
+   "r": "0px",
+   "pad": "0px",
+   "ff": "\"Golos Text\"",
+   "fw": "400",
+   "tt": "none",
+   "border": "0px none rgb(131, 131, 131)"
+  },
+  {
+   "t": "Get now",
+   "bg": "rgba(0, 0, 0, 0)",
+   "c": "rgb(131, 131, 131)",
+   "r": "0px",
+   "pad": "0px",
+   "ff": "\"Golos Text\"",
+   "fw": "400",
+   "tt": "none",
+   "border": "0px none rgb(131, 131, 131)"
+  },
+  {
+   "t": "Get now",
+   "bg": "rgba(125, 166, 60, 0)",
+   "c": "rgb(255, 255, 255)",
+   "r": "50px",
+   "pad": "0px",
+   "ff": "\"Golos Text\"",
+   "fw": "400",
+   "tt": "none",
+   "border": "0px solid rgb(125, 166, 60)"
+  },
+  {
+   "t": "Get now",
+   "bg": "rgba(0, 0, 0, 0)",
+   "c": "rgb(255, 255, 255)",
+   "r": "0px",
+   "pad": "0px",
+   "ff": "\"Golos Text\"",
+   "fw": "400",
+   "tt": "none",
+   "border": "0px none rgb(255, 255, 255)"
+  },
+  {
+   "t": "",
+   "bg": "rgba(0, 0, 0, 0)",
+   "c": "rgb(255, 255, 255)",
+   "r": "0px",
+   "pad": "0px",
+   "ff": "\"Golos Text\"",
+   "fw": "400",
+   "tt": "none",
+   "border": "0px none rgb(255, 255, 255)"
+  },
+  {
+   "t": "Get now",
+   "bg": "rgba(0, 0, 0, 0)",
+   "c": "rgb(255, 255, 255)",
+   "r": "0px",
+   "pad": "0px",
+   "ff": "\"Golos Text\"",
+   "fw": "400",
+   "tt": "none",
+   "border": "0px none rgb(255, 255, 255)"
+  },
+  {
+   "t": "Free consultations",
+   "bg": "rgba(0, 0, 0, 0)",
+   "c": "rgb(131, 131, 131)",
+   "r": "0px",
+   "pad": "0px",
+   "ff": "\"Golos Text\"",
+   "fw": "400",
+   "tt": "none",
+   "border": "0px none rgb(131, 131, 131)"
+  },
+  {
+   "t": "Free consultations",
+   "bg": "rgba(0, 0, 0, 0)",
+   "c": "rgb(131, 131, 131)",
+   "r": "0px",
+   "pad": "0px",
+   "ff": "\"Golos Text\"",
+   "fw": "400",
+   "tt": "none",
+   "border": "0px none rgb(131, 131, 131)"
+  },
+  {
+   "t": "Free consultations",
+   "bg": "rgb(125, 166, 60)",
+   "c": "rgb(255, 255, 255)",
+   "r": "50px",
+   "pad": "12px 24px",
+   "ff": "Onest",
+   "fw": "500",
+   "tt": "none",
+   "border": "0px solid rgb(125, 166, 60)"
+  },
+  {
+   "t": "Free consultations",
+   "bg": "rgba(0, 0, 0, 0)",
+   "c": "rgb(255, 255, 255)",
+   "r": "0px",
+   "pad": "0px",
+   "ff": "Onest",
+   "fw": "500",
+   "tt": "none",
+   "border": "0px none rgb(255, 255, 255)"
+  },
+  {
+   "t": "",
+   "bg": "rgba(0, 0, 0, 0)",
+   "c": "rgb(255, 255, 255)",
+   "r": "0px",
+   "pad": "0px",
+   "ff": "Onest",
+   "fw": "500",
+   "tt": "none",
+   "border": "0px none rgb(255, 255, 255)"
+  },
+  {
+   "t": "Free consultations",
+   "bg": "rgba(0, 0, 0, 0)",
+   "c": "rgb(255, 255, 255)",
+   "r": "0px",
+   "pad": "0px",
+   "ff": "Onest",
+   "fw": "500",
+   "tt": "none",
+   "border": "0px none rgb(255, 255, 255)"
+  }
+ ],
+ "sections": [
+  {
+   "tag": "HEADER",
+   "cls": "elementor elementor-31 elementor-location-header",
+   "y": 0,
+   "h": 117,
+   "bg": "rgba(0, 0, 0, 0)",
+   "bgimg": "none",
+   "heads": [],
+   "imgs": 1,
+   "inputs": 0,
+   "widgets": [
+    "icon-list.default",
+    "button.default",
+    "image.default",
+    "nav-menu.default"
+   ],
+   "swipers": 0,
+   "counters": 0,
+   "accordions": 4,
+   "videos": 0,
+   "anims": []
+  },
+  {
+   "tag": "DIV",
+   "cls": "elementor-element elementor-element-2cb7e1a e-flex e-con-boxed e-con e-parent e-lazyloaded",
+   "y": 42,
+   "h": 753,
+   "bg": "rgba(0, 0, 0, 0)",
+   "bgimg": "url(\"https://show.creativemox.com/shinental/wp-con",
+   "heads": [
+    "H6: WELCOME TO SHINENTAL",
+    "H1: Creating Healthy Smiles That Last Forever"
+   ],
+   "imgs": 1,
+   "inputs": 0,
+   "widgets": [
+    "heading.default",
+    "text-editor.default",
+    "button.default",
+    "image.default"
+   ],
+   "swipers": 0,
+   "counters": 0,
+   "accordions": 0,
+   "videos": 0,
+   "anims": []
+  },
+  {
+   "tag": "DIV",
+   "cls": "elementor-element elementor-element-9ad1d5f e-flex e-con-boxed e-con e-parent e-lazyloaded",
+   "y": 795,
+   "h": 66,
+   "bg": "rgba(0, 0, 0, 0)",
+   "bgimg": "none",
+   "heads": [],
+   "imgs": 3,
+   "inputs": 0,
+   "widgets": [
+    "image.default",
+    "icon-box.default"
+   ],
+   "swipers": 0,
+   "counters": 0,
+   "accordions": 0,
+   "videos": 0,
+   "anims": []
+  },
+  {
+   "tag": "DIV",
+   "cls": "elementor-element elementor-element-6a5c978 e-flex e-con-boxed e-con e-parent e-lazyloaded",
+   "y": 862,
+   "h": 924,
+   "bg": "rgba(0, 0, 0, 0)",
+   "bgimg": "none",
+   "heads": [
+    "H6: WHO WE ARE",
+    "H2: We are professional dental specialists"
+   ],
+   "imgs": 1,
+   "inputs": 0,
+   "widgets": [
+    "heading.default",
+    "text-editor.default",
+    "elementskit-progressbar.default",
+    "icon-box.default",
+    "image.default"
+   ],
+   "swipers": 0,
+   "counters": 0,
+   "accordions": 0,
+   "videos": 0,
+   "anims": []
+  },
+  {
+   "tag": "DIV",
+   "cls": "elementor-element elementor-element-2ba22fe e-con-full e-flex e-con e-parent e-lazyloaded",
+   "y": 1786,
+   "h": 149,
+   "bg": "rgb(235, 235, 235)",
+   "bgimg": "none",
+   "heads": [],
+   "imgs": 6,
+   "inputs": 0,
+   "widgets": [
+    "image.default"
+   ],
+   "swipers": 0,
+   "counters": 0,
+   "accordions": 0,
+   "videos": 0,
+   "anims": []
+  },
+  {
+   "tag": "DIV",
+   "cls": "elementor-element elementor-element-fe5c688 e-flex e-con-boxed e-con e-parent e-lazyloaded",
+   "y": 1935,
+   "h": 540,
+   "bg": "rgba(0, 0, 0, 0)",
+   "bgimg": "url(\"https://show.creativemox.com/shinental/wp-con",
+   "heads": [
+    "H2: Join us today and keep your smile healthy, bright, confident"
+   ],
+   "imgs": 0,
+   "inputs": 0,
+   "widgets": [
+    "heading.default",
+    "text-editor.default",
+    "button.default"
+   ],
+   "swipers": 0,
+   "counters": 0,
+   "accordions": 0,
+   "videos": 0,
+   "anims": []
+  },
+  {
+   "tag": "DIV",
+   "cls": "elementor-element elementor-element-e6f23d0 e-flex e-con-boxed e-con e-parent e-lazyloaded",
+   "y": 2475,
+   "h": 1470,
+   "bg": "rgba(0, 0, 0, 0)",
+   "bgimg": "none",
+   "heads": [
+    "H6: WHAT WE OFFER",
+    "H2: Dental health services to help your whole family thrive."
+   ],
+   "imgs": 12,
+   "inputs": 0,
+   "widgets": [
+    "heading.default",
+    "image.default",
+    "icon-box.default",
+    "text-editor.default",
+    "button.default"
+   ],
+   "swipers": 0,
+   "counters": 0,
+   "accordions": 0,
+   "videos": 0,
+   "anims": []
+  },
+  {
+   "tag": "DIV",
+   "cls": "elementor-element elementor-element-902d3e4 e-flex e-con-boxed e-con e-parent e-lazyloaded",
+   "y": 3945,
+   "h": 675,
+   "bg": "rgba(0, 0, 0, 0)",
+   "bgimg": "none",
+   "heads": [
+    "H6: TESTIMONIAL",
+    "H2: Customer Experiences That Inspire Confidence",
+    "H5: 4.7 Customer Reviews",
+    "H5: \"Professional, efficient, and truly patient-centered care. I would hig",
+    "H5: \"Professional, efficient, and truly patient-centered care. I would hig",
+    "H5: \"Professional, efficient, and truly patient-centered care. I would hig",
+    "H5: \"Professional, efficient, and truly patient-centered care. I would hig",
+    "H5: \"Professional, efficient, and truly patient-centered care. I would hig"
+   ],
+   "imgs": 10,
+   "inputs": 0,
+   "widgets": [
+    "heading.default",
+    "image.default",
+    "rating.default",
+    "nested-carousel.default",
+    "image-box.default"
+   ],
+   "swipers": 1,
+   "counters": 0,
+   "accordions": 0,
+   "videos": 0,
+   "anims": []
+  },
+  {
+   "tag": "DIV",
+   "cls": "elementor-element elementor-element-8a6ef4c e-flex e-con-boxed e-con e-parent e-lazyloaded",
+   "y": 4620,
+   "h": 678,
+   "bg": "rgba(0, 0, 0, 0)",
+   "bgimg": "url(\"https://show.creativemox.com/shinental/wp-con",
+   "heads": [
+    "H2: Let's get your teeth fixed right now."
+   ],
+   "imgs": 0,
+   "inputs": 0,
+   "widgets": [
+    "elementskit-video.default",
+    "heading.default",
+    "text-editor.default",
+    "button.default"
+   ],
+   "swipers": 0,
+   "counters": 0,
+   "accordions": 0,
+   "videos": 3,
+   "anims": []
+  },
+  {
+   "tag": "DIV",
+   "cls": "elementor-element elementor-element-25a1018 e-flex e-con-boxed e-con e-parent e-lazyloaded",
+   "y": 5298,
+   "h": 788,
+   "bg": "rgb(235, 235, 235)",
+   "bgimg": "none",
+   "heads": [
+    "H6: WHY CHOOSE US",
+    "H2: Customized Care for Every Stage of Your Dental Journey"
+   ],
+   "imgs": 2,
+   "inputs": 0,
+   "widgets": [
+    "image.default",
+    "heading.default",
+    "text-editor.default",
+    "icon-list.default"
+   ],
+   "swipers": 0,
+   "counters": 0,
+   "accordions": 0,
+   "videos": 0,
+   "anims": []
+  },
+  {
+   "tag": "FOOTER",
+   "cls": "elementor elementor-460 elementor-location-footer",
+   "y": 6086,
+   "h": 440,
+   "bg": "rgba(0, 0, 0, 0)",
+   "bgimg": "none",
+   "heads": [
+    "H5: Follow us",
+    "H5: Services",
+    "H5: Support",
+    "H4: Join our newsletter for brighter, healthier teeth today"
+   ],
+   "imgs": 1,
+   "inputs": 5,
+   "widgets": [
+    "divider.default",
+    "image.default",
+    "text-editor.default",
+    "heading.default",
+    "social-icons.default",
+    "icon-list.default",
+    "form.default"
+   ],
+   "swipers": 0,
+   "counters": 0,
+   "accordions": 0,
+   "videos": 0,
+   "anims": []
+  }
+ ],
+ "scripts": [
+  "jquery/jquery.min.js",
+  "jquery/jquery-migrate.min.js",
+  "public/template-kit-export-public.js",
+  "chunks/background-slideshow.min.js",
+  "chunks/background-video.min.js",
+  "chunks/text-editor.min.js",
+  "js/wp-emoji-release.min.js",
+  "js/hello-frontend.js",
+  "js/webpack.runtime.min.js",
+  "js/frontend-modules.min.js",
+  "ui/core.min.js",
+  "js/frontend.min.js",
+  "smartmenus/jquery.smartmenus.min.js",
+  "widgets/animate-numbers.js",
+  "widgets/core.js",
+  "widgets/progressbar.js",
+  "v8/swiper.min.js",
+  "widgets/video.js",
+  "mediaelement/mediaelement-and-player.min.js",
+  "mediaelement/mediaelement-migrate.min.js",
+  "mediaelement/wp-mediaelement.min.js",
+  "magnific-popup/jquery.magnific-popup.min.js",
+  "js/smush-lazy-load.min.js",
+  "dist/hooks.min.js",
+  "dist/i18n.min.js",
+  "js/frontend.min.js",
+  "js/elements-handlers.min.js"
+ ],
+ "fontLinks": [
+  "http://show.creativemox.com/shinental/wp-content/uploads/sites/17/elementor/google-fonts/css/onest.css?ver=1756695220",
+  "http://show.creativemox.com/shinental/wp-content/uploads/sites/17/elementor/google-fonts/css/golostext.css?ver=1756693657",
+  "https://fonts.googleapis.com/css?family=Public+Sans:100,100italic,200,200italic,300,300italic,400,400italic,500,500italic,600,600italic,700,700italic,800,800italic,900,900italic&display=swap"
+ ],
+ "fontFaces": [
+  "swiper-icons 400 normal unloaded",
+  "Public Sans 100 italic unloaded",
+  "Public Sans 200 italic unloaded",
+  "Public Sans 300 italic unloaded",
+  "Public Sans 400 italic unloaded",
+  "Public Sans 500 italic unloaded",
+  "Public Sans 600 italic unloaded",
+  "Public Sans 700 italic unloaded",
+  "Public Sans 800 italic unloaded",
+  "Public Sans 900 italic unloaded",
+  "Public Sans 100 normal unloaded",
+  "Public Sans 200 normal unloaded",
+  "Public Sans 300 normal unloaded",
+  "Public Sans 400 normal unloaded",
+  "Public Sans 500 normal unloaded",
+  "Public Sans 500 normal loaded",
+  "Public Sans 600 normal unloaded",
+  "Public Sans 700 normal unloaded",
+  "Public Sans 800 normal unloaded",
+  "Public Sans 900 normal unloaded",
+  "simple-line-icons normal normal loaded",
+  "elementskit 400 normal loaded",
+  "ElegantIcons 400 normal loaded",
+  "Material Design Icons normal normal loaded",
+  "Icons normal normal loaded",
+  "themify normal normal loaded",
+  "Ionicons normal normal loaded"
+ ],
+ "vars": {
+  "--wp--preset--color--black": "#000000",
+  "--wp--preset--color--cyan-bluish-gray": "#abb8c3",
+  "--wp--preset--color--white": "#ffffff",
+  "--wp--preset--color--pale-pink": "#f78da7",
+  "--wp--preset--color--vivid-red": "#cf2e2e",
+  "--wp--preset--color--luminous-vivid-orange": "#ff6900",
+  "--wp--preset--color--luminous-vivid-amber": "#fcb900",
+  "--wp--preset--color--light-green-cyan": "#7bdcb5",
+  "--wp--preset--color--vivid-green-cyan": "#00d084",
+  "--wp--preset--color--pale-cyan-blue": "#8ed1fc",
+  "--wp--preset--color--vivid-cyan-blue": "#0693e3",
+  "--wp--preset--color--vivid-purple": "#9b51e0",
+  "--e-global-color-secondary": "#363539",
+  "--e-global-color-primary": "#838383",
+  "--e-global-color-text": "#FFFFFF",
+  "--e-global-color-accent": "#FFFFFF2B",
+  "--e-global-color-14caab8": "#FFFFFF99",
+  "--e-global-color-d49ac81": "#7DA63C",
+  "--e-global-color-332724a": "#5A9BCB",
+  "--e-global-color-4d462f5": "#D6D6D6",
+  "--e-global-color-cfa1f76": "#D2E4B4",
+  "--e-global-color-7fbea4f": "#EDF4E1",
+  "--e-global-color-4b219f9": "#EBEBEB",
+  "--e-global-color-c94d9ab": "#749937",
+  "--e-global-color-044b931": "#59762A",
+  "--e-global-color-638d055": "#121808",
+  "--e-global-color-ec3c7a7": "#7DA63C",
+  "--e-global-color-3ee16e7": "#DDA94D",
+  "--e-global-color-2d91fda": "#F4A6B0",
+  "--e-global-color-46f9220": "#5A9BCB",
+  "--e-global-color-ee9ddbf": "#D2E4B4",
+  "--e-global-typography-primary-font-family": "\"Onest\"",
+  "--e-global-typography-secondary-font-family": "\"Onest\"",
+  "--e-global-typography-text-font-family": "\"Golos Text\"",
+  "--e-global-typography-accent-font-family": "\"Onest\"",
+  "--e-global-typography-b2ce6af-font-family": "\"Golos Text\"",
+  "--e-global-typography-69c152f-font-family": "\"Golos Text\"",
+  "--e-global-typography-112b6c4-font-family": "\"Golos Text\"",
+  "--e-global-typography-520c191-font-family": "\"Onest\"",
+  "--e-global-typography-a435f28-font-family": "\"Onest\"",
+  "--e-global-typography-583e54c-font-family": "\"Onest\"",
+  "--e-global-typography-5d167aa-font-family": "\"Onest\"",
+  "--e-global-typography-d3dae9a-font-family": "\"Onest\"",
+  "--e-global-typography-83682a1-font-family": "\"Onest\"",
+  "--e-global-typography-7044a64-font-family": "\"Onest\"",
+  "--e-global-typography-84ca66e-font-family": "\"Onest\"",
+  "--swiper-theme-color": "#007aff"
+ },
+ "cssAnims": [],
+ "httpStatus": 202
+}

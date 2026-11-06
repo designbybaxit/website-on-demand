@@ -1,0 +1,718 @@
+{
+ "title": "Home – Usmile",
+ "url": "https://askproject.net/usmile/home/?storefront=envato-elements",
+ "height": 8540,
+ "bg": [
+  [
+   "rgb(0, 202, 224)",
+   19
+  ],
+  [
+   "rgb(255, 255, 255)",
+   17
+  ],
+  [
+   "rgba(2, 1, 1, 0)",
+   15
+  ],
+  [
+   "rgba(255, 255, 255, 0)",
+   7
+  ],
+  [
+   "rgb(219, 238, 250)",
+   4
+  ],
+  [
+   "rgb(243, 250, 255)",
+   3
+  ],
+  [
+   "rgb(223, 237, 249)",
+   1
+  ],
+  [
+   "rgb(0, 0, 0)",
+   1
+  ]
+ ],
+ "fg": [
+  [
+   "rgb(0, 0, 0)",
+   71
+  ],
+  [
+   "rgb(68, 68, 68)",
+   44
+  ],
+  [
+   "rgb(0, 202, 224)",
+   25
+  ],
+  [
+   "rgb(255, 255, 255)",
+   8
+  ],
+  [
+   "rgb(131, 131, 131)",
+   7
+  ],
+  [
+   "rgb(137, 137, 137)",
+   4
+  ]
+ ],
+ "fonts": [
+  [
+   "\"DM Sans\"",
+   159
+  ]
+ ],
+ "heads": [
+  [
+   "H2|\"DM Sans\"|500|45px",
+   8
+  ],
+  [
+   "H3|\"DM Sans\"|500|25px",
+   4
+  ],
+  [
+   "H3|\"DM Sans\"|600|12px",
+   4
+  ],
+  [
+   "H2|\"DM Sans\"|500|21px",
+   3
+  ],
+  [
+   "H1|\"DM Sans\"|500|55px",
+   1
+  ],
+  [
+   "H3|\"DM Sans\"|400|25px",
+   1
+  ]
+ ],
+ "btns": [
+  {
+   "t": "BOOK NOW",
+   "bg": "rgba(0, 0, 0, 0)",
+   "c": "rgb(68, 68, 68)",
+   "r": "0px",
+   "pad": "0px",
+   "ff": "\"DM Sans\"",
+   "fw": "400",
+   "tt": "none",
+   "border": "0px none rgb(68, 68, 68)"
+  },
+  {
+   "t": "BOOK NOW",
+   "bg": "rgba(0, 0, 0, 0)",
+   "c": "rgb(68, 68, 68)",
+   "r": "0px",
+   "pad": "0px",
+   "ff": "\"DM Sans\"",
+   "fw": "400",
+   "tt": "none",
+   "border": "0px none rgb(68, 68, 68)"
+  },
+  {
+   "t": "BOOK NOW",
+   "bg": "rgb(255, 255, 255)",
+   "c": "rgb(0, 0, 0)",
+   "r": "100px",
+   "pad": "15px 37px",
+   "ff": "\"DM Sans\"",
+   "fw": "600",
+   "tt": "uppercase",
+   "border": "0px solid rgb(219, 238, 250)"
+  },
+  {
+   "t": "BOOK NOW",
+   "bg": "rgba(0, 0, 0, 0)",
+   "c": "rgb(0, 0, 0)",
+   "r": "0px",
+   "pad": "0px",
+   "ff": "\"DM Sans\"",
+   "fw": "600",
+   "tt": "uppercase",
+   "border": "0px none rgb(0, 0, 0)"
+  },
+  {
+   "t": "BOOK NOW",
+   "bg": "rgba(0, 0, 0, 0)",
+   "c": "rgb(0, 0, 0)",
+   "r": "0px",
+   "pad": "0px",
+   "ff": "\"DM Sans\"",
+   "fw": "600",
+   "tt": "uppercase",
+   "border": "0px none rgb(0, 0, 0)"
+  },
+  {
+   "t": "",
+   "bg": "rgba(0, 0, 0, 0)",
+   "c": "rgb(0, 0, 0)",
+   "r": "0px",
+   "pad": "0px",
+   "ff": "\"DM Sans\"",
+   "fw": "400",
+   "tt": "none",
+   "border": "0px none rgb(0, 0, 0)"
+  },
+  {
+   "t": "BOOK APPOINTMENT",
+   "bg": "rgba(0, 0, 0, 0)",
+   "c": "rgb(68, 68, 68)",
+   "r": "0px",
+   "pad": "0px",
+   "ff": "\"DM Sans\"",
+   "fw": "400",
+   "tt": "none",
+   "border": "0px none rgb(68, 68, 68)"
+  },
+  {
+   "t": "BOOK APPOINTMENT",
+   "bg": "rgba(0, 0, 0, 0)",
+   "c": "rgb(68, 68, 68)",
+   "r": "0px",
+   "pad": "0px",
+   "ff": "\"DM Sans\"",
+   "fw": "400",
+   "tt": "none",
+   "border": "0px none rgb(68, 68, 68)"
+  },
+  {
+   "t": "BOOK APPOINTMENT",
+   "bg": "rgb(0, 202, 224)",
+   "c": "rgb(255, 255, 255)",
+   "r": "100px",
+   "pad": "15px 37px",
+   "ff": "\"DM Sans\"",
+   "fw": "600",
+   "tt": "uppercase",
+   "border": "0px solid rgb(219, 238, 250)"
+  },
+  {
+   "t": "BOOK APPOINTMENT",
+   "bg": "rgba(0, 0, 0, 0)",
+   "c": "rgb(255, 255, 255)",
+   "r": "0px",
+   "pad": "0px",
+   "ff": "\"DM Sans\"",
+   "fw": "600",
+   "tt": "uppercase",
+   "border": "0px none rgb(255, 255, 255)"
+  },
+  {
+   "t": "BOOK APPOINTMENT",
+   "bg": "rgba(0, 0, 0, 0)",
+   "c": "rgb(255, 255, 255)",
+   "r": "0px",
+   "pad": "0px",
+   "ff": "\"DM Sans\"",
+   "fw": "600",
+   "tt": "uppercase",
+   "border": "0px none rgb(255, 255, 255)"
+  },
+  {
+   "t": "CONTACT US",
+   "bg": "rgba(0, 0, 0, 0)",
+   "c": "rgb(68, 68, 68)",
+   "r": "0px",
+   "pad": "0px",
+   "ff": "\"DM Sans\"",
+   "fw": "400",
+   "tt": "none",
+   "border": "0px none rgb(68, 68, 68)"
+  }
+ ],
+ "sections": [
+  {
+   "tag": "SECTION",
+   "cls": "elementor-section elementor-top-section elementor-element elementor-element-db581cd she-header-yes s",
+   "y": 0,
+   "h": 85,
+   "bg": "rgba(0, 0, 0, 0)",
+   "bgimg": "none",
+   "heads": [],
+   "imgs": 2,
+   "inputs": 1,
+   "widgets": [
+    "image.default",
+    "ekit-nav-menu.default",
+    "button.default",
+    "elementskit-header-search.default"
+   ],
+   "swipers": 0,
+   "counters": 0,
+   "accordions": 4,
+   "videos": 0,
+   "anims": [
+    "fadeIn"
+   ]
+  },
+  {
+   "tag": "SECTION",
+   "cls": "elementor-section elementor-top-section elementor-element elementor-element-4105935 elementor-sectio",
+   "y": 0,
+   "h": 896,
+   "bg": "rgba(0, 0, 0, 0)",
+   "bgimg": "url(\"https://askproject.net/usmile/wp-content/uplo",
+   "heads": [
+    "H1: Crafting Smiles With Our Personal Touch"
+   ],
+   "imgs": 1,
+   "inputs": 0,
+   "widgets": [
+    "text-editor.default",
+    "heading.default",
+    "button.default",
+    "counter.default",
+    "image.default",
+    "elementskit-video.default"
+   ],
+   "swipers": 0,
+   "counters": 6,
+   "accordions": 0,
+   "videos": 3,
+   "anims": [
+    "fadeInUp"
+   ]
+  },
+  {
+   "tag": "SECTION",
+   "cls": "elementor-section elementor-top-section elementor-element elementor-element-c1150dd elementor-revers",
+   "y": 896,
+   "h": 689,
+   "bg": "rgba(0, 0, 0, 0)",
+   "bgimg": "none",
+   "heads": [
+    "H2: A personalized approach to creating the perfect smile"
+   ],
+   "imgs": 1,
+   "inputs": 0,
+   "widgets": [
+    "image.default",
+    "text-editor.default",
+    "heading.default",
+    "button.default"
+   ],
+   "swipers": 0,
+   "counters": 0,
+   "accordions": 0,
+   "videos": 0,
+   "anims": [
+    "fadeIn",
+    "fadeInUp"
+   ]
+  },
+  {
+   "tag": "SECTION",
+   "cls": "elementor-section elementor-top-section elementor-element elementor-element-5d6ea92 elementor-sectio",
+   "y": 1585,
+   "h": 574,
+   "bg": "rgba(0, 0, 0, 0)",
+   "bgimg": "none",
+   "heads": [
+    "H3: Usmile is a trusted dentist who has been around since 2006. Usmile pro"
+   ],
+   "imgs": 0,
+   "inputs": 0,
+   "widgets": [
+    "icon.default",
+    "heading.default",
+    "button.default"
+   ],
+   "swipers": 0,
+   "counters": 0,
+   "accordions": 0,
+   "videos": 0,
+   "anims": [
+    "fadeInUp"
+   ]
+  },
+  {
+   "tag": "SECTION",
+   "cls": "elementor-section elementor-top-section elementor-element elementor-element-8cc56b1 elementor-sectio",
+   "y": 2159,
+   "h": 741,
+   "bg": "rgb(219, 238, 250)",
+   "bgimg": "none",
+   "heads": [
+    "H2: Turning your smile into an experience",
+    "H3: Teeth Alignment",
+    "H3: Cavity Inspection",
+    "H3: Cosmetic Dentistry",
+    "H3: Oral Hygiene"
+   ],
+   "imgs": 5,
+   "inputs": 0,
+   "widgets": [
+    "text-editor.default",
+    "heading.default",
+    "button.default",
+    "image.default",
+    "image-box.default"
+   ],
+   "swipers": 0,
+   "counters": 0,
+   "accordions": 0,
+   "videos": 0,
+   "anims": [
+    "fadeInUp",
+    "fadeIn"
+   ]
+  },
+  {
+   "tag": "SECTION",
+   "cls": "elementor-section elementor-top-section elementor-element elementor-element-dd55374 elementor-sectio",
+   "y": 2900,
+   "h": 809,
+   "bg": "rgba(0, 0, 0, 0)",
+   "bgimg": "none",
+   "heads": [
+    "H2: Changing lives one smile at a time"
+   ],
+   "imgs": 1,
+   "inputs": 0,
+   "widgets": [
+    "text-editor.default",
+    "heading.default",
+    "image.default",
+    "icon.default",
+    "testimonial.default",
+    "button.default"
+   ],
+   "swipers": 0,
+   "counters": 0,
+   "accordions": 0,
+   "videos": 0,
+   "anims": [
+    "fadeInUp",
+    "fadeIn"
+   ]
+  },
+  {
+   "tag": "SECTION",
+   "cls": "elementor-section elementor-top-section elementor-element elementor-element-46b67a7 elementor-sectio",
+   "y": 3710,
+   "h": 294,
+   "bg": "rgba(0, 0, 0, 0)",
+   "bgimg": "none",
+   "heads": [],
+   "imgs": 0,
+   "inputs": 0,
+   "widgets": [
+    "counter.default"
+   ],
+   "swipers": 0,
+   "counters": 28,
+   "accordions": 0,
+   "videos": 0,
+   "anims": [
+    "fadeInUp"
+   ]
+  },
+  {
+   "tag": "SECTION",
+   "cls": "elementor-section elementor-top-section elementor-element elementor-element-1f67271 elementor-sectio",
+   "y": 4004,
+   "h": 839,
+   "bg": "rgba(0, 0, 0, 0)",
+   "bgimg": "none",
+   "heads": [
+    "H2: Frequently Asked Questions"
+   ],
+   "imgs": 1,
+   "inputs": 0,
+   "widgets": [
+    "text-editor.default",
+    "heading.default",
+    "elementskit-accordion.default",
+    "button.default",
+    "image.default"
+   ],
+   "swipers": 0,
+   "counters": 0,
+   "accordions": 26,
+   "videos": 0,
+   "anims": [
+    "fadeInUp",
+    "fadeIn"
+   ]
+  },
+  {
+   "tag": "SECTION",
+   "cls": "elementor-section elementor-top-section elementor-element elementor-element-a20c028 elementor-sectio",
+   "y": 4843,
+   "h": 263,
+   "bg": "rgb(219, 238, 250)",
+   "bgimg": "none",
+   "heads": [
+    "H2: Meet Our Experts"
+   ],
+   "imgs": 0,
+   "inputs": 0,
+   "widgets": [
+    "text-editor.default",
+    "heading.default"
+   ],
+   "swipers": 0,
+   "counters": 0,
+   "accordions": 0,
+   "videos": 0,
+   "anims": [
+    "fadeInUp"
+   ]
+  },
+  {
+   "tag": "SECTION",
+   "cls": "elementor-section elementor-top-section elementor-element elementor-element-f1daed9 elementor-sectio",
+   "y": 5106,
+   "h": 513,
+   "bg": "rgb(219, 238, 250)",
+   "bgimg": "none",
+   "heads": [
+    "H4: Adam Smiths",
+    "H4: Linda Scott",
+    "H4: James Dufan",
+    "H4: Jenny Lawsan"
+   ],
+   "imgs": 4,
+   "inputs": 0,
+   "widgets": [
+    "image.default",
+    "heading.default",
+    "text-editor.default",
+    "social-icons.default"
+   ],
+   "swipers": 0,
+   "counters": 0,
+   "accordions": 0,
+   "videos": 0,
+   "anims": [
+    "fadeInUp",
+    "fadeIn"
+   ]
+  },
+  {
+   "tag": "SECTION",
+   "cls": "elementor-section elementor-top-section elementor-element elementor-element-b9a23dc elementor-sectio",
+   "y": 5620,
+   "h": 1008,
+   "bg": "rgba(0, 0, 0, 0)",
+   "bgimg": "none",
+   "heads": [
+    "H2: Make your smile shine again"
+   ],
+   "imgs": 2,
+   "inputs": 0,
+   "widgets": [
+    "text-editor.default",
+    "heading.default",
+    "elementskit-image-comparison.default"
+   ],
+   "swipers": 0,
+   "counters": 0,
+   "accordions": 0,
+   "videos": 0,
+   "anims": [
+    "fadeInUp",
+    "fadeIn"
+   ]
+  },
+  {
+   "tag": "SECTION",
+   "cls": "elementor-section elementor-top-section elementor-element elementor-element-6e32c55 elementor-revers",
+   "y": 6627,
+   "h": 636,
+   "bg": "rgba(0, 0, 0, 0)",
+   "bgimg": "none",
+   "heads": [
+    "H2: Get in touch",
+    "H3: QUICK CONTACT",
+    "H3: OUR ADDRESS"
+   ],
+   "imgs": 3,
+   "inputs": 12,
+   "widgets": [
+    "elementskit-wp-forms.default",
+    "text-editor.default",
+    "heading.default",
+    "image-box.default"
+   ],
+   "swipers": 0,
+   "counters": 0,
+   "accordions": 0,
+   "videos": 0,
+   "anims": [
+    "fadeIn",
+    "fadeInUp"
+   ]
+  },
+  {
+   "tag": "SECTION",
+   "cls": "elementor-section elementor-top-section elementor-element elementor-element-66dc715 elementor-sectio",
+   "y": 7263,
+   "h": 814,
+   "bg": "rgba(0, 0, 0, 0)",
+   "bgimg": "none",
+   "heads": [
+    "H2: Latest Blog & News",
+    "H2: Light Therapy Help Injuries Heal by Triggering Growth Protein",
+    "H2: Research Finds ‘Low Rate’ Dental Fluoride Varnish Treatment",
+    "H2: Setting the Teeth on Edge: Identifying the Risk for Tooth Loss"
+   ],
+   "imgs": 3,
+   "inputs": 0,
+   "widgets": [
+    "text-editor.default",
+    "heading.default",
+    "elementskit-blog-posts.default"
+   ],
+   "swipers": 0,
+   "counters": 0,
+   "accordions": 0,
+   "videos": 0,
+   "anims": [
+    "fadeInUp"
+   ]
+  },
+  {
+   "tag": "FOOTER",
+   "cls": "",
+   "y": 8078,
+   "h": 462,
+   "bg": "rgba(0, 0, 0, 0)",
+   "bgimg": "none",
+   "heads": [
+    "H3: QUICK CONTACT",
+    "H3: OUR ADDRESS"
+   ],
+   "imgs": 3,
+   "inputs": 0,
+   "widgets": [
+    "image.default",
+    "text-editor.default",
+    "social-icons.default",
+    "image-box.default",
+    "navigation-menu.default"
+   ],
+   "swipers": 0,
+   "counters": 0,
+   "accordions": 2,
+   "videos": 0,
+   "anims": [
+    "fadeInUp",
+    "fadeIn"
+   ]
+  }
+ ],
+ "scripts": [
+  "js/jquery-1.12.4-wp.js",
+  "js/jquery-migrate-1.4.1-wp.js",
+  "js/she-header.js",
+  "de_loop/ecs_ajax_pagination.js",
+  "de_loop/ecs.js",
+  "chunks/section-stretched-section.min.js",
+  "chunks/background-slideshow.min.js",
+  "chunks/background-video.min.js",
+  "chunks/text-editor.min.js",
+  "chunks/counter.min.js",
+  "js/wp-emoji-release.min.js",
+  "js/webpack.runtime.min.js",
+  "js/frontend-modules.min.js",
+  "ui/core.min.js",
+  "js/frontend.min.js",
+  "jquery-numerator/jquery-numerator.min.js",
+  "mediaelement/mediaelement-and-player.min.js",
+  "mediaelement/mediaelement-migrate.min.js",
+  "mediaelement/wp-mediaelement.min.js",
+  "event-move-js/jquery.event.move.js",
+  "twentytwenty/jquery.twentytwenty.js",
+  "js/imagesloaded.min.js",
+  "js/hello-frontend.js",
+  "widgets/core.js",
+  "widgets/video.js",
+  "magnific-popup/jquery.magnific-popup.min.js",
+  "js/ekit-ui.js",
+  "widgets/accordion.js",
+  "widgets/image-comparison.js",
+  "js/ekit-masonry.js",
+  "widgets/blog-posts.js",
+  "widgets/nav-menu.js",
+  "widgets/header-search.js",
+  "js/nav-menu.js",
+  "js/frontend.js",
+  "lib/ResizeSensor.min.js",
+  "sticky-sidebar/sticky-sidebar.min.js",
+  "js/de-sticky-frontend.js",
+  "js/de-active-icon-box.js",
+  "js/de-active-column.js",
+  "js/anime.min.js",
+  "js/scrollMonitor.js",
+  "js/de_scroll_animation.preview.js",
+  "js/intersectionobserver.js",
+  "letter/charming.min.js",
+  "letter/lineMaker.js",
+  "letter/imagesloaded.pkgd.min.js",
+  "letter/textfx.js",
+  "js/main.js",
+  "js/de_reveal_animation.preview.js",
+  "de_staggering/de_staggering.js"
+ ],
+ "fontLinks": [
+  "https://askproject.net/usmile/wp-content/plugins/elementor/assets/lib/font-awesome/css/font-awesome.min.css?ver=4.7.0",
+  "https://askproject.net/usmile/wp-content/plugins/elementor/assets/lib/font-awesome/css/brands.css?ver=5.15.3",
+  "https://askproject.net/usmile/wp-content/plugins/elementor/assets/lib/font-awesome/css/fontawesome.css?ver=5.15.3",
+  "https://askproject.net/usmile/wp-content/plugins/elementor/assets/lib/font-awesome/css/solid.css?ver=5.15.3",
+  "http://askproject.net/usmile/wp-content/uploads/sites/56/elementor/google-fonts/css/dmsans.css?ver=1742267530",
+  "https://askproject.net/usmile/wp-content/plugins/elementor/assets/lib/font-awesome/css/fontawesome.min.css?ver=5.15.3",
+  "https://askproject.net/usmile/wp-content/plugins/elementor/assets/lib/font-awesome/css/solid.min.css?ver=5.15.3",
+  "https://askproject.net/usmile/wp-content/plugins/elementor/assets/lib/font-awesome/css/brands.min.css?ver=5.15.3"
+ ],
+ "fontFaces": [
+  "eicons 400 normal unloaded",
+  "FontAwesome normal normal unloaded",
+  "simple-line-icons normal normal unloaded",
+  "Font Awesome 5 Brands 400 normal loaded",
+  "Font Awesome 5 Free 900 normal loaded",
+  "elementskit 400 normal loaded"
+ ],
+ "vars": {
+  "--wp--preset--color--black": "#000000",
+  "--wp--preset--color--cyan-bluish-gray": "#abb8c3",
+  "--wp--preset--color--white": "#ffffff",
+  "--wp--preset--color--pale-pink": "#f78da7",
+  "--wp--preset--color--vivid-red": "#cf2e2e",
+  "--wp--preset--color--luminous-vivid-orange": "#ff6900",
+  "--wp--preset--color--luminous-vivid-amber": "#fcb900",
+  "--wp--preset--color--light-green-cyan": "#7bdcb5",
+  "--wp--preset--color--vivid-green-cyan": "#00d084",
+  "--wp--preset--color--pale-cyan-blue": "#8ed1fc",
+  "--wp--preset--color--vivid-cyan-blue": "#0693e3",
+  "--wp--preset--color--vivid-purple": "#9b51e0",
+  "--e-global-color-primary": "#000000",
+  "--e-global-color-secondary": "#DBEEFA",
+  "--e-global-color-text": "#444444",
+  "--e-global-color-accent": "#00CAE0",
+  "--e-global-typography-primary-font-family": "\"DM Sans\"",
+  "--e-global-typography-secondary-font-family": "\"DM Sans\"",
+  "--e-global-typography-text-font-family": "\"DM Sans\"",
+  "--e-global-typography-accent-font-family": "\"DM Sans\"",
+  "--e-global-typography-dfd4234-font-family": "\"DM Sans\"",
+  "--e-global-typography-1700788-font-family": "\"DM Sans\"",
+  "--e-global-typography-9202428-font-family": "\"DM Sans\"",
+  "--e-global-typography-0bebcd9-font-family": "\"DM Sans\"",
+  "--e-global-typography-fd3cf4a-font-family": "\"DM Sans\"",
+  "--e-global-typography-2418844-font-family": "\"DM Sans\"",
+  "--e-global-typography-de47f64-font-family": "\"DM Sans\"",
+  "--e-global-typography-c00f01f-font-family": "\"DM Sans\""
+ },
+ "cssAnims": [
+  "animated"
+ ],
+ "httpStatus": 200
+}
