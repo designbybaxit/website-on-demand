@@ -1,0 +1,462 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<title>Kaito Counter — fictional sushi demo</title>
+<style>
+:root{
+  --bg:#101114; --fg:#f6f3ec; --muted:#c9c2b6; --line:rgba(255,255,255,.14);
+  --card:#1b1d22; --accent:#e8c27a; --deep:#0b0c0f;
+  --sans:ui-sans-serif,"Segoe UI",system-ui,sans-serif;
+  --display:Georgia,"Iowan Old Style",Palatino,serif;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth;scroll-padding-top:96px;overflow-x:clip}
+body{margin:0;background:var(--bg);color:var(--fg);font:16px/1.5 var(--sans);overflow-x:clip}
+img{max-width:100%;display:block}
+button,a{font:inherit}
+:focus-visible{outline:3px solid var(--accent);outline-offset:3px}
+.skip{position:absolute;left:1rem;top:0;transform:translateY(-140%);background:#fff;color:#111;padding:.6rem 1rem;z-index:50}
+.skip:focus{transform:none}
+.wrap{width:min(1120px,calc(100% - 2rem));margin-inline:auto}
+.tag{display:inline-block;font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--accent);font-weight:700}
+
+/* header + liquid glass pill (CSS drop from the Waterline pattern; no shader) */
+.top{position:sticky;top:0;z-index:30;display:flex;align-items:center;justify-content:space-between;gap:.75rem;padding:.7rem 1rem 1rem;background:linear-gradient(#101114 55%,rgba(16,17,20,.82) 78%,transparent);min-width:0}
+.brand{color:var(--fg);text-decoration:none;font-weight:700;letter-spacing:.04em}
+.brand small{display:block;font-weight:500;letter-spacing:.16em;font-size:10px;color:var(--muted)}
+.book-btn,.btn{appearance:none;border:0;border-radius:999px;background:var(--fg);color:#161410;padding:.7rem 1rem;font-weight:700;cursor:pointer;text-decoration:none;display:inline-flex;align-items:center;justify-content:center;min-height:44px}
+.btn.ghost{background:transparent;color:var(--fg);border:1px solid var(--line)}
+.nimbus{position:relative;display:inline-flex;align-items:center;gap:2px;padding:6px;border-radius:999px;isolation:isolate;max-width:100%;min-width:0;overflow-x:auto}
+.nimbus-glass{position:absolute;inset:0;border-radius:inherit;z-index:-2;background:rgba(255,255,255,.78);-webkit-backdrop-filter:blur(12px) saturate(1.35) brightness(1.08);backdrop-filter:blur(12px) saturate(1.35) brightness(1.08);box-shadow:inset 0 1px 1px rgba(255,255,255,.95),inset 0 0 0 1px rgba(255,255,255,.35),0 12px 32px -14px rgba(0,40,90,.55)}
+.nimbus-drop{position:absolute;top:6px;bottom:6px;left:0;width:72px;border-radius:999px;z-index:-1;background:radial-gradient(120% 140% at 30% 0%,rgba(255,255,255,.95),rgba(255,255,255,0) 55%),rgba(255,255,255,.55);box-shadow:inset 0 1px 1px #fff,inset 0 -2px 6px rgba(0,162,255,.22),inset 0 0 0 1px rgba(255,255,255,.7),0 6px 16px -6px rgba(0,70,140,.45);transition:transform .5s cubic-bezier(.2,.9,.2,1),width .5s cubic-bezier(.2,.9,.2,1)}
+.nimbus-item{position:relative;z-index:1;display:inline-flex;align-items:center;gap:8px;height:42px;padding:0 14px;border:0;border-radius:999px;background:none;color:rgba(11,19,43,.62);font-weight:600;font-size:14px;text-decoration:none;cursor:pointer}
+.nimbus-item[aria-current="true"]{color:#0b132b}
+.nv-ico{display:inline-flex}
+.nv-ico svg{width:18px;height:18px;stroke:currentColor;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.nimbus-item[aria-current="true"] .nv-ico svg{transform:translateY(-1px) scale(1.08)}
+.nimbus-item .nv-ico[data-fx="pop"] svg{animation:nvPop .5s cubic-bezier(.3,1.6,.5,1) both}
+@keyframes nvPop{0%{transform:scale(.72)}60%{transform:scale(1.2)}100%{transform:translateY(-1px) scale(1.08)}}
+@media (max-width:720px){
+  .top{flex-wrap:wrap;justify-content:center}
+  .nimbus{order:3;overflow:auto}
+  .nimbus-item{padding:0 8px;font-size:12px;gap:4px}
+  .nv-ico svg{width:15px;height:15px}
+  .brand{margin-right:auto}
+}
+
+/* conveyor hero */
+.hero{padding:1rem 0 3rem}
+.hero-grid{display:grid;grid-template-columns:minmax(0,.8fr) minmax(0,1.2fr);gap:1.5rem;align-items:center}
+.hero h1{font-family:var(--display);font-weight:500;font-size:clamp(2.2rem,5vw,3.6rem);line-height:1.05;margin:.4rem 0 .6rem}
+.hero p{color:var(--muted);max-width:38rem}
+.hero-actions{display:flex;flex-wrap:wrap;gap:.6rem;margin-top:1.1rem}
+.stage{position:relative;height:min(460px,62vw);min-height:280px;border-radius:28px;background:radial-gradient(circle at 50% 45%,#24262c,#121317 70%);overflow:hidden}
+.track{position:absolute;inset:12% 6%;border-radius:50%;border:18px solid #2a2d33;box-shadow:inset 0 0 0 10px #16181c,0 20px 40px rgba(0,0,0,.35)}
+.hole{position:absolute;inset:30% 24%;border-radius:50%;background:#0e0f12;box-shadow:inset 0 0 0 1px rgba(255,255,255,.06)}
+.plate{position:absolute;left:50%;top:50%;width:92px;height:92px;margin:0;padding:0;border-radius:50%;border:4px solid var(--ring,#e8c27a);background:#111;overflow:hidden;cursor:pointer;transform:translate(-50%,-50%)}
+.plate img{width:100%;height:100%;object-fit:cover}
+.belt-ui{position:absolute;right:.7rem;bottom:.7rem;display:flex;gap:.4rem;z-index:30}
+.belt-ui button{width:44px;height:44px;border-radius:50%;border:1px solid var(--line);background:rgba(16,17,20,.8);color:#fff;cursor:pointer}
+.legend{display:flex;flex-wrap:wrap;gap:.45rem .8rem;margin-top:.8rem;color:var(--muted);font-size:13px}
+.legend i{display:inline-block;width:.7rem;height:.7rem;border-radius:50%;border:2px solid currentColor;margin-right:.3rem;vertical-align:-1px}
+
+/* dish orbit */
+.orbit{padding:3rem 0;background:#16171b}
+.orbit-grid{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,.9fr);gap:2rem;align-items:center}
+.fan{position:relative;height:420px;display:grid;place-items:center;overflow:hidden}
+.band{position:absolute;width:340px;height:180px;border-radius:50%;background:#6d5a4a;transform:rotate(-18deg) translateY(20px);opacity:.9}
+.orb{position:absolute;width:250px;height:250px;border-radius:50%;overflow:hidden;border:0;padding:0;background:#111;box-shadow:0 20px 40px rgba(0,0,0,.35);transition:transform .6s cubic-bezier(.2,.8,.2,1),opacity .4s}
+.orb img{width:100%;height:100%;object-fit:cover}
+.orb[data-pos="prev"]{transform:translate(-120px,36px) rotate(-16deg) scale(.68);z-index:1}
+.orb[data-pos="next"]{transform:translate(120px,36px) rotate(16deg) scale(.68);z-index:1}
+.orb[data-pos="cur"]{transform:none;z-index:2;width:270px;height:270px}
+.pager{position:absolute;left:0;top:50%;transform:translateY(-50%);display:grid;gap:.45rem}
+.pager button{width:10px;height:28px;border:0;border-radius:99px;background:#3a3d44;padding:0;cursor:pointer}
+.pager button[aria-current="true"]{background:var(--fg);height:42px}
+.dish-copy h2{margin:.2rem 0 .4rem;font-size:clamp(2.4rem,5vw,4rem);line-height:.9;letter-spacing:-.03em}
+.dish-copy h2 .thin{display:block;font-weight:500;font-size:.62em;letter-spacing:.08em}
+.dish-copy h2 .bold{display:block;font-weight:800}
+.price{font-weight:800;font-size:1.15rem}
+.note{color:var(--muted)}
+.thumbs{display:flex;align-items:center;gap:.5rem;margin-top:1.2rem;min-width:0}
+.strip{display:flex;gap:.7rem;overflow:auto;scroll-snap-type:x mandatory;padding-bottom:.3rem;flex:1;min-width:0}
+.thumbs button.nav{width:44px;height:44px;border-radius:50%;border:1px solid var(--line);background:transparent;color:#fff;cursor:pointer;flex:none}
+.thumb{scroll-snap-align:start;width:84px;border:0;background:none;color:var(--muted);cursor:pointer;text-align:center;padding:0}
+.thumb img{width:72px;height:72px;border-radius:50%;object-fit:cover;margin:0 auto .3rem;border:2px solid transparent}
+.thumb[aria-current="true"] img{border-radius:16px;border-color:var(--fg)}
+.thumb[aria-current="true"]{color:var(--fg);font-weight:700}
+.thumb span{display:block;font-size:12px;line-height:1.2}
+
+/* menu, about, visit */
+.section{padding:3.2rem 0}
+.menu-head,.about-grid,.visit-grid{display:grid;gap:1.4rem}
+.menu-list{list-style:none;margin:0;padding:0;border-top:1px solid var(--line)}
+.menu-list li{display:grid;grid-template-columns:1fr auto;gap:.4rem 1rem;padding:.9rem 0;border-bottom:1px solid var(--line)}
+.menu-list p{grid-column:1/-1;margin:0;color:var(--muted);font-size:14.5px}
+.about-grid,.visit-grid{grid-template-columns:1fr 1fr;align-items:center}
+.about-grid img,.visit form{border-radius:18px}
+.about-grid img{width:100%;height:100%;max-height:420px;object-fit:cover}
+form{display:grid;gap:.7rem;background:var(--card);padding:1.1rem;border:1px solid var(--line)}
+label{display:grid;gap:.25rem;font-size:14px;color:var(--muted)}
+input,select{min-height:44px;border-radius:10px;border:1px solid var(--line);background:#0e0f12;color:var(--fg);padding:0 .7rem}
+.foot{padding:2rem 0 3rem;color:var(--muted);font-size:14px}
+.foot a{color:var(--fg)}
+dialog{border:0;border-radius:18px;padding:1.3rem;max-width:min(440px,calc(100% - 2rem));background:#fff;color:#161410}
+dialog::backdrop{background:rgba(0,0,0,.55)}
+dialog p{color:#3d3832}
+dialog .row{display:flex;flex-wrap:wrap;gap:.5rem}
+@media (max-width:800px){
+  .hero-grid,.orbit-grid,.about-grid,.visit-grid{grid-template-columns:minmax(0,1fr)}
+  .fan{height:320px}
+  .orb,.orb[data-pos="cur"]{width:200px;height:200px}
+  .orb[data-pos="prev"]{transform:translate(-78px,28px) rotate(-14deg) scale(.62)}
+  .orb[data-pos="next"]{transform:translate(78px,28px) rotate(14deg) scale(.62)}
+  .band{width:240px;height:120px}
+  .stage{height:300px}
+}
+@media (prefers-reduced-motion:reduce){
+  html{scroll-behavior:auto}
+  .nimbus-drop,.orb,.nv-ico svg{transition:none!important;animation:none!important}
+}
+</style>
+</head>
+<body>
+<a class="skip" href="#menu">Skip to the example menu</a>
+<header class="top">
+  <a class="brand" href="#belt">Kaito Counter<small>FICTIONAL DEMO</small></a>
+  <nav class="nimbus" aria-label="On this page">
+    <span class="nimbus-glass" aria-hidden="true"></span>
+    <span class="nimbus-drop" aria-hidden="true"></span>
+    <a class="nimbus-item" href="#belt" data-fx="pop"><span class="nv-ico"></span><span>Belt</span></a>
+    <a class="nimbus-item" href="#dishes" data-fx="spin"><span class="nv-ico"></span><span>Dishes</span></a>
+    <a class="nimbus-item" href="#menu"><span class="nv-ico"></span><span>Menu</span></a>
+    <a class="nimbus-item" href="#about"><span class="nv-ico"></span><span>About</span></a>
+    <a class="nimbus-item" href="#visit"><span class="nv-ico"></span><span>Visit</span></a>
+  </nav>
+  <button class="book-btn" type="button" data-book>Demo booking</button>
+</header>
+<main>
+  <section class="hero" id="belt" aria-labelledby="belt-title">
+    <div class="wrap hero-grid">
+      <div>
+        <p class="tag">Example lunch belt</p>
+        <h1 id="belt-title">A sushi belt that keeps turning, on this page.</h1>
+        <p>Kaito Counter is a fictional sushi bar. The plates below are example dishes with example prices. Pause the belt, step it, or open a plate. Nothing is ordered.</p>
+        <div class="hero-actions">
+          <a class="btn" href="#menu">See the example menu</a>
+          <button class="btn ghost" type="button" data-book>Request a demo table</button>
+        </div>
+      </div>
+      <div>
+        <div class="stage" id="belt-stage">
+          <div class="track" aria-hidden="true"></div>
+          <div class="hole" aria-hidden="true"></div>
+          <div id="plates"></div>
+          <div class="belt-ui">
+            <button type="button" id="belt-prev" aria-label="Previous plate">‹</button>
+            <button type="button" id="belt-pause" aria-pressed="false">Pause</button>
+            <button type="button" id="belt-next" aria-label="Next plate">›</button>
+          </div>
+        </div>
+        <p class="legend" id="belt-legend"></p>
+      </div>
+    </div>
+  </section>
+
+  <section class="orbit" id="dishes" tabindex="0" aria-roledescription="carousel" aria-labelledby="dish-title">
+    <div class="wrap orbit-grid">
+      <div class="fan">
+        <div class="band" aria-hidden="true"></div>
+        <div class="pager" id="pager"></div>
+        <button class="orb" type="button" data-pos="prev" id="orb-prev" aria-label="Previous dish"></button>
+        <div class="orb" data-pos="cur" id="orb-cur"></div>
+        <button class="orb" type="button" data-pos="next" id="orb-next" aria-label="Next dish"></button>
+      </div>
+      <div class="dish-copy">
+        <p class="tag">Example dish</p>
+        <h2 id="dish-title"><span class="thin" id="dish-thin"></span><span class="bold" id="dish-bold"></span></h2>
+        <p class="note" id="dish-desc"></p>
+        <p class="price" id="dish-price"></p>
+        <div class="hero-actions">
+          <button class="btn" type="button" id="dish-book">Add this example to the demo booking</button>
+        </div>
+        <div class="thumbs">
+          <button class="nav" type="button" id="dish-prev" aria-label="Previous dish">‹</button>
+          <div class="strip" id="strip"></div>
+          <button class="nav" type="button" id="dish-next" aria-label="Next dish">›</button>
+        </div>
+        <p class="visually-hidden" aria-live="polite" id="dish-live" style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)"></p>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" id="menu">
+    <div class="wrap">
+      <p class="tag">Example menu</p>
+      <h2>Prices on this page are examples.</h2>
+      <p class="note">They are not a live menu and they are not an offer from a real restaurant.</p>
+      <ul class="menu-list" id="menu-list"></ul>
+    </div>
+  </section>
+
+  <section class="section" id="about">
+    <div class="wrap about-grid">
+      <img id="about-photo" alt="Example dining room with set tables. This is not the Kaito Counter premises." width="900" height="700">
+      <div>
+        <p class="tag">About this demo</p>
+        <h2>A made-up counter, for trying the page.</h2>
+        <p>Kaito Counter does not exist. The dishes, prices, address and hours are sample content so the layout can be clicked through. The photograph is a dining room from a free photo library, not this restaurant.</p>
+        <p>There is no kitchen, no booking system and no payment on this page.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" id="visit">
+    <div class="wrap visit-grid">
+      <div>
+        <p class="tag">Example visit</p>
+        <h2>Sample details only.</h2>
+        <p>Example address: 12 Example Row, Manchester. Example hours: Tuesday to Saturday, 12:00 to 21:00. These are placeholders, not a real opening schedule.</p>
+      </div>
+      <form id="book-form">
+        <p class="tag">Demo booking</p>
+        <h3 style="margin:.2rem 0 .4rem">Request a demo table</h3>
+        <label>Name<input name="name" autocomplete="name" placeholder="Your name"></label>
+        <label>How many people
+          <select name="party"><option>1</option><option selected>2</option><option>3</option><option>4</option><option>5+</option></select>
+        </label>
+        <label>Example dish<input name="dish" id="book-dish" value="No dish chosen"></label>
+        <button class="btn" type="submit">Show the demo message</button>
+      </form>
+    </div>
+  </section>
+</main>
+<footer class="foot">
+  <div class="wrap">
+    <p>Fictional demo. Kaito Counter is not a real business. Example menu only. Nothing you type is sent.</p>
+    <p>Food and dining-room photographs: Pexels, free to use. Glass pill uses the CSS drop from the Waterline navbar pattern, without the shader. The dish fan follows the orbit carousel’s plate swing, without pinned scrolling. The conveyor is an original layout drawn from a screenshot, not copied component code.</p>
+  </div>
+</footer>
+<dialog id="sent">
+  <p class="tag">Fictional demo</p>
+  <h3>Nothing was sent.</h3>
+  <p id="sent-copy">This form does not book a table. Kaito Counter is not a real restaurant.</p>
+  <div class="row"><button class="btn" type="button" id="sent-close">Close</button></div>
+</dialog>
+<dialog id="plate-dialog">
+  <p class="tag">Example menu</p>
+  <h3 id="plate-name"></h3>
+  <p id="plate-copy"></p>
+  <div class="row">
+    <button class="btn" type="button" id="plate-close">Close</button>
+    <button class="btn ghost" type="button" id="plate-menu" style="color:#161410;border-color:#ccc">Show on the menu</button>
+  </div>
+</dialog>
+<script>
+(function () {
+  var DISHES = [
+    { name: "Salmon nigiri", thin: "Salmon", bold: "NIGIRI", price: "£4.20", desc: "Rice topped with a slice of salmon. Example item.", photo: 28992198, ring: "#e07a3d" },
+    { name: "Salmon and avocado nigiri", thin: "Salmon", bold: "AVOCADO", price: "£4.80", desc: "Salmon nigiri with avocado. Example item.", photo: 8518854, ring: "#d4a017" },
+    { name: "Vegetable maki", thin: "Vegetable", bold: "MAKI", price: "£6.50", desc: "Rice rolls with cucumber, avocado and carrot. Example item.", photo: 357756, ring: "#3d8f5a" },
+    { name: "Salmon avocado roll", thin: "Salmon", bold: "ROLL", price: "£7.50", desc: "Rolls topped with salmon, with avocado inside. Example item.", photo: 1148086, ring: "#c23b4a" },
+    { name: "Assorted nigiri board", thin: "Assorted", bold: "BOARD", price: "£18", desc: "A wooden board of nigiri and a few rolls. Example platter.", photo: 2098085, ring: "#6b4ea2" },
+    { name: "Sushi platter", thin: "Sushi", bold: "PLATTER", price: "£22", desc: "A round platter of nigiri and rolls. Example platter.", photo: 2323398, ring: "#2a9d8f" }
+  ];
+  function src(id) { return "https://images.pexels.com/photos/" + id + "/pexels-photo-" + id + ".jpeg?auto=compress&cs=tinysrgb&w=800"; }
+  var reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
+  var ICONS = {
+    belt: '<svg viewBox="0 0 24 24" aria-hidden="true"><ellipse cx="12" cy="12" rx="8" ry="5"/><circle cx="12" cy="12" r="2"/></svg>',
+    dishes: '<svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="7"/><path d="M12 5v2M8 14h8"/></svg>',
+    menu: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 7h12M6 12h12M6 17h8"/></svg>',
+    about: '<svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="8" r="3"/><path d="M5 19c1.2-3 3.4-4.5 7-4.5S17.8 16 19 19"/></svg>',
+    visit: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 21s6-5.2 6-10a6 6 0 1 0-12 0c0 4.8 6 10 6 10z"/><circle cx="12" cy="11" r="1.6"/></svg>'
+  };
+  document.querySelectorAll(".nimbus-item").forEach(function (a, i) {
+    var key = ["belt", "dishes", "menu", "about", "visit"][i];
+    a.querySelector(".nv-ico").innerHTML = ICONS[key];
+  });
+
+  /* glass indicator */
+  var nav = document.querySelector(".nimbus");
+  var drop = document.querySelector(".nimbus-drop");
+  var links = [].slice.call(document.querySelectorAll(".nimbus-item"));
+  function placeDrop(el, jump) {
+    var n = nav.getBoundingClientRect();
+    var r = el.getBoundingClientRect();
+    drop.style.width = r.width + "px";
+    var x = r.left - n.left;
+    if (reduce || !drop.animate) { drop.style.transform = "translateX(" + x + "px)"; return; }
+    drop.animate([{ transform: drop.style.transform || "translateX(0)" }, { transform: "translateX(" + x + "px) scaleX(" + (jump ? 1.25 : 1) + ")" }, { transform: "translateX(" + x + "px)" }], { duration: jump ? 520 : 280, easing: "cubic-bezier(.2,.9,.2,1)" });
+    drop.style.transform = "translateX(" + x + "px)";
+  }
+  var currentNav = "";
+  function setNav(id) {
+    if (id === currentNav) return;
+    currentNav = id;
+    links.forEach(function (a) {
+      var on = a.getAttribute("href") === "#" + id;
+      a.setAttribute("aria-current", on ? "true" : "false");
+      var ico = a.querySelector(".nv-ico");
+      if (on && !reduce) { ico.setAttribute("data-fx", a.dataset.fx || "pop"); setTimeout(function () { ico.removeAttribute("data-fx"); }, 900); }
+      if (on) placeDrop(a, true);
+    });
+  }
+  links.forEach(function (a) { a.addEventListener("click", function () { setNav(a.getAttribute("href").slice(1)); }); });
+  var sections = ["belt", "dishes", "menu", "about", "visit"].map(function (id) { return document.getElementById(id); });
+  if ("IntersectionObserver" in window) {
+    var io = new IntersectionObserver(function (entries) {
+      entries.forEach(function (e) { if (e.isIntersecting) setNav(e.target.id); });
+    }, { rootMargin: "-40% 0px -50% 0px" });
+    sections.forEach(function (s) { io.observe(s); });
+  }
+  setNav("belt");
+  window.addEventListener("resize", function () { var cur = nav.querySelector("[aria-current='true']") || links[0]; placeDrop(cur, false); });
+
+  /* conveyor */
+  var host = document.getElementById("plates");
+  var stage = document.getElementById("belt-stage");
+  DISHES.forEach(function (d, i) {
+    var b = document.createElement("button");
+    b.type = "button";
+    b.className = "plate";
+    b.style.setProperty("--ring", d.ring);
+    b.style.borderColor = d.ring;
+    b.dataset.i = i;
+    b.setAttribute("aria-label", d.name + ", example price " + d.price);
+    b.innerHTML = "<img alt='' src='" + src(d.photo) + "' width='200' height='200'>";
+    host.appendChild(b);
+  });
+  var plates = [].slice.call(host.children);
+  var belt = { t: 0, paused: reduce, hover: false, off: false, hidden: false, raf: 0, last: 0 };
+  function layout() {
+    var rx = stage.clientWidth * 0.36, ry = stage.clientHeight * 0.30;
+    plates.forEach(function (el, i) {
+      var a = (belt.t + i / plates.length) * Math.PI * 2 - Math.PI / 2;
+      var x = Math.cos(a) * rx, y = Math.sin(a) * ry;
+      var depth = (Math.sin(a) + 1) / 2;
+      el.style.transform = "translate(calc(-50% + " + x.toFixed(1) + "px), calc(-50% + " + y.toFixed(1) + "px)) scale(" + (0.72 + depth * 0.36).toFixed(3) + ")";
+      el.style.zIndex = String(10 + Math.round(depth * 30));
+    });
+  }
+  function running() { return !belt.paused && !belt.hover && !belt.off && !belt.hidden && !reduce; }
+  function loop(now) {
+    var dt = Math.min(40, now - belt.last || 16);
+    belt.last = now;
+    if (running()) belt.t = (belt.t + dt / 26000) % 1;
+    layout();
+    belt.raf = running() ? requestAnimationFrame(loop) : 0;
+  }
+  function kick() { if (!belt.raf && running()) { belt.last = performance.now(); belt.raf = requestAnimationFrame(loop); } }
+  function setPaused(v) {
+    belt.paused = v;
+    var btn = document.getElementById("belt-pause");
+    btn.textContent = v ? "Play" : "Pause";
+    btn.setAttribute("aria-pressed", v ? "true" : "false");
+    btn.setAttribute("aria-label", v ? "Play the belt" : "Pause the belt");
+    if (!v) kick(); else layout();
+  }
+  document.getElementById("belt-pause").addEventListener("click", function () { setPaused(!belt.paused); });
+  function step(dir) { belt.t = (belt.t + dir / plates.length + 1) % 1; layout(); }
+  document.getElementById("belt-prev").addEventListener("click", function () { step(-1); });
+  document.getElementById("belt-next").addEventListener("click", function () { step(1); });
+  var legend = document.getElementById("belt-legend");
+  DISHES.forEach(function (d) { var s = document.createElement("span"); s.innerHTML = "<i style='color:" + d.ring + "'></i>" + d.name; legend.appendChild(s); });
+  host.addEventListener("click", function (e) {
+    var p = e.target.closest(".plate"); if (!p) return;
+    var d = DISHES[+p.dataset.i];
+    document.getElementById("plate-name").textContent = d.name;
+    document.getElementById("plate-copy").textContent = d.desc + " Example price " + d.price + ". This does not place an order.";
+    document.getElementById("plate-dialog").showModal();
+  });
+  document.getElementById("plate-close").addEventListener("click", function () { document.getElementById("plate-dialog").close(); });
+  document.getElementById("plate-menu").addEventListener("click", function () { document.getElementById("plate-dialog").close(); document.getElementById("menu").scrollIntoView(); });
+  if (window.PointerEvent) {
+    stage.addEventListener("pointerenter", function (e) { if (e.pointerType === "mouse" && !reduce) { belt.hover = true; } });
+    stage.addEventListener("pointerleave", function (e) { if (e.pointerType === "mouse") { belt.hover = false; kick(); } });
+  }
+  document.addEventListener("visibilitychange", function () { belt.hidden = document.hidden; if (!document.hidden) kick(); });
+  if ("IntersectionObserver" in window) {
+    new IntersectionObserver(function (es) { belt.off = !es[0].isIntersecting; if (!belt.off) kick(); }).observe(stage);
+  }
+  setPaused(reduce);
+  if (!reduce) kick(); else layout();
+
+  /* orbit carousel, no scroll pinning */
+  var index = 0;
+  var thin = document.getElementById("dish-thin"), bold = document.getElementById("dish-bold"), desc = document.getElementById("dish-desc"), price = document.getElementById("dish-price"), live = document.getElementById("dish-live");
+  var strip = document.getElementById("strip"), pager = document.getElementById("pager");
+  function show(i) {
+    index = (i + DISHES.length) % DISHES.length;
+    var d = DISHES[index], prev = DISHES[(index + DISHES.length - 1) % DISHES.length], next = DISHES[(index + 1) % DISHES.length];
+    thin.textContent = d.thin; bold.textContent = d.bold; desc.textContent = d.desc;
+    price.textContent = "Example price " + d.price;
+    live.textContent = d.name + ", example price " + d.price;
+    function fill(id, dish, label) {
+      var el = document.getElementById(id);
+      el.innerHTML = "<img alt='" + (id === "orb-cur" ? dish.name : "") + "' src='" + src(dish.photo) + "' width='540' height='540'>";
+      if (label) el.setAttribute("aria-label", label);
+    }
+    fill("orb-prev", prev, "Show " + prev.name);
+    fill("orb-cur", d);
+    fill("orb-next", next, "Show " + next.name);
+    [].forEach.call(strip.children, function (b, n) { b.setAttribute("aria-current", n === index ? "true" : "false"); });
+    [].forEach.call(pager.children, function (b, n) { b.setAttribute("aria-current", n === index ? "true" : "false"); });
+    var curThumb = strip.children[index];
+    if (curThumb) strip.scrollTo({ left: Math.max(0, curThumb.offsetLeft - 12), behavior: reduce ? "auto" : "smooth" });
+  }
+  DISHES.forEach(function (d, n) {
+    var t = document.createElement("button");
+    t.type = "button"; t.className = "thumb";
+    t.innerHTML = "<img alt='' src='" + src(d.photo) + "' width='144' height='144'><span>" + d.name + "</span>";
+    t.addEventListener("click", function () { show(n); });
+    strip.appendChild(t);
+    var dot = document.createElement("button");
+    dot.type = "button";
+    dot.setAttribute("aria-label", "Show " + d.name);
+    dot.addEventListener("click", function () { show(n); });
+    pager.appendChild(dot);
+  });
+  document.getElementById("dish-prev").addEventListener("click", function () { show(index - 1); });
+  document.getElementById("dish-next").addEventListener("click", function () { show(index + 1); });
+  document.getElementById("orb-prev").addEventListener("click", function () { show(index - 1); });
+  document.getElementById("orb-next").addEventListener("click", function () { show(index + 1); });
+  document.getElementById("dishes").addEventListener("keydown", function (e) {
+    if (e.key === "ArrowRight") { show(index + 1); e.preventDefault(); }
+    if (e.key === "ArrowLeft") { show(index - 1); e.preventDefault(); }
+  });
+  var swipe = null;
+  document.querySelector(".fan").addEventListener("pointerdown", function (e) { swipe = e.clientX; });
+  document.querySelector(".fan").addEventListener("pointerup", function (e) {
+    if (swipe == null) return;
+    var dx = e.clientX - swipe; swipe = null;
+    if (Math.abs(dx) > 40) show(index + (dx < 0 ? 1 : -1));
+  });
+  document.getElementById("dish-book").addEventListener("click", function () {
+    document.getElementById("book-dish").value = DISHES[index].name;
+    openBook();
+  });
+  show(0);
+
+  var menu = document.getElementById("menu-list");
+  DISHES.forEach(function (d) {
+    var li = document.createElement("li");
+    li.innerHTML = "<strong>" + d.name + "</strong><b>" + d.price + "</b><p>" + d.desc + " Example price.</p>";
+    menu.appendChild(li);
+  });
+  document.getElementById("about-photo").src = src(67468);
+
+  function openBook() { document.getElementById("sent").close(); document.getElementById("visit").scrollIntoView(); document.querySelector("#book-form [name=name]").focus(); }
+  document.querySelectorAll("[data-book]").forEach(function (b) { b.addEventListener("click", openBook); });
+  document.getElementById("book-form").addEventListener("submit", function (e) {
+    e.preventDefault();
+    document.getElementById("sent-copy").textContent = "Nothing was sent. " + (document.getElementById("book-dish").value || "The form") + " was not booked. Kaito Counter is a fictional demo.";
+    document.getElementById("sent").showModal();
+  });
+  document.getElementById("sent-close").addEventListener("click", function () { document.getElementById("sent").close(); });
+})();
+</script>
+</body>
+</html>

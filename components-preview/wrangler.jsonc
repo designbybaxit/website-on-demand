@@ -1,0 +1,9 @@
+{
+  // Static preview only. No D1, KV, vars, or secrets.
+  // Deploy from this folder with the existing box OAuth. Do not point this at wod or wod-design-test.
+  "name": "wod-components-preview",
+  "compatibility_date": "2026-11-01",
+  "assets": {
+    "directory": "./public"
+  }
+}
