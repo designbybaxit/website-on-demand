@@ -54,7 +54,25 @@ const hh = s => String(s ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '
 const hashStr = s => { let h = 7; for (const c of String(s)) h = (h * 31 + c.charCodeAt(0)) >>> 0; return h; };
 const pick = (arr, seed) => arr[seed % arr.length];
 const cleanName = n => String(n || '').replace(/\s*\((demo|example)\)\s*/ig, ' ').trim();
-const lowerFirst = s => s && /^[A-Z][a-z]/.test(s) && !/^[A-Z]{2}/.test(s) ? s[0].toLowerCase() + s.slice(1) : s;
+/* Round 1 item 6: item names render in Title Case everywhere ("seekh kebab" -> "Seekh Kebab"), keeping
+   acronyms and brand casing the owner typed (NHS, BBQ, MOT, iPhone, uPVC) and a few known ones typed lowercase. */
+const TC_SMALL = new Set(['a', 'an', 'and', 'or', 'of', 'the', 'with', 'in', 'on', 'for', 'to', 'at', 'by', 'per', 'from', 'vs', 'via', 'de', 'la', 'le', 'du', 'al', 'e', 'n']);
+const TC_KNOWN = { iphone: 'iPhone', ipad: 'iPad', imac: 'iMac', macbook: 'MacBook', upvc: 'uPVC', mot: 'MOT', bbq: 'BBQ', nhs: 'NHS', ac: 'AC', tv: 'TV', cctv: 'CCTV', led: 'LED', diy: 'DIY', ev: 'EV', hiit: 'HIIT', gp: 'GP', eicr: 'EICR', pat: 'PAT', vat: 'VAT', seo: 'SEO', ppc: 'PPC', ux: 'UX', ui: 'UI', hgv: 'HGV', ipl: 'IPL', hd: 'HD', '4x4': '4x4', dbs: 'DBS', gcse: 'GCSE', sats: 'SATs', ielts: 'IELTS', bmw: 'BMW', vw: 'VW', pc: 'PC', wifi: 'WiFi', pvc: 'PVC', rgb: 'RGB', mma: 'MMA', bjj: 'BJJ', wp: 'WP' };
+function titleCase(str) {
+  let first = true;
+  return String(str || '').replace(/[^\s/]+/g, w => {
+    const isFirst = first; first = /[:(]$/.test(w);
+    const core = w.replace(/^[^\p{L}\p{N}]+|[^\p{L}\p{N}]+$/gu, ''), lc = core.toLowerCase();
+    if (!core) { if (/[:(]$/.test(w)) first = true; return w; }
+    if (TC_KNOWN[lc] && core === lc) return w.replace(core, TC_KNOWN[lc]);
+    if (/\d/.test(core) || /[A-Z]/.test(core.slice(1)) || /^\p{Lu}{2,}$/u.test(core)) return w;   // acronyms, brands, sizes: as typed
+    if (!isFirst && TC_SMALL.has(lc)) return w.replace(core, lc);
+    return w.replace(core, core[0].toLocaleUpperCase() + core.slice(1));
+  });
+}
+const lowerFirst = s => titleCase(s);
+/* Round 1 item 10: true once the owner asked for a colour / tone change; hand-tuned decorative colours then give way to the tokens */
+const userTone = M => !!(M && M.opts && (M.opts.accent || typeof M.opts.dark === 'boolean' || M.opts.minimal || M.opts.white));   // was: lower-case the first letter in running text; item names now keep Title Case
 const listJoin = arr => arr.length > 1 ? arr.slice(0, -1).join(', ') + ' and ' + arr[arr.length - 1] : (arr[0] || '');
 function hx(h) { h = String(h).replace('#', ''); if (h.length === 3) h = h.split('').map(c => c + c).join(''); const n = parseInt(h, 16); return [n >> 16 & 255, n >> 8 & 255, n & 255]; }
 function mixC(a, b, t) { if (!/^#/.test(a) || !/^#/.test(b)) return a; const x = hx(a), y = hx(b); return '#' + x.map((v, i) => Math.round(v + (y[i] - v) * t).toString(16).padStart(2, '0')).join(''); }
@@ -132,7 +150,7 @@ function parseReviews(txt) {
 }
 function parseStats(txt) {
   return String(txt || '').split('\n').map(s => s.trim()).filter(Boolean).slice(0, 4).map(l => {
-    const m = l.match(/^([<>~]?\s*[\d.,]+)\s*([+%a-z×x★]{0,3})\s*(?:\||—|–|-|:)?\s*(.*)$/i);
+    const m = l.match(/^([<>~]?\s*[\d.,]*\d)\s*((?:[+%×★]|[a-z]{1,3}(?![a-z]))*)\s*(?:\||—|–|-|:)?\s*(.*)$/i);
     if (!m) return null;
     return [m[1].replace(/[,\s<>~]/g, ''), m[2] || '', (m[3] || '').trim() || ''];
   }).filter(Boolean);
@@ -149,6 +167,12 @@ function groupServices(services) {
   });
   return groups;
 }
-const splitSentences = t => String(t || '').replace(/\(.*?made-up.*?\)/ig, '').replace(/\s+/g, ' ').match(/[^.!?]+[.!?]+/g) || [];
+// Round 1 item 7: a typed rating always reads "4.8 ★" ("rated 4.8/5", "4.8 stars", "rating of 4.8 out of 5")
+const fmtRating = t => String(t).replace(/\b(rated|rating(?: of)?|scored?|score of|average(?: of)?|reviews? average)\s+([1-5](?:\.\d)?)(?:\s*(?:\/\s*5(?:\.0)?|out of (?:5|five)|stars?|★))*/gi, '$1 $2 ★')
+  .replace(/\b([1-5]\.\d)\s*(?:\/\s*5(?:\.0)?|out of (?:5|five)|stars?)(?!\w)(?:\s*★)?/gi, '$1 ★');
+// Round 1 item 7: never split inside a number ("4.8", "£12.50", "v2.0") or after an abbreviation like "St." / "Dr."
+const splitSentences = t => (String(t || '').replace(/\(.*?made-up.*?\)/ig, '').replace(/\s+/g, ' ')
+  .replace(/(\d)\.(?=\d)/g, '$1\u2024').replace(/\b(St|Dr|Mr|Mrs|Ms|No|Rd|approx|est|etc)\.(?= [a-z0-9])/g, '$1\u2024').concat(/[.!?]\s*$/.test(String(t || '').trim()) || !String(t || '').trim() ? '' : '.')
+  .match(/[^.!?]+[.!?]+/g) || []).map(x => fmtRating(x.replace(/\u2024/g, '.')));
 
 /* Photos: see allocPhotos() in lib/40-select.js (uploads first, curated stock, never a repeat on one page) */

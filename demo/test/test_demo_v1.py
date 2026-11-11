@@ -25,7 +25,7 @@ async def run():
         ok('validation blocks empty form', n_invalid >= 5, f'{n_invalid} invalid fields')
         await p.screenshot(path=f'{SS}/02-form-validation.png')
         # fill example + logo upload
-        await p.click('#fillExample')
+        await p.click('#exChips .ex-chip')
         await p.set_input_files('#logoFile', os.path.join(HERE, 'test-logo.png'))
         await p.wait_for_function("document.querySelector('#logoPrev img')")
         ok('logo upload shows thumbnail', await p.locator('#logoPrev img').count() == 1)
@@ -34,10 +34,10 @@ async def run():
         # build
         await p.click('#buildBtn')
         await p.wait_for_selector('#screen-pipeline.on')
-        await p.wait_for_selector('#bot2.run', timeout=5000)
+        await p.wait_for_selector('#bx.s2', timeout=5000)
         await p.wait_for_timeout(500)
         await p.screenshot(path=f'{SS}/04-pipeline-running.png')
-        await p.wait_for_selector('#bot3.done', timeout=20000)
+        await p.wait_for_selector('#bx.done', timeout=20000)
         await p.screenshot(path=f'{SS}/05-pipeline-done.png')
         await wait_preview(p)
         mode = await p.text_content('#pvMode')
@@ -71,8 +71,8 @@ async def run():
         await p.screenshot(path=f'{SS}/08-request-changes.png', full_page=False)
         await p.click('#rerunBtn')
         await p.wait_for_selector('#screen-pipeline.on')
-        await p.wait_for_selector('#bot3.done', timeout=20000)
-        log1 = await p.inner_text('#bot1 ul')
+        await p.wait_for_selector('#bx.done', timeout=20000)
+        log1 = await p.text_content('#buildLog')
         await wait_preview(p)
         rev = await p.text_content('#pvRev')
         theme = await p.evaluate("current.opts.theme")
@@ -111,7 +111,7 @@ async def run():
 
         # ---------- second pass: no logo, salon -> elegant, custom colour, other industry ----------
         await p.goto(URL); 
-        await p.fill('[name=name]', 'Sample Salon Studio'); await p.select_option('#industry', 'salon')
+        await p.fill('[name=name]', 'Sample Salon Studio'); await p.fill('#industryInput', 'Hair salon / beauty / spa')
         await p.fill('[name=about]', 'A small, friendly salon offering cuts, colour and nails in a relaxed space since 2019.')
         await p.fill('#svcList input[data-k=name]', 'Cut & finish')
         await p.fill('[name=phone]', '+353 1 555 0100'); await p.fill('[name=email]', 'hi@example.org')
@@ -124,7 +124,7 @@ async def run():
         open(f'{SS}/preview-image-salon-desktop.png','wb').write(base64.b64decode((await p.evaluate("previews.desktop.url")).split(',')[1]))
         # 'other' industry + bakery warm via another
         await p.goto(URL)
-        await p.fill('[name=name]', 'Demo Bakehouse'); await p.select_option('#industry', 'bakery'); await p.fill('[name=city]', 'Dublin')
+        await p.fill('[name=name]', 'Demo Bakehouse'); await p.fill('#industryInput', 'Bakery & cakes'); await p.fill('[name=city]', 'Dublin')
         await p.fill('[name=about]', 'Small-batch sourdough, pastries and celebration cakes baked fresh every morning.')
         await p.fill('#svcList input[data-k=name]', 'Sourdough loaves'); await p.click('#addSvc')
         await p.fill('#svcList .svc:nth-child(2) input[data-k=name]', 'Celebration cakes'); await p.fill('#svcList .svc:nth-child(2) input[data-k=price]', 'From €45')
@@ -134,7 +134,7 @@ async def run():
         open(f'{SS}/preview-image-bakery-desktop.png','wb').write(base64.b64decode((await p.evaluate("previews.desktop.url")).split(',')[1]))
         # fallback mode
         await p.goto(URL + '?preview=iframe')
-        await p.click('#fillExample'); await p.click('#buildBtn'); await wait_preview(p)
+        await p.click('#exChips .ex-chip'); await p.click('#buildBtn'); await wait_preview(p)
         fb = await p.evaluate("previews.mode")
         blocked = await p.evaluate("""() => { const r=document.querySelector('#lockedFrame').getBoundingClientRect(); const el=document.elementFromPoint(r.left+100, Math.min(r.top+100, innerHeight-10)); return el && el.classList.contains('lock'); }""")
         ok('fallback locked frame works and overlay blocks clicks', fb == 'frame' and blocked)
@@ -146,9 +146,9 @@ async def run():
         q = await m.new_page()
         q.on('pageerror', lambda e: errors.append('mobile pageerror: ' + str(e)))
         await q.goto(URL)
-        await q.click('#fillExample')
+        await q.click('#exChips .ex-chip')
         await q.screenshot(path=f'{SS}/m1-form-mobile.png')
-        await q.click('#buildBtn'); await q.wait_for_selector('#bot2.run'); await q.wait_for_timeout(400)
+        await q.click('#buildBtn'); await q.wait_for_selector('#bx.s2'); await q.wait_for_timeout(400)
         await q.screenshot(path=f'{SS}/m2-pipeline-mobile.png')
         await wait_preview(q)
         await q.screenshot(path=f'{SS}/m3-preview-desktop-view-on-phone.png')

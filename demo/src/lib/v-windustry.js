@@ -73,12 +73,12 @@ registerVariant('hero', 'power', {
 <div class="hero-copy">${p.eyebrow}${p.h1}${p.lead}${p.actions}${p.proof}${chips ? `<div class="pw-chips">${chips}</div>` : ''}</div>
 <figure class="pw-photo">${p.heroImg('', 900, 1100)}</figure>
 </div></div></div></section>`; },
-  css: () => `.site .hero-power{padding:1rem 0 1.2rem;background:var(--bg)}
-.site .pw-shell{border-radius:28px;overflow:hidden;color:#fff;background:linear-gradient(105deg,#141433 0%,#241e62 48%,#c2410c 100%);padding:2.6rem 2.2rem}
+  css: M => `.site .hero-power{padding:1rem 0 1.2rem;background:var(--bg)}
+.site .pw-shell{border-radius:28px;overflow:hidden;color:#fff;background:${userTone(M) ? `linear-gradient(105deg,var(--deep) 0%,${mixC(/^#/.test(M.P.deep) ? M.P.deep : '#111111', /^#/.test(M.P.brand) ? M.P.brand : '#333333', .5)} 52%,${/^#/.test(M.P.brand) ? mixC(M.P.brand, '#000000', .15) : 'var(--brand)'} 100%)` : 'linear-gradient(105deg,#141433 0%,#241e62 48%,#c2410c 100%)'};padding:2.6rem 2.2rem}
 .site .pw-grid{display:grid;grid-template-columns:1.15fr .85fr;gap:1.6rem;align-items:center}
 .site .hero-power h1,.site .hero-power .lead,.site .hero-power .eyebrow,.site .hero-power .proof{color:#fff}
-.site .hero-power h1 em{color:#ffe1c4}
-.site .hero-power .eyebrow{color:#ffd7b0}
+.site .hero-power h1 em{color:${userTone(M) ? (/^#/.test(M.P.accent) ? mixC(M.P.accent, '#ffffff', .55) : '#fff') : '#ffe1c4'}}
+.site .hero-power .eyebrow{color:${userTone(M) ? (/^#/.test(M.P.accent) ? mixC(M.P.accent, '#ffffff', .65) : '#fff') : '#ffd7b0'}}
 .site .hero-power .proof{color:rgba(255,255,255,.86)}
 .site .hero-power .btn-ghost{color:#fff;border-color:rgba(255,255,255,.45)}
 .site .pw-photo{margin:0;border-radius:20px;overflow:hidden;min-height:280px;background:rgba(0,0,0,.2)}
@@ -111,7 +111,7 @@ registerVariant('hero', 'airy', {
     const side = (M.ctaKey === 'quote' || M.primary.kind === 'form') && M.services.length ? quoteCard(M) : '';
     return `<section class="hero hero-airy" ${p.lbl}><div class="wrap ay-grid"><div class="hero-copy">${p.eyebrow}${p.h1}${p.lead}${p.actions}${pills ? `<div class="ay-pills">${pills}</div>` : ''}${p.proof}</div>
 <figure class="ay-photo">${p.heroImg('', 900, 1100)}</figure>${side}</div></section>`; },
-  css: () => `.site .hero-airy{padding:2.8rem 0 3rem;background:linear-gradient(160deg,#e7f2ff 0%,#f7fbff 42%,#fff6d8 100%)}
+  css: M => `.site .hero-airy{padding:2.8rem 0 3rem;background:${userTone(M) ? 'linear-gradient(160deg,var(--soft) 0%,var(--bg) 46%,var(--surface) 100%)' : 'linear-gradient(160deg,#e7f2ff 0%,#f7fbff 42%,#fff6d8 100%)'}}
 .site .ay-grid{display:grid;grid-template-columns:1.1fr .9fr;gap:1.4rem 1.6rem;align-items:center}
 .site .ay-grid .qcard{grid-column:2;grid-row:2}
 .site .ay-photo{margin:0;border-radius:28px;overflow:hidden;background:var(--soft);aspect-ratio:4/5}

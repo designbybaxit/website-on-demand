@@ -1,9 +1,15 @@
 <!DOCTYPE html>
 <html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="robots" content="noindex, nofollow">
-<title>Admin – Website on Demand</title>
+<title>Admin – WebiMade</title>
+<link rel="icon" href="/favicon.ico" sizes="any">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400&display=swap" rel="stylesheet">
 <style>
-:root{--ink:#1f2430;--muted:#667085;--line:#e4e7ec;--bg:#f6f7fb;--blue:#1d4ed8;--green:#15803d;--bad:#b42318;--amber:#b54708}
-*{box-sizing:border-box}body{margin:0;font:14px/1.5 system-ui,-apple-system,Segoe UI,Roboto,sans-serif;background:var(--bg);color:var(--ink)}
+:root{--ink:#0A3336;--muted:#3D5C5A;--line:#CDE7E2;--bg:#F3FBF9;--brand:#0F5B59;--blue:#0F5B59;--green:#15803d;--bad:#dc2626;--amber:#b45309}
+*{box-sizing:border-box}body{margin:0;font:14px/1.5 "Plus Jakarta Sans",system-ui,-apple-system,Segoe UI,Roboto,sans-serif;background:var(--bg);color:var(--ink)}
 header{display:flex;justify-content:space-between;align-items:center;padding:14px 22px;background:#fff;border-bottom:1px solid var(--line);position:sticky;top:0;z-index:5}
 header h1{font-size:18px;margin:0}main{max-width:1280px;margin:0 auto;padding:20px}
 .btn{border:1px solid var(--line);background:#fff;border-radius:9px;padding:7px 12px;font:inherit;font-weight:600;cursor:pointer;color:var(--ink);text-decoration:none;display:inline-block}
@@ -12,7 +18,7 @@ header h1{font-size:18px;margin:0}main{max-width:1280px;margin:0 auto;padding:20
 .login{max-width:380px;margin:12vh auto}.login input{width:100%;padding:11px;border:1px solid var(--line);border-radius:9px;font:inherit;margin:8px 0 12px}
 .stats{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:14px}.stat{background:#fff;border:1px solid var(--line);border-radius:12px;padding:10px 16px;min-width:120px}.stat b{font-size:22px;display:block}.stat span{color:var(--muted);font-size:12px}
 table{width:100%;border-collapse:collapse}th,td{text-align:left;padding:10px 8px;border-bottom:1px solid var(--line);vertical-align:top}th{font-size:12px;color:var(--muted);font-weight:600}
-.note{color:var(--muted);font-size:12px}.pill{display:inline-block;padding:2px 9px;border-radius:999px;font-size:12px;font-weight:600;background:#eef2ff;color:#3538cd}
+.note{color:var(--muted);font-size:12px}.pill{display:inline-block;padding:2px 9px;border-radius:999px;font-size:12px;font-weight:600;background:#DFF6F1;color:#0F5B59}
 .pill.applied{background:#fffaeb;color:var(--amber)}.pill.published{background:#ecfdf3;color:var(--green)}.pill.unpublished{background:#fef3f2;color:var(--bad)}
 .acts{display:flex;flex-direction:column;gap:6px;min-width:170px}.det{display:none;background:#fafbfc}.det.on{display:table-row}
 .det pre{white-space:pre-wrap;word-break:break-word;background:#fff;border:1px solid var(--line);border-radius:8px;padding:10px;max-height:360px;overflow:auto;font-size:12px}
@@ -21,7 +27,7 @@ table{width:100%;border-collapse:collapse}th,td{text-align:left;padding:10px 8px
 .err{color:var(--bad)}a{color:var(--blue)}
 </style></head>
 <body>
-<header><h1>Website on Demand · Admin</h1><div id="hdrActs" style="display:none"><button class="btn" id="refresh">Refresh</button> <button class="btn" id="logout">Log out</button></div></header>
+<header><div style="display:flex;align-items:center;gap:12px"><img src="/brand/logo-horizontal.png?v=2" alt="WebiMade" width="134" height="32" style="height:32px;width:auto"><h1>Admin</h1></div><div id="hdrActs" style="display:none"><button class="btn" id="refresh">Refresh</button> <button class="btn" id="logout">Log out</button></div></header>
 <main>
   <div class="card login" id="loginBox" style="display:none">
     <h2 style="margin:0 0 4px">Admin login</h2><p class="note">Enter the admin password.</p>

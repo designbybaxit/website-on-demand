@@ -173,7 +173,7 @@ registerVariant('reviews', 'bento', {
 .site .rb p{font:400 1.08rem/1.5 ${M.S.em === 'italic' ? (M.S.italic || 'var(--display)') : 'var(--sans)'}}
 .site .rb0{background:var(--deep);color:#fff;border-color:transparent;grid-row:span 2;justify-content:flex-end}.site .rb0 p{font-size:1.35rem}
 .site .rb1{background:var(--brand);color:${lumC(M.P.brand) > .55 ? '#141414' : '#fff'};border-color:transparent}
-.site .rb .stars{color:#f5b301;letter-spacing:.1em}
+.site .rb .stars{color:var(--star,#f5b301);letter-spacing:.1em}
 .site .rb footer{display:flex;align-items:center;gap:.6rem;font-weight:700;font-size:14px;margin-top:auto}.site .rb cite{font-style:normal}
 .site .rb .av{width:34px;height:34px;border-radius:50%;display:grid;place-items:center;background:var(--soft);color:var(--accent-text);font-weight:800}
 .site .rb-ph{padding:0;overflow:hidden;min-height:320px;grid-row:span 2;justify-content:flex-end;color:#fff;isolation:isolate}

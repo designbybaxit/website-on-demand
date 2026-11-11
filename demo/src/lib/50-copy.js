@@ -53,7 +53,7 @@ const H2_BEAUTY = {
 };
 const H2_FOOD = {
   menu: ['Something for *every* craving.', 'From the *kitchen.*', 'Our *menu.*'],
-  why: ['Why people *come back.*', 'Made with *care.*', 'The little *things.*'],
+  why: ['Why people *come back.*', 'Why guests *return.*', 'The little *things.*'],
   reviews: ['Words from our *guests.*', 'What guests *say.*', 'Happy *tables.*'],
   faq: ['Before you *visit.*', 'Good *questions.*'],
   gallery: ['A taste of the *day.*', 'From our *tables.*', 'Plates we *love.*'],
@@ -125,7 +125,8 @@ cxReg(['barber'], {
   h1: ['Sharp cuts, *good* company.', 'Look sharp. *Feel* sharper.', 'Your chair is *waiting.*', 'Fresh fades, *proper* chats.', 'Clean cuts, *every* visit.', 'Classic cuts, *modern* style.', 'Sharp lines, *easy* booking.', 'The chair you\'ll *look forward* to.'],
   place: ['Barbers in the heart of *{place}.*', 'Your barbers in *{place}.*'],
   lead: ['Skilled barbers, good chat and no rushing.', 'Proper cuts and a friendly chair.', 'Fades, trims and beard work done right.'],
-  h2: H2_BEAUTY,
+  // barber words, not salon ones (no "treatment", no "you time")
+  h2: { ...H2_BEAUTY, menu: ['Pick your *cut.*', 'Cuts and *prices.*', 'The price *list.*'], cta: ['Your chair is *waiting.*', 'Time for a *fresh cut?*', 'Look *sharp.*'], book: ['Book your *cut.*', 'Grab a *chair.*', 'Find your *time.*'], why: ['Why clients *come back.*', 'Sharp cuts, *good* chat.', 'Old-school *skills.*'] },
 });
 cxReg(['spa'], {
   h1: ['Your hour of *calm* starts here.', 'Relax, restore, *glow.*', 'Time out, *beautifully* done.', 'Breathe out. *Unwind.*', 'Calm hands, *glowing* skin.', 'Slow down and *feel* better.', 'Treatments that *restore.*'],
@@ -137,7 +138,7 @@ cxReg(['restaurant'], {
   h1: ['A table worth *coming back* to.', 'Pull up a chair. *Stay* a while.', 'Made to share, *made* to remember.', 'Good food, *good* people.', 'Seasonal plates, *warm* welcome.', 'Come hungry, *leave* happy.',
     'Dinner, *done* beautifully.', 'A table *waiting* for you.', 'Cooked with care, *served* with love.'],
   place: ['Eating well in *{place}.*', 'Your table in *{place}.*'],
-  lead: ['Honest cooking and a warm welcome.', 'Food made with care, served with a smile.', 'Good plates, good company.'],
+  lead: ['Honest cooking and a warm welcome.', 'Good plates, good company.'],
   h2: H2_FOOD,
 });
 cxReg(['cafe'], {
@@ -149,7 +150,7 @@ cxReg(['cafe'], {
 cxReg(['bakery'], {
   h1: ['Baked fresh, *every* morning.', 'Made by hand, *made* with love.', 'Proper bread, *beautiful* cakes.', 'Bread worth *getting up* for.', 'Fresh out of the *oven.*', 'Small batches, *big* flavour.', 'Cakes for every *celebration.*'],
   place: ['Fresh baking in *{place}.*'],
-  lead: ['Bread, pastries and cakes, made with care.', 'Baked by hand, in small batches.'],
+  lead: ['Bread, pastries and cakes, baked fresh.', 'Baked by hand, in small batches.'],
   h2: H2_FOOD,
 });
 /* -> { h1Pool, lead, h2, why } for this business, or null pieces where we keep the base copy */

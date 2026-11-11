@@ -1,3 +1,28 @@
+# Existing
 demo/screenshots/
 demo/test/photo1.jpg
 demo/test/photo2.jpg
+
+# Dependencies and local tool caches
+**/node_modules/
+**/.wrangler/
+**/.dev.vars
+**/.env
+**/.env.*
+
+# Secrets and local Cloudflare config (D1/KV ids). Never commit these.
+backend/ADMIN_PASSWORD.txt
+backend/wrangler.jsonc
+**/*PASSWORD*
+**/*secret*
+
+# Backups
+**/wod-backup*/
+**/.demo-src-backup-*/
+**/src-backup*/
+
+# Large screenshot / audit folders
+brand/rebrand-shots/
+brand/site-test-shots/
+backend/screenshots/
+quality-audit/

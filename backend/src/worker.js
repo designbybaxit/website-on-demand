@@ -270,6 +270,12 @@ async function adminUnpublish(env, id) {
 export default {
   async fetch(req, env, ctx) {
     const url = new URL(req.url), p = url.pathname, m = req.method;
+    // Production only: apex is canonical. Fires solely on the www host, never on
+    // workers.dev or the brand-preview hostname.
+    if (url.hostname === 'www.webimade.com') {
+      url.hostname = 'webimade.com';
+      return new Response(null, { status: 301, headers: { location: url.toString(), 'cache-control': 'public, max-age=3600' } });
+    }
     try {
       let r;
       if (p.startsWith('/api/')) {

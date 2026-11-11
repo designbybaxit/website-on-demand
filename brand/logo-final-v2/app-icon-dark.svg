@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0.000 0.000 1024.000 1024.000" width="1024" height="1024" fill="none" role="img" aria-label="WebiMade logo">
+  <title>WebiMade</title>
+  
+
+  <defs>
+    <clipPath id="sq"><rect x="0" y="0" width="1024" height="1024" rx="224" ry="224"/></clipPath>
+    <g id="mark">
+  <defs>
+    <linearGradient id="leftGrad" x1="320" y1="180" x2="420" y2="820" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#0E9C94"/>
+      <stop offset="100%" stop-color="#0A7C78"/>
+    </linearGradient>
+    <linearGradient id="midGrad" x1="1120" y1="50" x2="620" y2="1320" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#7EF0CC"/>
+      <stop offset="100%" stop-color="#22C7AE"/>
+    </linearGradient>
+    <linearGradient id="rightGrad" x1="1540" y1="520" x2="1200" y2="1340" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#8AF2CF"/>
+      <stop offset="100%" stop-color="#1CB894"/>
+    </linearGradient>
+    <linearGradient id="dotGrad" x1="1560" y1="80" x2="1820" y2="420" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#A8F8E0"/>
+      <stop offset="100%" stop-color="#3FD4A8"/>
+    </linearGradient>
+    <mask id="maskMid" maskUnits="userSpaceOnUse" x="0" y="0" width="1930" height="1400">
+      <rect x="0" y="0" width="1930" height="1400" fill="black"/>
+      <g fill="white">
+    <path d="M1323.119,409.268 A237.800,237.800 0 1,0 912.915,169.052 L649.363,653.464 A220.430,220.430 0 0,0 1029.604,876.133 Z"/>
+    <path d="M1027.374,879.607 A220.430,220.430 0 0,0 680.990,609.326 L393.826,920.533 A255.500,255.500 0 1,0 795.319,1233.815 Z"/>
+    <path d="M433.754,715.277 A188.020,188.020 0 0,0 215.088,990.054 L331.026,1186.638 A275.430,275.430 0 1,0 651.350,784.119 Z"/>
+    <path d="M1020.060,634.238 A160.000,160.000 0 0,0 768.836,831.629 L972.440,1123.083 A180.000,180.000 0 1,0 1255.068,901.018 Z"/>
+</g>
+    </mask>
+    <clipPath id="valleyFoldClip">
+      <!-- Keep the valley crease under the left cap and in the U, not around the outer left. -->
+      <polygon points="400,640 640,730 580,960 250,900 250,760"/>
+    </clipPath>
+  </defs>
+
+  <!-- Draw order: right (tucked under mid) → mid wrap → crisp folds on mid →
+       left arm in front (complete pill sitting in the valley) → i-dot. -->
+  <path d="M1681.718,819.106 A200.000,200.000 0 0,0 1358.547,587.095 L1048.481,935.766 A248.800,248.800 0 1,0 1450.505,1224.388 Z" fill="url(#rightGrad)"/>
+  <g fill="url(#midGrad)" fill-rule="nonzero">
+    
+    <path d="M1323.119,409.268 A237.800,237.800 0 1,0 912.915,169.052 L649.363,653.464 A220.430,220.430 0 0,0 1029.604,876.133 Z"/>
+    <path d="M1027.374,879.607 A220.430,220.430 0 0,0 680.990,609.326 L393.826,920.533 A255.500,255.500 0 1,0 795.319,1233.815 Z"/>
+    <path d="M433.754,715.277 A188.020,188.020 0 0,0 215.088,990.054 L331.026,1186.638 A275.430,275.430 0 1,0 651.350,784.119 Z"/>
+    <path d="M1020.060,634.238 A160.000,160.000 0 0,0 768.836,831.629 L972.440,1123.083 A180.000,180.000 0 1,0 1255.068,901.018 Z"/>
+
+  </g>
+  <g mask="url(#maskMid)" fill="none">
+    <!-- Crisp contact bands: half the stroke falls just outside each tucked
+         stroke, so a sharp crease shows on the mid after the left arm is
+         painted on top. -->
+    <g clip-path="url(#valleyFoldClip)">
+      <path d="M638.134,449.646 A242.000,242.000 0 1,0 225.088,199.108 L66.140,501.514 A221.030,221.030 0 0,0 443.395,730.342 Z" fill="none" stroke="#01585A" stroke-width="96" stroke-linejoin="miter"/>
+    </g>
+    <path d="M1681.718,819.106 A200.000,200.000 0 0,0 1358.547,587.095 L1048.481,935.766 A248.800,248.800 0 1,0 1450.505,1224.388 Z" fill="none" stroke="#01665A" stroke-width="130" stroke-linejoin="miter"/>
+  </g>
+  <path d="M638.134,449.646 A242.000,242.000 0 1,0 225.088,199.108 L66.140,501.514 A221.030,221.030 0 0,0 443.395,730.342 Z" fill="url(#leftGrad)"/>
+  <circle cx="1688.700" cy="253.500" r="191.000" fill="url(#dotGrad)"/>
+</g>
+  </defs>
+  <g clip-path="url(#sq)">
+    <rect x="0" y="0" width="1024" height="1024" fill="#0A3336"/>
+    <g transform="translate(127.049,232.761) scale(0.399)">
+      <use href="#mark"/>
+    </g>
+  </g>
+
+</svg>

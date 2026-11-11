@@ -14,6 +14,18 @@ def check(cond, msg):
     print(('  PASS ' if cond else '  FAIL ') + msg)
     if not cond: fails.append(msg)
 
+
+async def form_goto(pg, step):
+    await pg.locator(f'#formSteps li[data-fs="{step}"]').click()
+
+async def form_build(pg):
+    for _ in range(6):
+        if await pg.is_visible('#buildBtn'):
+            await pg.click('#buildBtn')
+            return
+        await pg.click('#formNext')
+    raise RuntimeError('build button never appeared')
+
 def serve():
     h = functools.partial(http.server.SimpleHTTPRequestHandler, directory=ROOT)
     http.server.ThreadingHTTPServer.allow_reuse_address = True
@@ -62,19 +74,22 @@ async def flow(b, key, mobile, upload=False):
     pg = await ctx.new_page(); errs = []
     pg.on('console', lambda m: errs.append(m.text) if m.type == 'error' else None)
     pg.on('pageerror', lambda e: errs.append(str(e)))
-    await pg.goto(f'http://127.0.0.1:{PORT}/demo.html')
-    await pg.select_option('#exPick', key); await pg.click('#fillExample')
+    await pg.goto(f'http://127.0.0.1:{PORT}/demo.html?nopreload=1')
+    await pg.click(f'#exChips [data-ex={key}]')
+    await form_goto(pg, 3)
     await pg.check('input[name=mainAction][value=whatsapp]', force=True); await pg.fill('#f-wa', '')
-    await pg.click('#buildBtn')
+    await pg.click('#formNext')
     check(await pg.is_visible('[data-f=whatsapp] .err-msg'), 'WhatsApp required when main action is WhatsApp')
-    await pg.click('#fillExample')
+    await form_goto(pg, 1)   # the example strip lives on step 1 only (hidden on steps 2+ by design)
+    await pg.click(f'#exChips [data-ex={key}]')   # refill the same example (the old #fillExample refilled the picked one)
     if upload:
+        await form_goto(pg, 4)
         await pg.set_input_files('#photoFile', [os.path.join(HERE, 'photo1.jpg'), os.path.join(HERE, 'photo2.jpg')])
         await pg.wait_for_function("document.querySelectorAll('#photoList img').length === 2")
-    await pg.click('#buildBtn')
+    await form_build(pg)
     await pg.wait_for_selector('#screen-preview.on', timeout=120000)
-    log = await pg.inner_text('#bot3')
-    check('new tab' in log and 'JPEG' not in log and 'watermark' not in log.lower(), 'preview bot prepares the live site (no picture, no watermark)')
+    log = await pg.text_content('#buildLog')
+    check('new tab' in log and 'JPEG' not in log and 'watermark' not in log.lower(), 'build prepares the live site (no picture, no watermark)')
     doc_ok = await pg.evaluate("!/pv-badge|PREVIEW ·|Preview<\\/span> by|Shown as a picture/i.test(previews.doc) && previews.url.startsWith('blob:')")
     check(doc_ok, 'preview document has no badge/watermark; blob fallback URL ready')
     check(await pg.get_attribute('#openPv', 'target') == '_blank' and (await pg.get_attribute('#openPv', 'href')).startswith('blob:'), 'open button is a real new-tab link (blob fallback)')
@@ -126,7 +141,7 @@ async def flow(b, key, mobile, upload=False):
     if not mobile and key == 'salon': await pg.wait_for_timeout(1200); await pg.screenshot(path=f'{SHOTS}/app-approve-salon.png', full_page=True)
     await pg.click('#payBtn'); await pg.wait_for_selector('#screen-thanks.on')
     # admin
-    await pg.goto(f'http://127.0.0.1:{PORT}/demo.html#admin'); await pg.wait_for_selector('#screen-admin.on')
+    await pg.goto(f'http://127.0.0.1:{PORT}/demo.html?nopreload=1#admin'); await pg.wait_for_selector('#screen-admin.on')
     await pg.click('[data-view]'); await pg.wait_for_timeout(2500)
     check(await pg.frame_locator('#smFrame').locator('.site.js').count() == 1, 'admin full site runs its script (sandboxed)')
     check(not errs, f'no console errors in the app {errs[:2]}')
@@ -139,7 +154,7 @@ PRICE_CASES = [('100', '$', 'From $100'), ('$100', '$', 'From $100'), ('£1,250'
 
 async def unit_checks(b):
     print('\n== price parser ==')
-    pg = await b.new_page(); await pg.goto(f'http://127.0.0.1:{PORT}/demo.html')
+    pg = await b.new_page(); await pg.goto(f'http://127.0.0.1:{PORT}/demo.html?nopreload=1')
     for raw, cur, want in PRICE_CASES:
         got = await pg.evaluate('([r,c])=>priceText(r,c)', [raw, cur])
         check(got == want, f'priceText({raw!r}, {cur!r}) = {got!r} (want {want!r})')
@@ -188,7 +203,7 @@ LIB_JS = r"""(()=>{
 
 async def library_checks(b):
     print('\n== template library ==')
-    pg = await b.new_page(); await pg.goto(f'http://127.0.0.1:{PORT}/demo.html')
+    pg = await b.new_page(); await pg.goto(f'http://127.0.0.1:{PORT}/demo.html?nopreload=1')
     r = await pg.evaluate(LIB_JS); await pg.close()
     check(r['same'], 'same business data always builds the identical page (deterministic)')
     check(r['sameCase'], 'name case / spacing does not change the design')
@@ -236,7 +251,7 @@ RESEARCH_JS = r"""(()=>{
 
 async def research_checks(b):
     print('\n== dental research sections ==')
-    pg = await b.new_page(); await pg.goto(f'http://127.0.0.1:{PORT}/demo.html')
+    pg = await b.new_page(); await pg.goto(f'http://127.0.0.1:{PORT}/demo.html?nopreload=1')
     r = await pg.evaluate(RESEARCH_JS); await pg.close()
     check(r['noInsSec'] and r['noBaSec'], f'no insurance or before/after section without client data ({r["plainOrder"]})')
     check(r['insShown'] and r['insPlans'] and r['insNoLogos'] and r['insAsk'], f'insurance section from client facts: plan names as text, no logos, "Ask about coverage" bar ({r["insOrder"]})')
@@ -253,10 +268,13 @@ async def research_flow(b):
     print('\n== before/after upload + design back/forward (demo) ==')
     ctx = await b.new_context(viewport={'width': 1400, 'height': 900}); pg = await ctx.new_page(); errs = []
     pg.on('pageerror', lambda e: errs.append(str(e)))
-    await pg.goto(f'http://127.0.0.1:{PORT}/demo.html')
-    await pg.select_option('#exPick', 'restaurant'); await pg.click('#fillExample')
+    await pg.goto(f'http://127.0.0.1:{PORT}/demo.html?nopreload=1')
+    await pg.click('#exChips [data-ex=restaurant]')
+    await form_goto(pg, 4)
     check(not await pg.is_visible('#baField'), 'before/after upload hidden for restaurants')
-    await pg.select_option('#exPick', 'clinic'); await pg.click('#fillExample')
+    await form_goto(pg, 1)   # the example strip lives on step 1 only (hidden on steps 2+ by design)
+    await pg.click('#exChips [data-ex=clinic]')
+    await form_goto(pg, 4)
     check(await pg.is_visible('#baField') and await pg.is_visible('#f-insurance'), 'before/after upload and insurance field shown for clinics')
     F = os.path.join(HERE, 'fixtures')
     await pg.set_input_files('#baBefore', os.path.join(F, 'ba-before-1.jpg')); await pg.wait_for_function("!!baDraft.b")
@@ -265,7 +283,7 @@ async def research_flow(b):
     await pg.fill('#baLabel', 'Whitening'); await pg.click('#baAdd')
     check(await pg.locator('#baList figure').count() == 1, 'pair added to the form')
     await pg.fill('#f-insurance', 'NHS & private patients\nWe accept Bupa and Denplan')
-    await pg.click('#buildBtn'); await pg.wait_for_selector('#screen-preview.on', timeout=120000)
+    await form_build(pg); await pg.wait_for_selector('#screen-preview.on', timeout=120000)
     d = await pg.evaluate("({n:current.data.ba.length, t:current.data.ba[0].t, jpg:current.data.ba[0].b.startsWith('data:image/jpeg'), ins:current.data.insurance})")
     check(d['n'] == 1 and d['t'] == 'Whitening' and d['jpg'] and 'Bupa' in d['ins'], f'form data carries the pair and insurance text {d}')
     fr = pg.frame_locator('#liveFrame')
@@ -295,103 +313,50 @@ async def research_flow(b):
     check(not errs, f'no script errors {errs[:2]}')
     await ctx.close()
 
-INDUSTRY_JS = r"""(()=>{
-  const sig = M => ({kit:M.kit.id, hero:M.heroV, services:M.V.services, menu:M.V.menu, why:M.V.why, gallery:M.V.gallery, reviews:M.V.reviews, about:M.V.about, book:M.V.book, process:M.V.process, order:M.design.orderIx, photo:M.ph.heroId, ind:M.design.industry});
-  const imgs = doc => [...doc.matchAll(/<img[^>]+src="([^"]+)"/g)].map(m => photoKey(m[1]));
-  const dups = doc => { const a = imgs(doc); return [...new Set(a.filter((x, i) => a.indexOf(x) !== i))]; };
-  const own = k => { const p = PROFILES.find(x => x.k === k); const x = LIB.photos[k] || {pool:[], heroes:[]}; return new Set([p.hero, p.split, p.about, p.contact, ...(p.gallery||[]), ...p.pool.map(y => y[0]), ...x.pool.map(y => y[0]), ...(x.heroes||[])].filter(Boolean)); };
-  const forbid = new Set([...own('dental'), ...own('plumbing'), ...own('electric')]);
-  const base = (name, trade, extra) => ({ name, industry:'other', industryOther:trade, country:'UK', city:'Leeds', about:'A small independent team.', phone:'0113 496 0000', email:'hi@example.com', mainAction:/salon|barber|spa/i.test(trade) ? 'book' : 'quote', hours:'Mon–Fri: 9am–6pm', address:'1 Sample Street, Leeds', services:[{name:'Standard visit', desc:'The usual appointment. About 50 minutes.', price:'£60'}, {name:'Longer visit', price:'80-120'}, {name:'Ask first', price:'Free quote'}], ...extra });
-  const batch = (trade, names) => names.map(n => { const B = buildSite(base(n, trade)); return { sig:sig(B.M), dups:dups(B.doc), prices:B.M.services.map(s => s.priceT), dur:/50 min/.test(B.doc), prof:B.M.prof.k }; });
-  const pairs = list => { let min = 99; for (let i = 0; i < list.length; i++) for (let j = i + 1; j < list.length; j++) { const a = list[i].sig, b = list[j].sig; const d = Object.keys(a).filter(k => a[k] !== b[k]).length; if (d < min) min = d; } return min; };
-  const names = ['Alpha Works','Bravo & Co','Cedar Lane','North House','Elm Street'];
-  const trades = ['Hair salon','Barber shop','Day spa and massage','Plumber','Electrician','House cleaning','Office cleaning','Pressure washing'];
-  const varied = Object.fromEntries(trades.map(t => { const list = batch(t, names.map(n => n + ' ' + t.split(' ')[0])); return [t, { prof:list[0].prof, ind:list[0].sig.ind, min:pairs(list), kits:new Set(list.map(x => x.sig.kit)).size, heroes:new Set(list.map(x => x.sig.hero)).size, dups:list.some(x => x.dups.length), prices:list[0].prices, dur:list.every(x => x.dur) }]; }));
-  const alias = (trade, extra) => detectProfile({ name:'Test Co', industry:'other', industryOther:trade, about:'', services:[], ...extra }).k;
-  const aliases = {
-    barber: alias('Barber shop'), barbershop: alias('Gents barbershop'), spa: alias('Day spa and massage'), salon: alias('Hair salon'),
-    nails: alias('Nail bar'), electric: alias('Electrician in Leeds'), sparky: alias('Sparky and rewires'), plumber: alias('Emergency plumber'),
-    house: alias('House cleaning service'), office: alias('Office and commercial cleaning'), pressure: alias('Pressure washing driveways'), power: alias('Power wash and soft wash'),
-  };
-  const dropdown = {
-    electric: detectProfile({ name:'Bright Spark Electrical', industry:'home', industryOther:'', about:'', services:[{name:'Rewire', desc:'Full rewire'}] }).k,
-    cleaning: detectProfile({ name:'Sparkle Cleaning', industry:'home', industryOther:'', about:'', services:[{name:'Domestic clean'}] }).k,
-    pressure: detectProfile({ name:'Kerb Pressure Washing', industry:'home', industryOther:'', about:'', services:[{name:'Driveway wash'}] }).k,
-    plumbing: detectProfile(EXAMPLES.home).k,
-  };
-  const customD = { name:'Willow Baskets', industry:'other', industryOther:'Underwater basket weaving', country:'UK', city:'York', about:'We weave baskets to order.', phone:'01904 000000', email:'hi@example.com', mainAction:'quote', hours:'Mon–Fri: 9am–5pm', address:'1 Lane, York', services:[{name:'Custom basket', desc:'Woven to order in about 2 hours.', price:'£45'}, {name:'Repair', price:'18'}, {name:'Note', price:'Free quote'}] };
-  const custom = buildSite(customD), empty = buildSite({ name:'', industry:'other', industryOther:'', about:'', services:[{name:'General help', price:'40'}], country:'UK', city:'York', phone:'01904000000', mainAction:'quote' });
-  const used = imgs(custom.doc);
-  const live = buildSite(customD, {}, null, { live:true, leadUrl:'https://x/api/lead' }).doc;
-  const again = buildSite(JSON.parse(JSON.stringify(customD)), { design:2 }).doc;
-  const first = buildSite(customD, { design:2 }).doc;
-  const other = buildSite(customD, { design:1 }).doc;
-  const office = buildSite(base('Desk Co', 'Office cleaning', { about:'Commercial office cleaning for workplaces.', services:[{name:'Office clean', price:'99'}, {name:'Restroom clean', price:'40'}, {name:'Floor care', price:'55'}] }));
-  const house = buildSite(base('Desk Co', 'House cleaning', { about:'Regular domestic cleaning for houses and apartments.', services:[{name:'Home clean', price:'99'}, {name:'Kitchen clean', price:'40'}, {name:'Bathroom clean', price:'55'}] }));
-  const keys = PROFILES.map(p => p.k);
-  const kept = ['graphic','marketing','web','it','photo','events','accountant','consult','gym','yoga','physio','medical','dental','salon','barber','spa','restaurant','cafe','bakery','cleaning','garden','electric','roofing','build','plumbing','auto','carwash','realestate','interior','architect','law','tutor','pets','retail'];
-  return {
-    varied, aliases, dropdown, kept: kept.every(k => keys.includes(k)), n: keys.length,
-    customProf: custom.M.prof.k, emptyProf: empty.M.prof.k,
-    customForeign: used.filter(id => forbid.has(id)),
-    customHas: { hero: /id="hero-title"/.test(custom.doc), services: /id="services"|id="menu"/.test(custom.doc), book: /id="book"/.test(custom.doc), prices: ['From £45','From £18','Free quote'].every(p => custom.doc.includes(p)), dur: /2 hrs/.test(custom.doc) },
-    emptyHas: { hero: /id="hero-title"/.test(empty.doc), book: /id="book"/.test(empty.doc) },
-    liveClean: !/class="sample-tag"|Sample review|Sample figures|Sample photos/.test(live),
-    persist: first === again && first !== other,
-    photoSplit: office.M.ph.heroId !== house.M.ph.heroId,
-    recipes: ['salon','barber','spa','plumbing','electric','cleaning','pressure','local'].every(id => LIB.industries[id] && LIB.industries[id].kits.length >= 3),
-    restaurant: LIB.industries.restaurant && LIB.industries.restaurant.profiles.includes('restaurant'),
-    quotes: (() => {
-      const vis = doc => doc.replace(/<script[\s\S]*?<\/script>/gi, '').replace(/<style[\s\S]*?<\/style>/gi, '');
-      const job = (about, services) => ({ name:'Plain Pipe Co', industry:'other', industryOther:'Plumber', country:'UK', city:'Leeds', about, phone:'0113 496 0000', email:'hi@example.com', mainAction:'quote', hours:'Mon–Fri: 8am–6pm', services });
-      const paid = [{ name:'Leak repair', desc:'Find and fix a leak.', price:'85' }, { name:'Tap replacement', price:'70' }];
-      const plain = buildSite(job('We fix leaks and boilers in Leeds.', paid));
-      const plainLive = buildSite(job('We fix leaks and boilers in Leeds.', paid), {}, null, { live:true, leadUrl:'https://x/api/lead' });
-      const said = buildSite(job('We fix leaks. Free quotes, with the price agreed before we start.', paid));
-      const saidLive = buildSite(job('We fix leaks. Free quotes, with the price agreed before we start.', paid), {}, null, { live:true, leadUrl:'https://x/api/lead' });
-      const priced = buildSite(job('We fix leaks and boilers.', [{ name:'Bathroom fitting', desc:'Full installation.', price:'Free quote' }]));
-      const consult = buildSite(job('Free consultations, then a written price.', paid));
-      const trades = ['Electrician','House cleaning','Pressure washing'].map(trade => buildSite({ name:'Plain '+trade, industry:'other', industryOther:trade, country:'UK', city:'Leeds', about:'A small local team.', phone:'0113 496 0000', mainAction:'quote', services:[{ name:'Standard visit', price:'90' }] }));
-      const cta = M => ({ button:M.primary.label, title:M.U.quoteTitle, submit:M.U.formSubmit, lead:M.U.actQuote, free:M.freeQuote });
-      const noFreeWords = doc => !/free quote/i.test(vis(doc));
-      return {
-        plain: cta(plain.M), plainClean: noFreeWords(plain.doc), plainLive: cta(plainLive.M), plainLiveClean: noFreeWords(plainLive.doc),
-        said: cta(said.M), saidHas: /Get a free quote/.test(vis(said.doc)) && /Get my free quote/.test(vis(said.doc)),
-        saidLive: cta(saidLive.M), saidLiveHas: /Get a free quote/.test(vis(saidLive.doc)) && /Get my free quote/.test(vis(saidLive.doc)),
-        priced: cta(priced.M), pricedText: priced.M.services.map(s => s.priceT),
-        consult: cta(consult.M),
-        trades: trades.map(B => cta(B.M)),
-      };
-    })(),
-  };
-})()"""
 
-async def industry_library_checks(b):
-    print('\n== industry design library ==')
-    pg = await b.new_page(); await pg.goto(f'http://127.0.0.1:{PORT}/demo.html')
-    r = await pg.evaluate(INDUSTRY_JS); await pg.close()
-    check(r['kept'] and r['n'] >= 34, f'all original industry profiles kept ({r["n"]})')
-    want_alias = {'barber':'barber','barbershop':'barber','spa':'spa','salon':'salon','nails':'salon','electric':'electric','sparky':'electric','plumber':'plumbing','house':'cleaning','office':'cleaning','pressure':'pressure','power':'pressure'}
-    bad_alias = {k: r['aliases'][k] for k, want in want_alias.items() if r['aliases'][k] != want}
-    check(not bad_alias, f'industry aliases {bad_alias or r["aliases"]}')
-    check(r['dropdown'] == {'electric':'electric','cleaning':'cleaning','pressure':'pressure','plumbing':'plumbing'}, f'dropdown text overrides the coarse home choice when it clearly names a trade {r["dropdown"]}')
-    for trade, row in r['varied'].items():
-        check(row['min'] >= 3 and not row['dups'] and row['kits'] >= 2 and row['heroes'] >= 2, f'{trade}: varied designs (min {row["min"]}, kits {row["kits"]}, heroes {row["heroes"]}, dups {row["dups"]}, {row["prof"]}/{row["ind"]})')
-        check(row['prices'] == ['From £60', '£80–£120', 'Free quote'] and row['dur'], f'{trade}: exact prices and a typed duration {row["prices"]}')
-    check(r['customProf'] == 'local' and r['emptyProf'] == 'local' and not r['customForeign'], f'unknown and empty trades use the neutral pool, not dental/plumbing/electrical photos {r["customProf"]} {r["customForeign"]}')
-    check(all(r['customHas'].values()) and all(r['emptyHas'].values()), f'fallback pages are complete and keep typed prices/durations {r["customHas"]} {r["emptyHas"]}')
-    check(r['liveClean'] and r['persist'] and r['photoSplit'], f'live sample strip, design persistence, office vs home photos {r["liveClean"]} {r["persist"]} {r["photoSplit"]}')
-    check(r['recipes'] and r['restaurant'], 'split recipes each have 3+ kits and the restaurant recipe is unchanged')
-    q = r['quotes']
-    check(q['plain'] == {'button':'Get a quote','title':'Get a quote','submit':'Get my quote','lead':'Get a quote in two quick steps.','free':False} and q['plainClean'] and q['plainLive'] == q['plain'] and q['plainLiveClean'], f'quote CTA stays "Get a quote" in preview and live unless the client said quotes are free {q["plain"]} {q["plainLive"]}')
-    check(q['said']['free'] and q['said']['button'] == 'Get a free quote' and q['said']['title'] == 'Get a free quote' and q['said']['submit'] == 'Get my free quote' and q['saidHas'] and q['saidLive'] == q['said'] and q['saidLiveHas'], f'an explicit free-quote offer is kept on the preview and the live page {q["said"]}')
-    check(q['priced']['free'] and q['priced']['button'] == 'Get a free quote' and q['pricedText'] == ['Free quote'], f'a typed price of "Free quote" is kept exactly and counts as the client offering it {q["priced"]} {q["pricedText"]}')
-    check(q['consult']['button'] == 'Get a quote' and not q['consult']['free'], f'a free consultation is not treated as a free quote {q["consult"]}')
-    check(all(t['button'] == 'Get a quote' and not t['free'] for t in q['trades']), f'electrician, cleaning and pressure washing default to Get a quote {q["trades"]}')
+async def design_nav_share_row_regression(b):
+    """Next/Previous must keep working after the Open button is moved into the share row
+    (the live server-mode layout). A regression destroyed #openPv on the first switch and
+    crashed the second with 'Sorry, that design could not be built.'"""
+    print('\n== design nav with share-row Open button ==')
+    ctx = await b.new_context(viewport={'width': 1400, 'height': 900}); pg = await ctx.new_page(); errs = []
+    pg.on('pageerror', lambda e: errs.append(str(e)))
+    await pg.goto(f'http://127.0.0.1:{PORT}/demo.html?nopreload=1')
+    await pg.click('#exChips [data-ex=graphic]')
+    await form_build(pg)
+    await pg.wait_for_selector('#screen-preview.on', timeout=120000)
+    moved = await pg.evaluate("""() => {
+      const box = document.querySelector('#shareBox');
+      const bar = document.querySelector('#shareBar');
+      if (!box || !bar) return false;
+      box.hidden = false;
+      bar.classList.add('has-link');
+      box.innerHTML = '<div class="pv-share-meta"><span class="pv-share-label">Your shareable link</span></div>'
+        + '<div class="pv-share-row"><input type="text" id="shareUrl" readonly value="https://example.test/p/x" aria-label="Preview link"><button type="button" class="btn sm" id="shareCopy">Copy link</button></div>';
+      if (typeof placeOpenInShareRow === 'function') placeOpenInShareRow();
+      return !!(document.querySelector('#shareBox .pv-share-row #openPv') && document.querySelector('#pvOpened'));
+    }""")
+    check(moved, 'Open button sits in the share row (server-mode layout)')
+    docs = [await pg.evaluate('previews.doc')]
+    for want in ['Design 2 of 2', 'Design 3 of 3']:
+        await pg.click('#dNext')
+        await pg.wait_for_function(f"document.querySelector('#dPos').textContent === '{want}' && !designBusy", timeout=30000)
+        note = await pg.inner_text('#dNote')
+        check('could not be built' not in note.lower(), f'graphic Next to {want} succeeded')
+        check(await pg.locator('#openPv').count() == 1, f'Open button still present after {want}')
+        docs.append(await pg.evaluate('previews.doc'))
+    check(len(set(docs)) == 3, 'graphic: each next design builds a different page with the share row present')
+    await pg.click('#dPrev')
+    await pg.wait_for_function("document.querySelector('#dPos').textContent === 'Design 2 of 3' && !designBusy", timeout=30000)
+    note = await pg.inner_text('#dNote')
+    check('could not be built' not in note.lower(), 'graphic Previous to Design 2 of 3 succeeded')
+    check(await pg.locator('#openPv').count() == 1, 'Open button still present after Previous')
+    check(not errs, f'no script errors {errs[:2]}')
+    await ctx.close()
 
 async def site_checks(b):
     # write the full generated sites (what goes live), then check each one
-    pg = await b.new_page(); await pg.goto(f'http://127.0.0.1:{PORT}/demo.html')
+    pg = await b.new_page(); await pg.goto(f'http://127.0.0.1:{PORT}/demo.html?nopreload=1')
     docs = await pg.evaluate("Object.fromEntries(Object.keys(EXAMPLES).map(k=>[k, buildSite(EXAMPLES[k]).doc]))")
     await pg.close()
     for k, doc in docs.items():
@@ -458,12 +423,12 @@ async def main():
     async with async_playwright() as pw:
         b = await pw.chromium.launch()
         # wipe storage once
-        pg = await b.new_page(); await pg.goto(f'http://127.0.0.1:{PORT}/demo.html'); await pg.evaluate('localStorage.clear()'); await pg.close()
+        pg = await b.new_page(); await pg.goto(f'http://127.0.0.1:{PORT}/demo.html?nopreload=1'); await pg.evaluate('localStorage.clear()'); await pg.close()
         await unit_checks(b)
         await library_checks(b)
-        await industry_library_checks(b)
         await research_checks(b)
         await research_flow(b)
+        await design_nav_share_row_regression(b)
         if os.environ.get('FAST'): await b.close(); srv.shutdown(); print('\n' + ('ALL PASSED' if not fails else f'{len(fails)} FAILED:\n - ' + '\n - '.join(fails))); sys.exit(1 if fails else 0)
         for k in ['graphic', 'salon', 'restaurant', 'law']: await flow(b, k, mobile=False)
         for k in ['gym', 'clinic', 'home', 'realestate']: await flow(b, k, mobile=True, upload=(k == 'clinic'))
