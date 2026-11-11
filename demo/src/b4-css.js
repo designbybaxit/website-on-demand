@@ -10,7 +10,7 @@ function siteCSS(M) {
   const btnR = S.btnRadius || '999px';
   const SEC = { compact: '4.8rem', regular: '6rem', airy: '7.5rem' }[S.density] || '6rem';
   return `
-.site{--bg:${P.bg};--surface:${P.surface};--text:${P.text};--muted:${P.muted};--brand:${P.brand};--btn:${P.btn};--on-btn:${P.onBtn};--accent:${P.accent};--soft:${P.soft};--accent-text:${P.accentText};--warm:${P.warm};--line:${P.line};--deep:${P.deep};--on-deep:${P.onDeep};
+.site{--bg:${P.bg};--surface:${P.surface};--text:${P.text};--muted:${P.muted};--brand:${P.brand};--btn:${P.btn};--on-btn:${P.onBtn};--accent:${P.accent};--soft:${P.soft};--accent-text:${P.accentText};--warm:${P.warm};--line:${P.line};--deep:${P.deep};--on-deep:${P.onDeep};${P.custom ? `--star:${P.dark ? P.accentText : P.accent};` : ''}
  --radius:${S.radius}px;--ease:cubic-bezier(.2,.8,.2,1);--spring:cubic-bezier(.34,1.56,.64,1);--display:${S.display};--sans:${S.sans};--sec:${SEC};--shadow:0 30px 60px -30px ${P.dark ? 'rgba(0,0,0,.7)' : rgba(/^#/.test(P.text) ? P.text : '#000000', .35)};
  position:relative;margin:0;background:var(--bg);color:var(--text);font:400 16px/1.6 var(--sans);overflow-x:clip;-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility}
 .site *,.site *::before,.site *::after{box-sizing:border-box}
@@ -216,6 +216,7 @@ function siteCSS(M) {
 .site .mi{display:grid;grid-template-columns:1fr auto;gap:.2rem 1rem;padding:1.15rem 0;border-bottom:1px solid var(--line);align-items:baseline}
 .site .mi h4{font:${S.headSerif ? '500 1.4rem/1.2 var(--display)' : '700 1.05rem/1.3 var(--sans)'};letter-spacing:-0.01em}
 .site .mi p{grid-column:1/2;color:var(--muted);font-size:14.5px}
+.site .mi.has-img{display:flex;gap:1rem;align-items:center}.site .mi-img{width:72px;height:72px;flex:none;border-radius:14px;object-fit:cover}.site .mi-b{flex:1;min-width:0;display:grid;grid-template-columns:1fr auto;gap:.2rem 1rem;align-items:baseline}.site .mi-b p{grid-column:1/-1}
 .site .mi .pr{font-weight:700;color:var(--accent-text);white-space:nowrap}
 .site .mi.svc{grid-template-columns:1fr auto auto;align-items:center}
 .site .mi.svc .add{grid-row:1/3;grid-column:3;width:44px;height:44px;border-radius:50%;border:1px solid var(--line);background:var(--surface);color:var(--text);font-size:22px;line-height:1;cursor:pointer;display:grid;place-items:center;transition:transform .4s var(--spring),background-color .3s,color .3s}
@@ -263,7 +264,7 @@ function siteCSS(M) {
 .site .rv-card footer{display:flex;align-items:center;justify-content:space-between;gap:1rem;margin-top:1.6rem;flex-wrap:wrap}
 .site .rv-card cite{font:600 15px var(--sans);font-style:normal;display:flex;align-items:center;gap:.7rem}
 .site .rv-card .av{width:42px;height:42px;border-radius:50%;background:var(--soft);color:var(--accent-text);display:grid;place-items:center;font-weight:800}
-.site .stars{color:#e7a300;letter-spacing:.08em;font-size:15px}
+.site .stars{color:var(--star,#e7a300);letter-spacing:.08em;font-size:15px}
 .site .rv-ctrl{display:flex;gap:.6rem;align-items:center;margin-top:2rem}
 .site .rv-btn{width:48px;height:48px;border-radius:50%;border:1px solid var(--line);background:var(--surface);color:var(--text);cursor:pointer;display:grid;place-items:center;transition:transform .35s var(--spring),background-color .3s,color .3s}
 .site .rv-btn:hover{background:var(--btn);color:var(--on-btn);transform:scale(1.06)}

@@ -1,9 +1,15 @@
 <!DOCTYPE html>
 <html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="robots" content="noindex, nofollow">
-<title>Admin – Website on Demand</title>
+<title>Admin – WebiMade</title>
+<link rel="icon" href="/favicon.ico" sizes="any">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400&display=swap" rel="stylesheet">
 <style>
-:root{--ink:#1f2430;--muted:#667085;--line:#e4e7ec;--bg:#f6f7fb;--blue:#1d4ed8;--green:#15803d;--bad:#b42318;--amber:#b54708}
-*{box-sizing:border-box}body{margin:0;font:14px/1.5 system-ui,-apple-system,Segoe UI,Roboto,sans-serif;background:var(--bg);color:var(--ink)}
+:root{--ink:#0A3336;--muted:#3D5C5A;--line:#CDE7E2;--bg:#F3FBF9;--brand:#0F5B59;--blue:#0F5B59;--green:#15803d;--bad:#dc2626;--amber:#b45309}
+*{box-sizing:border-box}body{margin:0;font:14px/1.5 "Plus Jakarta Sans",system-ui,-apple-system,Segoe UI,Roboto,sans-serif;background:var(--bg);color:var(--ink)}
 header{display:flex;justify-content:space-between;align-items:center;padding:14px 22px;background:#fff;border-bottom:1px solid var(--line);position:sticky;top:0;z-index:5}
 header h1{font-size:18px;margin:0}main{max-width:1280px;margin:0 auto;padding:20px}
 .btn{border:1px solid var(--line);background:#fff;border-radius:9px;padding:7px 12px;font:inherit;font-weight:600;cursor:pointer;color:var(--ink);text-decoration:none;display:inline-block}
@@ -12,7 +18,7 @@ header h1{font-size:18px;margin:0}main{max-width:1280px;margin:0 auto;padding:20
 .login{max-width:380px;margin:12vh auto}.login input{width:100%;padding:11px;border:1px solid var(--line);border-radius:9px;font:inherit;margin:8px 0 12px}
 .stats{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:14px}.stat{background:#fff;border:1px solid var(--line);border-radius:12px;padding:10px 16px;min-width:120px}.stat b{font-size:22px;display:block}.stat span{color:var(--muted);font-size:12px}
 table{width:100%;border-collapse:collapse}th,td{text-align:left;padding:10px 8px;border-bottom:1px solid var(--line);vertical-align:top}th{font-size:12px;color:var(--muted);font-weight:600}
-.note{color:var(--muted);font-size:12px}.pill{display:inline-block;padding:2px 9px;border-radius:999px;font-size:12px;font-weight:600;background:#eef2ff;color:#3538cd}
+.note{color:var(--muted);font-size:12px}.pill{display:inline-block;padding:2px 9px;border-radius:999px;font-size:12px;font-weight:600;background:#DFF6F1;color:#0F5B59}
 .pill.applied{background:#fffaeb;color:var(--amber)}.pill.published{background:#ecfdf3;color:var(--green)}.pill.unpublished{background:#fef3f2;color:var(--bad)}
 .acts{display:flex;flex-direction:column;gap:6px;min-width:170px}.det{display:none;background:#fafbfc}.det.on{display:table-row}
 .det pre{white-space:pre-wrap;word-break:break-word;background:#fff;border:1px solid var(--line);border-radius:8px;padding:10px;max-height:360px;overflow:auto;font-size:12px}
@@ -21,7 +27,7 @@ table{width:100%;border-collapse:collapse}th,td{text-align:left;padding:10px 8px
 .err{color:var(--bad)}a{color:var(--blue)}
 </style></head>
 <body>
-<header><h1>Website on Demand · Admin</h1><div id="hdrActs" style="display:none"><button class="btn" id="refresh">Refresh</button> <button class="btn" id="logout">Log out</button></div></header>
+<header><div style="display:flex;align-items:center;gap:12px"><img src="/brand/logo-horizontal.png?v=2" alt="WebiMade" width="134" height="32" style="height:32px;width:auto"><h1>Admin</h1></div><div id="hdrActs" style="display:none"><button class="btn" id="refresh">Refresh</button> <button class="btn" id="logout">Log out</button></div></header>
 <main>
   <div class="card login" id="loginBox" style="display:none">
     <h2 style="margin:0 0 4px">Admin login</h2><p class="note">Enter the admin password.</p>
@@ -249,7 +255,7 @@ const PROFILES = [
   {"k": "realestate", "label": "Estate & letting agents", "style": "realestate", "fam": "property", "hero": "1600596542815-ffad4c1539a9", "split": "1600607687939-ce8a6c25118c", "about": "1560518883-ce09059eeffa", "gallery": ["1600585154340-be6161a56a0c", "1568605114967-8130f3a36994", "1560448204-e02f11c3d0e2", "1570129477492-45c003edd2be"], "pool": [["1600585154340-be6161a56a0c", "selling home house"], ["1568605114967-8130f3a36994", "buying house family"], ["1560448204-e02f11c3d0e2", "lettings flat rent"], ["1570129477492-45c003edd2be", "property management"], ["1560518883-ce09059eeffa", "valuation keys"], ["1582407947304-fd86f028f716", "commercial"], ["1605276374104-dee2a0ed3cd6", "house"], ["1564501049412-61c2a3083791", "luxury"]], kw: /estate agent|letting|lettings|property|realtor|real estate|homes|mortgage|conveyanc/i },
   {"k": "interior", "label": "Interior design", "style": "realestate", "fam": "creative", "hero": "1618221195710-dd6b41faaea6", "split": "1586023492125-27b2c045efd7", "about": "1513161455079-7dc1de15ef3e", "gallery": ["1616486338812-3dadae4b4ace", "1600210492486-724fe5c67fb0", "1615529182904-14819c35db37", "1556228453-efd6c1ff04f6", "1618220179428-22790b461013", "1606744824163-985d376605aa"], "pool": [["1586023492125-27b2c045efd7", "colour consultation chair"], ["1618221195710-dd6b41faaea6", "living room design"], ["1616486338812-3dadae4b4ace", "living room styling"], ["1600210492486-724fe5c67fb0", "living room"], ["1615529182904-14819c35db37", "lounge lighting"], ["1556228453-efd6c1ff04f6", "boho styling"], ["1618220179428-22790b461013", "plants styling"], ["1513694203232-719a280e022f", "bedroom"], ["1513161455079-7dc1de15ef3e", "decor accessories"], ["1606744824163-985d376605aa", "furniture sourcing"], ["1601628828688-632f38a5a7d0", "kitchen"]], kw: /interior|home stag|decor|furnish|upholster|curtain|kitchen design/i },
   {"k": "architect", "label": "Architects", "style": "realestate", "fam": "creative", "hero": "1600566753190-17f0baa2a6c3", "split": "1578496480157-697fc14d2e55", "about": "1503387762-592deb58ef4e", "gallery": ["1487958449943-2429e8be8625", "1600047509807-ba8f99d2cdde", "1600585154340-be6161a56a0c", "1581092160562-40aa08e78837"], "pool": [["1600566753190-17f0baa2a6c3", "house design"], ["1578496480157-697fc14d2e55", "model concept"], ["1503387762-592deb58ef4e", "drawings plans planning"], ["1487958449943-2429e8be8625", "commercial building"], ["1600047509807-ba8f99d2cdde", "residential new build"], ["1600585154340-be6161a56a0c", "house"], ["1581092160562-40aa08e78837", "plans survey"]], kw: /architect|planning permission|surveyor|drawings|structural/i },
-  {"k": "law", "label": "Solicitors & legal", "style": "law", "fam": "legal", "hero": "1589829545856-d10d557cf95f", "split": "1505664194779-8beaceb93744", "about": "1450101499163-c8848c66ca85", "gallery": ["1450101499163-c8848c66ca85", "1521791055366-0d553872125f", "1497366811353-6870744d04b2", "1423592707957-3b212afa6733"], "pool": [["1450101499163-c8848c66ca85", "contracts paperwork"], ["1521791055366-0d553872125f", "employment agreement"], ["1497366811353-6870744d04b2", "office commercial"], ["1423592707957-3b212afa6733", "wills probate"], ["1450101499163-c8848c66ca85", "signing conveyancing"], ["1600880292089-90a7e086ee0c", "family mediation"]], kw: /solicit|law|legal|lawyer|attorney|barrister|litigat|conveyanc|immigration|notary|probate|divorce/i },
+  {"k": "law", "label": "Solicitors & legal", "style": "law", "fam": "legal", "hero": "1589829545856-d10d557cf95f", "split": "1505664194779-8beaceb93744", "about": "1450101499163-c8848c66ca85", "gallery": ["1450101499163-c8848c66ca85", "1521791055366-0d553872125f", "1497366811353-6870744d04b2", "1423592707957-3b212afa6733"], "pool": [["1450101499163-c8848c66ca85", "contracts paperwork"], ["1521791055366-0d553872125f", "employment agreement"], ["1497366811353-6870744d04b2", "office commercial"], ["1423592707957-3b212afa6733", "wills probate"], ["1450101499163-c8848c66ca85", "signing conveyancing"]], kw: /solicit|law|legal|lawyer|attorney|barrister|litigat|conveyanc|immigration|notary|probate|divorce/i },
   {"k": "tutor", "label": "Tutoring & education", "style": "clinic", "fam": "education", "hero": "1434030216411-0b793f4b4173", "split": "1509062522246-3755977927d7", "about": "1503676260728-1c00da094a0b", "gallery": ["1532012197267-da84d127e765", "1495446815901-a7297e633e8d", "1427504494785-3a9ca7044f45", "1488190211105-8b0e65b80b4e"], "pool": [["1427504494785-3a9ca7044f45", "library research"], ["1503676260728-1c00da094a0b", "kids primary"], ["1509062522246-3755977927d7", "class group"], ["1434030216411-0b793f4b4173", "exam revision gcse maths"], ["1488190211105-8b0e65b80b4e", "study online"], ["1513475382585-d06e58bcb0e0", "books english reading"], ["1532012197267-da84d127e765", "reading"], ["1495446815901-a7297e633e8d", "books"]], kw: /tutor|teach|lesson|school|nursery|childcare|education|exam|gcse|a.?level|maths|english|music lesson|language|academy|course/i },
   {"k": "pets", "label": "Pet care & grooming", "style": "clinic", "fam": "pets", "hero": "1548199973-03cce0bbc87b", "split": "1516734212186-a967f81ad0d7", "about": "1587300003388-59208cc962cb", "gallery": ["1583337130417-3346a1be7dee", "1537151625747-768eb6cf92b2", "1450778869180-41d0601e046e", "1600880292630-ee8a00403024"], "pool": [["1516734212186-a967f81ad0d7", "dog grooming bath"], ["1587300003388-59208cc962cb", "walking"], ["1548199973-03cce0bbc87b", "dogs daycare"], ["1583337130417-3346a1be7dee", "french bulldog"], ["1537151625747-768eb6cf92b2", "puppy"], ["1450778869180-41d0601e046e", "cats sitting"], ["1600880292630-ee8a00403024", "cat sitting boarding"]], kw: /\bpet|dog|cat\b|groom|kennel|cattery|vet|puppy|walker|walking/i },
   {"k": "retail", "label": "Shops & boutiques", "style": "salon", "fam": "retail", "hero": "1441986300917-64674bd600d8", "split": "1528698827591-e19ccd7bc23d", "about": "1556740738-b6a63e27c4df", "gallery": ["1567401893414-76b7b1e5a7a5", "1595476108010-b4d1f102b1b1", "1472851294608-062f824d29cc", "1559526324-4b87b5e36e44"], "pool": [["1441986300917-64674bd600d8", "clothing"], ["1472851294608-062f824d29cc", "open"], ["1528698827591-e19ccd7bc23d", "shop front"], ["1567401893414-76b7b1e5a7a5", "fashion"], ["1595476108010-b4d1f102b1b1", "boutique"], ["1559526324-4b87b5e36e44", "online delivery"], ["1556745757-8d76bdb6984b", "payment click collect"], ["1534723452862-4c874018d66d", "grocery"]], kw: /shop|boutique|store|retail|fashion|clothing|gift shop|florist|jewell|online shop/i },
@@ -472,7 +478,7 @@ const PROFILE_COPY = {
   barber: { h1: ['Sharp cuts, *good* company.', 'Look sharp. *Feel* sharper.', 'Your chair is *waiting.*'], leadOpen: 'Skilled barbers, good chat and no rushing.', eyebrow: { menu: 'Price list', gallery: 'Fresh cuts', why: 'The shop' }, h2: { menu: 'Pick your *cut.*', gallery: 'Fresh from the *chair.*', why: 'Old-school skills, *modern* style.' } },
   spa: { h1: ['Your hour of *calm* starts here.', 'Relax, restore, *glow.*', 'Time out, *beautifully* done.'] },
   cafe: { h1: ['Good coffee, *good* company.', 'Your new favourite *corner.*', 'Brewed with *care.*'], leadOpen: 'Great coffee, fresh bakes and a warm welcome.', eyebrow: { menu: 'The menu', gallery: 'From the counter', book: 'Book a table' }, h2: { menu: 'Something for *every* craving.', gallery: 'A taste of the *day.*' }, cta: { book: 'Book a table', quote: 'Ask about catering', reserve: 'Book a table' } },
-  bakery: { h1: ['Baked fresh, *every* morning.', 'Made by hand, *made* with love.', 'Proper bread, *beautiful* cakes.'], leadOpen: 'Bread, pastries and cakes, made with care.', eyebrow: { menu: 'Today\'s bakes', gallery: 'From the oven', book: 'Order' }, h2: { menu: 'Fresh from the *oven.*', gallery: 'Still *warm.*', book: 'Order a *cake.*' }, cta: { book: 'Order a cake', quote: 'Order a cake', reserve: 'Order a cake' } },
+  bakery: { h1: ['Baked fresh, *every* morning.', 'Made by hand, *made* with love.', 'Proper bread, *beautiful* cakes.'], leadOpen: 'Bread, pastries and cakes, baked fresh.', eyebrow: { menu: 'Today\'s bakes', gallery: 'From the oven', book: 'Order' }, h2: { menu: 'Fresh from the *oven.*', gallery: 'Still *warm.*', book: 'Order a *cake.*' }, cta: { book: 'Order a cake', quote: 'Order a cake', reserve: 'Order a cake' } },
   medical: {}, physio: {}, gym: {}, yoga: {}, tutor: {}, pets: {}, retail: {}, events: {}, it: {}, graphic: {}, auto: {}, electric: {}, build: {},
 };
 /* which family packs are content-native to which style (use COPY[style] as base instead) */
@@ -559,7 +565,25 @@ const hh = s => String(s ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '
 const hashStr = s => { let h = 7; for (const c of String(s)) h = (h * 31 + c.charCodeAt(0)) >>> 0; return h; };
 const pick = (arr, seed) => arr[seed % arr.length];
 const cleanName = n => String(n || '').replace(/\s*\((demo|example)\)\s*/ig, ' ').trim();
-const lowerFirst = s => s && /^[A-Z][a-z]/.test(s) && !/^[A-Z]{2}/.test(s) ? s[0].toLowerCase() + s.slice(1) : s;
+/* Round 1 item 6: item names render in Title Case everywhere ("seekh kebab" -> "Seekh Kebab"), keeping
+   acronyms and brand casing the owner typed (NHS, BBQ, MOT, iPhone, uPVC) and a few known ones typed lowercase. */
+const TC_SMALL = new Set(['a', 'an', 'and', 'or', 'of', 'the', 'with', 'in', 'on', 'for', 'to', 'at', 'by', 'per', 'from', 'vs', 'via', 'de', 'la', 'le', 'du', 'al', 'e', 'n']);
+const TC_KNOWN = { iphone: 'iPhone', ipad: 'iPad', imac: 'iMac', macbook: 'MacBook', upvc: 'uPVC', mot: 'MOT', bbq: 'BBQ', nhs: 'NHS', ac: 'AC', tv: 'TV', cctv: 'CCTV', led: 'LED', diy: 'DIY', ev: 'EV', hiit: 'HIIT', gp: 'GP', eicr: 'EICR', pat: 'PAT', vat: 'VAT', seo: 'SEO', ppc: 'PPC', ux: 'UX', ui: 'UI', hgv: 'HGV', ipl: 'IPL', hd: 'HD', '4x4': '4x4', dbs: 'DBS', gcse: 'GCSE', sats: 'SATs', ielts: 'IELTS', bmw: 'BMW', vw: 'VW', pc: 'PC', wifi: 'WiFi', pvc: 'PVC', rgb: 'RGB', mma: 'MMA', bjj: 'BJJ', wp: 'WP' };
+function titleCase(str) {
+  let first = true;
+  return String(str || '').replace(/[^\s/]+/g, w => {
+    const isFirst = first; first = /[:(]$/.test(w);
+    const core = w.replace(/^[^\p{L}\p{N}]+|[^\p{L}\p{N}]+$/gu, ''), lc = core.toLowerCase();
+    if (!core) { if (/[:(]$/.test(w)) first = true; return w; }
+    if (TC_KNOWN[lc] && core === lc) return w.replace(core, TC_KNOWN[lc]);
+    if (/\d/.test(core) || /[A-Z]/.test(core.slice(1)) || /^\p{Lu}{2,}$/u.test(core)) return w;   // acronyms, brands, sizes: as typed
+    if (!isFirst && TC_SMALL.has(lc)) return w.replace(core, lc);
+    return w.replace(core, core[0].toLocaleUpperCase() + core.slice(1));
+  });
+}
+const lowerFirst = s => titleCase(s);
+/* Round 1 item 10: true once the owner asked for a colour / tone change; hand-tuned decorative colours then give way to the tokens */
+const userTone = M => !!(M && M.opts && (M.opts.accent || typeof M.opts.dark === 'boolean' || M.opts.minimal || M.opts.white));   // was: lower-case the first letter in running text; item names now keep Title Case
 const listJoin = arr => arr.length > 1 ? arr.slice(0, -1).join(', ') + ' and ' + arr[arr.length - 1] : (arr[0] || '');
 function hx(h) { h = String(h).replace('#', ''); if (h.length === 3) h = h.split('').map(c => c + c).join(''); const n = parseInt(h, 16); return [n >> 16 & 255, n >> 8 & 255, n & 255]; }
 function mixC(a, b, t) { if (!/^#/.test(a) || !/^#/.test(b)) return a; const x = hx(a), y = hx(b); return '#' + x.map((v, i) => Math.round(v + (y[i] - v) * t).toString(16).padStart(2, '0')).join(''); }
@@ -637,7 +661,7 @@ function parseReviews(txt) {
 }
 function parseStats(txt) {
   return String(txt || '').split('\n').map(s => s.trim()).filter(Boolean).slice(0, 4).map(l => {
-    const m = l.match(/^([<>~]?\s*[\d.,]+)\s*([+%a-z×x★]{0,3})\s*(?:\||—|–|-|:)?\s*(.*)$/i);
+    const m = l.match(/^([<>~]?\s*[\d.,]*\d)\s*((?:[+%×★]|[a-z]{1,3}(?![a-z]))*)\s*(?:\||—|–|-|:)?\s*(.*)$/i);
     if (!m) return null;
     return [m[1].replace(/[,\s<>~]/g, ''), m[2] || '', (m[3] || '').trim() || ''];
   }).filter(Boolean);
@@ -654,35 +678,56 @@ function groupServices(services) {
   });
   return groups;
 }
-const splitSentences = t => String(t || '').replace(/\(.*?made-up.*?\)/ig, '').replace(/\s+/g, ' ').match(/[^.!?]+[.!?]+/g) || [];
+// Round 1 item 7: a typed rating always reads "4.8 ★" ("rated 4.8/5", "4.8 stars", "rating of 4.8 out of 5")
+const fmtRating = t => String(t).replace(/\b(rated|rating(?: of)?|scored?|score of|average(?: of)?|reviews? average)\s+([1-5](?:\.\d)?)(?:\s*(?:\/\s*5(?:\.0)?|out of (?:5|five)|stars?|★))*/gi, '$1 $2 ★')
+  .replace(/\b([1-5]\.\d)\s*(?:\/\s*5(?:\.0)?|out of (?:5|five)|stars?)(?!\w)(?:\s*★)?/gi, '$1 ★');
+// Round 1 item 7: never split inside a number ("4.8", "£12.50", "v2.0") or after an abbreviation like "St." / "Dr."
+const splitSentences = t => (String(t || '').replace(/\(.*?made-up.*?\)/ig, '').replace(/\s+/g, ' ')
+  .replace(/(\d)\.(?=\d)/g, '$1\u2024').replace(/\b(St|Dr|Mr|Mrs|Ms|No|Rd|approx|est|etc)\.(?= [a-z0-9])/g, '$1\u2024').concat(/[.!?]\s*$/.test(String(t || '').trim()) || !String(t || '').trim() ? '' : '.')
+  .match(/[^.!?]+[.!?]+/g) || []).map(x => fmtRating(x.replace(/\u2024/g, '.')));
 
 /* Photos: see allocPhotos() in lib/40-select.js (uploads first, curated stock, never a repeat on one page) */
 /* ---------------- Model: everything the page needs, from the form only ---------------- */
 function paletteFor(S, key, opts) {
+  // Round 1 item 10: a change request ("dark with gold accent", "navy and white", "light and minimal") recolours
+  // EVERY token: brand, buttons, accent, links, badges, soft fills, warm tints, footer/topbar (deep) and focus.
   const p = { ...S.pal };
   const light = !(S.dark);
-  if (opts.accent && /^#[0-9a-f]{6}$/i.test(opts.accent)) {
-    const c = opts.accent;
-    if (S.pal.text === S.pal.brand) p.text = lumC(c) < 0.3 ? c : mixC(c, '#000000', 0.6);
-    p.brand = c;
-    p.accentText = lumC(c) < 0.45 ? c : mixC(c, '#000000', 0.45);
-    p.soft = light ? mixC(c, '#ffffff', 0.9) : rgba(c, 0.14);
-    if (S.btnFrom === 'accent') { p.accent = c; p.accentText = p.text; p.soft = mixC(c, '#ffffff', 0.85); }
-  }
+  const c = opts.accent && /^#[0-9a-f]{6}$/i.test(opts.accent) ? opts.accent : '';
   let dark = S.dark && opts.dark !== false || (!S.dark && opts.dark === true);
+  if (c) {
+    if (light && S.pal.text === S.pal.brand) p.text = lumC(c) < 0.3 ? c : mixC(c, '#000000', 0.6);
+    p.brand = c; p.accent = c;
+    p.accentText = light ? (lumC(c) < 0.45 ? c : mixC(c, '#000000', 0.45)) : (lumC(c) > 0.35 ? c : mixC(c, '#ffffff', 0.45));
+    p.soft = light ? mixC(c, '#ffffff', 0.9) : rgba(c, 0.14);
+    p.warm = light ? mixC(c, '#ffffff', 0.72) : mixC(c, '#000000', 0.45);
+    if (S.btnFrom === 'accent') p.soft = light ? mixC(c, '#ffffff', 0.85) : p.soft;
+  }
   if (!S.dark && dark) {
-    const b = p.brand;
-    Object.assign(p, { bg: mixC(b, '#060606', 0.8), surface: mixC(b, '#0b0b0b', 0.62), text: '#f3f1ee', muted: 'rgba(243,241,238,.7)', line: 'rgba(255,255,255,.12)',
-      soft: rgba(/^#/.test(p.accent) ? p.accent : '#ffffff', 0.14), accentText: lumC(p.accent) > 0.45 ? p.accent : mixC(p.accent, '#ffffff', 0.5), brand: p.accent });
+    const b = c || p.brand, a = c || p.accent;
+    Object.assign(p, { bg: c ? mixC(c, '#0a0a0a', 0.93) : mixC(b, '#060606', 0.8), surface: c ? mixC(c, '#141414', 0.88) : mixC(b, '#0b0b0b', 0.62), text: '#f3f1ee', muted: 'rgba(243,241,238,.7)', line: 'rgba(255,255,255,.12)',
+      soft: rgba(/^#/.test(a) ? a : '#ffffff', 0.14), accentText: lumC(a) > 0.45 ? a : mixC(a, '#ffffff', 0.5), brand: a, accent: a, warm: mixC(a, '#000000', 0.45) });
   }
   if (S.dark && !dark) {
-    Object.assign(p, { bg: '#fbf6ef', surface: '#ffffff', text: '#2a1d14', muted: '#6d5a4a', line: '#eadfce', soft: '#f6ead3', accentText: '#b05a1f' });
+    const a = c || (/^#/.test(p.accent) ? p.accent : p.brand);
+    Object.assign(p, { bg: '#fbf6ef', surface: '#ffffff', text: '#2a1d14', muted: '#6d5a4a', line: '#eadfce', soft: mixC(a, '#ffffff', 0.88), warm: mixC(a, '#ffffff', 0.7),
+      accentText: lumC(a) < 0.45 ? a : mixC(a, '#000000', 0.45) });
+    if (lumC(p.brand) > 0.6) p.brand = mixC(p.brand, '#000000', 0.35);
+  }
+  if (opts.minimal || opts.white) {
+    // plain white (or near-black) canvas, hairline borders, colour only on actions and accents
+    const a = /^#/.test(p.brand) ? p.brand : '#111111';
+    if (dark) Object.assign(p, { bg: '#0b0b0b', surface: '#151515', line: 'rgba(255,255,255,.1)' });
+    else Object.assign(p, { bg: '#ffffff', surface: opts.minimal ? '#fafafa' : '#ffffff', line: '#e9e9e9', soft: mixC(a, '#ffffff', 0.93), warm: mixC(a, '#ffffff', 0.86), text: lumC(p.text) < 0.2 ? p.text : '#151515', muted: '#5c5c5c' });
   }
   p.btn = S.btnFrom === 'accent' ? p.accent : p.brand;
-  p.onBtn = S.onBtn && !opts.accent && !(dark && !S.dark) ? S.onBtn : lumC(p.btn) > 0.6 ? '#141414' : '#ffffff';
-  p.deep = dark ? mixC(/^#/.test(p.bg) ? p.bg : '#111111', '#000000', 0.35) : (S.pal.deep || (opts.accent ? (lumC(opts.accent) < 0.35 ? opts.accent : mixC(opts.accent, '#000000', 0.55)) : S.pal.brand));
+  p.onBtn = S.onBtn && !c && !(dark && !S.dark) ? S.onBtn : lumC(p.btn) > 0.6 ? '#141414' : '#ffffff';
+  p.deep = dark ? mixC(/^#/.test(p.bg) ? p.bg : '#111111', '#000000', 0.35)
+    : c ? (lumC(c) < 0.35 ? c : mixC(c, '#000000', 0.55)) : (S.pal.deep || S.pal.brand);
+  if (!dark && S.dark && !c) p.deep = lumC(p.brand) < 0.35 ? p.brand : mixC(p.brand, '#000000', 0.6);
   p.onDeep = '#ffffff';
   p.dark = dark;
+  p.custom = !!(c || typeof opts.dark === 'boolean' || opts.minimal || opts.white);
   return p;
 }
 
@@ -712,18 +757,19 @@ function siteModel(d, opts = {}, ai = null) {
   // TEMPLATE LIBRARY: kit (look) + hero + section variants + order, seeded by name + industry (+ opts.design)
   const design = pickDesign({ d, prof, key, opts, fam, profK: prof.k });
   const kit = LIB.kits[design.kit] || LIB.kits[LEGACY_KIT[key]];
-  const S = { ...STYLES[key], ...kit, btnFrom: kit.btnFrom || 'brand' }, seed = hash32(design.seed);
+  // the kit decides light/dark: a light kit must not inherit the legacy style's dark flag
+  const S = { ...STYLES[key], ...kit, dark: !!kit.dark, btnFrom: kit.btnFrom || 'brand' }, seed = hash32(design.seed);
   const P = paletteFor(S, key, { ...opts, dark: typeof opts.dark === 'boolean' ? opts.dark : (opts.style ? prof.dark : undefined) });
   const country = COUNTRIES[d.country] || COUNTRIES.UK, cur = country.cur;
   const name = cleanName(d.name) || 'Your business';
   const words = name.split(/\s+/);
   const logoBold = words.length > 1 ? words[0] : name, logoRest = words.length > 1 ? words.slice(1).join(' ') : '';
   const initials = (words.filter(w => /^[A-Za-z0-9]/.test(w) && !/^(ltd|limited|co\.?|the|and|of|&)$/i.test(w)).slice(0, 2).map(w => w[0].toUpperCase()).join('')) || name[0].toUpperCase();
-  const services = (d.services || []).filter(s => s.name).map(s => ({ ...s, priceT: priceText(s.price, cur), icon: iconFor(s.name.replace(/^[^:]{2,24}:\s*(?=.)/, m => /drink/i.test(m) ? m : ''), fam === 'legal' ? 'scales' : fam === 'property' ? 'home' : fam === 'trade' || fam === 'auto' ? 'wrench' : fam === 'food' ? 'plate' : 'sparkle', s.desc || '') }));
+  const services = (d.services || []).filter(s => s.name).map(s => ({ ...s, name: titleCase(String(s.name).trim()), priceT: priceText(s.price, cur), icon: iconFor(s.name.replace(/^[^:]{2,24}:\s*(?=.)/, m => /drink/i.test(m) ? m : ''), fam === 'legal' ? 'scales' : fam === 'property' ? 'home' : fam === 'trade' || fam === 'auto' ? 'wrench' : fam === 'food' ? 'plate' : 'sparkle', s.desc || '') }));
   const plainNames = services.map(s => s.name.replace(/^[^:]{2,24}:\s*/, ''));
   const wa = waDigits(d);
   const waLink = t => wa ? `https://wa.me/${wa}?text=${encodeURIComponent(t)}` : '';
-  const act = d.mainAction || ({ dental: 'book', health: 'book', wellness: 'book', fitness: 'book', beauty: 'book', pets: 'book', education: 'book', food: 'reserve', auto: 'book' })[fam] || 'quote';
+  const act = d.mainAction || (typeof PROF_ACT !== 'undefined' && PROF_ACT[prof.k]) || ({ dental: 'book', health: 'book', wellness: 'book', fitness: 'book', beauty: 'book', pets: 'book', education: 'book', food: 'reserve', auto: 'book' })[fam] || 'quote';
   const ctaKey = act === 'reserve' || (fam === 'food' && act === 'book') ? 'reserve' : act === 'quote' ? 'quote' : 'book';
   let primary;
   if (act === 'call' && d.phone) primary = { label: 'Call ' + d.phone, short: 'Call us', href: telHref(d.phone), kind: 'call' };
@@ -740,7 +786,10 @@ function siteModel(d, opts = {}, ai = null) {
   if (prof.fam !== 'dental' && prof.fam !== 'health') C.eyebrow.insurance = 'Paying';
   if (cx.lead) C.leadOpen = cx.lead;
   const h1Pool = fam === 'dental' && !hasDental && C.h1Health ? C.h1Health : (cx.h1Pool || C.h1);
-  const h1 = opts.headline ? clientHeadline(opts.headline) : (ai && ai.h1) || (cx.h1Pool && h1Pool === cx.h1Pool ? seedPick(h1Pool, design.seed, 'h1') : pick(h1Pool, seed));
+  // hero words come from the owner's own description, hours, town and services (lib/55-owner.js); stock lines only if nothing was typed
+  const own = ownerHero(d, services, place, { ...opts, tradeRe: prof.kw });
+  const ownIx = own.h1Pool.length ? (+opts.design || 0) % own.h1Pool.length : 0;
+  const h1 = opts.headline ? clientHeadline(opts.headline) : (ai && ai.h1) || (own.h1Pool.length ? own.h1Pool[ownIx] : cx.h1Pool && h1Pool === cx.h1Pool ? seedPick(h1Pool, design.seed, 'h1') : pick(h1Pool, seed));
 
   // Eyebrow: what + where, from the client's own services
   const eyeSvc = plainNames.slice(0, 2).map((s, i) => i ? lowerFirst(s) : s);
@@ -754,7 +803,7 @@ function siteModel(d, opts = {}, ai = null) {
   const pricesClear = fam !== 'food' && services.length > 0 && pricedN / services.length >= 0.6;
   const actLine = primary.kind === 'wa' ? 'Message us on WhatsApp any time.' : primary.kind === 'call' ? `Call ${d.phone} to talk it through.` :
     ({ book: 'Book online in under a minute.', reserve: 'Reserve your table online in seconds.', quote: U.actQuote })[ctaKey];
-  const lead = (ai && ai.lead) || [C.leadOpen, svcList ? `${svcList}${place ? ' in ' + place : ''}${pricesClear ? ', with clear prices up front' : ''}.` : '', actLine].filter(Boolean).join(' ');
+  const lead = (ai && ai.lead) || [own.lead || (own.h1Pool.length ? '' : C.leadOpen), svcList ? `${svcList}${place ? ' in ' + place : ''}${pricesClear ? ', with clear prices up front' : ''}.` : '', actLine].filter(Boolean).join(' ');
 
   // Photos: client's own first, then the curated set for the REAL industry
   // section order: the recipe's rhythm, gated by what fits the real business
@@ -767,7 +816,8 @@ function siteModel(d, opts = {}, ai = null) {
   // research sections: shown only when the client gave the data for them
   const BA_FAMS = ['dental', 'beauty', 'trade', 'auto', 'pets', 'health', 'wellness', 'creative'];
   const ba = BA_FAMS.includes(fam) ? (Array.isArray(d.ba) ? d.ba : []).filter(p => p && p.b && p.a).slice(0, 4).map(p => ({ b: p.b, a: p.a, t: String(p.t || '').slice(0, 40) })) : [];
-  const ins = insuranceFacts(d);
+  // cover / finance / payment section only where it fits the trade (never restaurants, salons, shops…)
+  const ins = ['dental', 'health', 'wellness', 'pets', 'auto', 'trade'].includes(fam) ? insuranceFacts(d) : { features: [], plans: [], any: false };
   const emergency = offersEmergency(d, services);
   const week = weekHours(hours);
   if (!ba.length) order = order.filter(k => k !== 'beforeafter');
@@ -789,10 +839,11 @@ function siteModel(d, opts = {}, ai = null) {
   const addNeed = n => Object.entries(n || {}).forEach(([k, v]) => { need[k] = Math.max(need[k] || 0, v); });
   const vdef = k => variantDef(k === 'hero' ? 'hero' : k, V[k] || Object.keys(LIB.sections[k] || {})[0]);
   ['hero', ...order].forEach(k => { const v = vdef(k); if (v && v.needs) addNeed(v.needs()); });
-  if (order.includes('menu')) { const seen = new Set(); need.svcShown = services.map(s => { const m = s.name.match(/^([^:]{2,24}):/); const g = (m ? m[1] : 'Menu').toLowerCase(); if (seen.has(g)) return false; seen.add(g); return true; }); }
+  if (order.includes('menu') && (fam === 'food' || fam === 'beauty')) need.svcShown = services.map(() => true);   // every item may get its own matched photo
+  else if (order.includes('menu')) { const seen = new Set(); need.svcShown = services.map(s => { const m = s.name.match(/^([^:]{2,24}):/); const g = (m ? m[1] : 'Menu').toLowerCase(); if (seen.has(g)) return false; seen.add(g); return true; }); }
   else if (!order.includes('services')) need.svcShown = services.map(() => false);
   if (!d.about) { need.about = 0; need.about2 = 0; }
-  const ph = allocPhotos(prof, up, services, name, need, design.seed, [d.name, d.industryOther, d.about].join(' '));
+  const ph = allocPhotos(prof, up, services, name, need, design.seed, [d.name, d.industryOther, d.about].join(' '), { designIx: +opts.design || 0, biz: `${String(name).toLowerCase()}|${prof.k}` });
   // Reviews and stats: real ones if given; otherwise visibly-tagged samples (preview only)
   const realReviews = parseReviews(d.reviews);
   const reviews = realReviews.length ? realReviews.map(r => ({ q: r[0], n: r[1], sample: false })) :
@@ -802,6 +853,8 @@ function siteModel(d, opts = {}, ai = null) {
   const stats = realStats.length ? realStats.map(s => ({ v: s[0], suf: s[1], l: s[2], sample: false })) :
     fStats.length >= 2 && facts.some(f => f.stat) ? fStats :
     C.stats.map(s => ({ v: s[0], suf: s[1], l: s[2], sample: true }));
+  // Round 1 item 7: a rating out of 5 always reads "4.8 ★"
+  stats.forEach(s => { if (/^[1-5](\.\d)?$/.test(String(s.v)) && (/★/.test(s.suf) || /\b(rating|rated|review score|stars?)\b/i.test(s.l))) { s.suf = ' ★'; s.text = true; s.l = s.l.replace(/^(?:stars?|★)\s*/i, '').replace(/^\/\s*5\s*/, '') || 'average rating'; } });
 
   // "Why us" points written only from what the client told us
   const sentences = splitSentences(d.about);
@@ -861,7 +914,7 @@ function siteCSS(M) {
   const btnR = S.btnRadius || '999px';
   const SEC = { compact: '4.8rem', regular: '6rem', airy: '7.5rem' }[S.density] || '6rem';
   return `
-.site{--bg:${P.bg};--surface:${P.surface};--text:${P.text};--muted:${P.muted};--brand:${P.brand};--btn:${P.btn};--on-btn:${P.onBtn};--accent:${P.accent};--soft:${P.soft};--accent-text:${P.accentText};--warm:${P.warm};--line:${P.line};--deep:${P.deep};--on-deep:${P.onDeep};
+.site{--bg:${P.bg};--surface:${P.surface};--text:${P.text};--muted:${P.muted};--brand:${P.brand};--btn:${P.btn};--on-btn:${P.onBtn};--accent:${P.accent};--soft:${P.soft};--accent-text:${P.accentText};--warm:${P.warm};--line:${P.line};--deep:${P.deep};--on-deep:${P.onDeep};${P.custom ? `--star:${P.dark ? P.accentText : P.accent};` : ''}
  --radius:${S.radius}px;--ease:cubic-bezier(.2,.8,.2,1);--spring:cubic-bezier(.34,1.56,.64,1);--display:${S.display};--sans:${S.sans};--sec:${SEC};--shadow:0 30px 60px -30px ${P.dark ? 'rgba(0,0,0,.7)' : rgba(/^#/.test(P.text) ? P.text : '#000000', .35)};
  position:relative;margin:0;background:var(--bg);color:var(--text);font:400 16px/1.6 var(--sans);overflow-x:clip;-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility}
 .site *,.site *::before,.site *::after{box-sizing:border-box}
@@ -1067,6 +1120,7 @@ function siteCSS(M) {
 .site .mi{display:grid;grid-template-columns:1fr auto;gap:.2rem 1rem;padding:1.15rem 0;border-bottom:1px solid var(--line);align-items:baseline}
 .site .mi h4{font:${S.headSerif ? '500 1.4rem/1.2 var(--display)' : '700 1.05rem/1.3 var(--sans)'};letter-spacing:-0.01em}
 .site .mi p{grid-column:1/2;color:var(--muted);font-size:14.5px}
+.site .mi.has-img{display:flex;gap:1rem;align-items:center}.site .mi-img{width:72px;height:72px;flex:none;border-radius:14px;object-fit:cover}.site .mi-b{flex:1;min-width:0;display:grid;grid-template-columns:1fr auto;gap:.2rem 1rem;align-items:baseline}.site .mi-b p{grid-column:1/-1}
 .site .mi .pr{font-weight:700;color:var(--accent-text);white-space:nowrap}
 .site .mi.svc{grid-template-columns:1fr auto auto;align-items:center}
 .site .mi.svc .add{grid-row:1/3;grid-column:3;width:44px;height:44px;border-radius:50%;border:1px solid var(--line);background:var(--surface);color:var(--text);font-size:22px;line-height:1;cursor:pointer;display:grid;place-items:center;transition:transform .4s var(--spring),background-color .3s,color .3s}
@@ -1114,7 +1168,7 @@ function siteCSS(M) {
 .site .rv-card footer{display:flex;align-items:center;justify-content:space-between;gap:1rem;margin-top:1.6rem;flex-wrap:wrap}
 .site .rv-card cite{font:600 15px var(--sans);font-style:normal;display:flex;align-items:center;gap:.7rem}
 .site .rv-card .av{width:42px;height:42px;border-radius:50%;background:var(--soft);color:var(--accent-text);display:grid;place-items:center;font-weight:800}
-.site .stars{color:#e7a300;letter-spacing:.08em;font-size:15px}
+.site .stars{color:var(--star,#e7a300);letter-spacing:.08em;font-size:15px}
 .site .rv-ctrl{display:flex;gap:.6rem;align-items:center;margin-top:2rem}
 .site .rv-btn{width:48px;height:48px;border-radius:50%;border:1px solid var(--line);background:var(--surface);color:var(--text);cursor:pointer;display:grid;place-items:center;transition:transform .35s var(--spring),background-color .3s,color .3s}
 .site .rv-btn:hover{background:var(--btn);color:var(--on-btn);transform:scale(1.06)}
@@ -1521,7 +1575,7 @@ function nextDays(n, skipSunday) {
 const dayChips = (n, skip) => nextDays(n, skip).map((x, i) => `<button type="button" class="chipbtn${i ? '' : ' is-on'}" aria-pressed="${i ? 'false' : 'true'}"><small>${x.toLocaleDateString('en-GB', { weekday: 'short' })}</small>${x.getDate()}</button>`).join('');
 const slotChips = (arr, on = 1) => arr.map((t, i) => `<button type="button" class="chipbtn${i === on ? ' is-on' : ''}" aria-pressed="${i === on}">${t}</button>`).join('');
 const legalLine = () => `<p class="fine">By sending this you agree to our <a href="#terms">Terms</a> and <a href="#privacy">Privacy Policy</a>. Preview: nothing is sent until your site goes live.</p>`;
-const honey = () => `<div class="hp" aria-hidden="true"><label>Company website<input type="text" name="company_url" tabindex="-1" autocomplete="off"></label></div>`;
+const honey = () => `<div class="hp" aria-hidden="true" style="position:absolute;left:-9999px;width:1px;height:1px;overflow:hidden"><label>Leave this field empty<input type="text" name="company_url" tabindex="-1" autocomplete="off"></label></div>`;
 const svcOptions = M => M.services.map(s => `<option>${hh(svcName(s.name))}</option>`).join('');
 
 function topbarHTML(M) {
@@ -1608,14 +1662,20 @@ function processHTML(M) {
 }
 function menuHTML(M) {
   const groups = groupServices(M.services), salon = M.key === 'salon' && M.ctaKey === 'book';
-  let gi = 0; const gImg = groups.map(g => { const idx = M.services.findIndex(s => svcName(s.name) === g.items[0].name); return M.ph.services[idx >= 0 ? idx : gi++] || ''; });
+  // food / salon / barber menus: each item shows its own keyword-matched photo (or none); other menus keep one photo per group
+  const perItem = M.fam === 'food' || M.fam === 'beauty';
+  const itemImg = s => { const idx = M.services.findIndex(x => svcName(x.name) === s.name); return idx >= 0 ? M.ph.services[idx] || '' : ''; };
+  let gi = 0; const gImg = perItem ? groups.map(() => '') : groups.map(g => { const idx = M.services.findIndex(s => svcName(s.name) === g.items[0].name); return M.ph.services[idx >= 0 ? idx : gi++] || ''; });
   const tabs = groups.length > 1 ? `<div class="tabs" role="tablist" aria-label="Menu sections">${groups.map((g, i) => `<button class="tab" type="button" role="tab" id="t-${i}" aria-controls="m-${i}" aria-selected="${i ? 'false' : 'true'}"${i ? ' tabindex="-1"' : ''}>${hh(g.name)}</button>`).join('')}</div>` : '';
   const panels = groups.map((g, i) => `<ul class="menu-list" id="m-${i}" role="tabpanel"${groups.length > 1 ? ` aria-labelledby="t-${i}"` : ''}${i ? ' hidden' : ''}>${gImg[i] ? `<li class="menu-img" aria-hidden="true"><img src="${gImg[i]}" alt="" loading="lazy" width="640" height="420"></li>` : ''}${g.items.map((s, j) => {
     const dur = svcDuration(s);
     const pr = `${dur ? `<span class="dur">${hh(dur)}</span>` : ''}${s.priceT ? `<span class="pr">${hh(s.priceT)}</span>` : ''}`;
-    if (!salon) return `<li class="mi reveal"><h4>${hh(s.name)}</h4>${pr}${s.desc ? `<p>${hh(s.desc)}</p>` : ''}</li>`;
+    const im = perItem ? itemImg(s) : '';
+    const imgT = im ? `<img class="mi-img" src="${im}" alt="${hh(s.name)}" loading="lazy" width="640" height="420">` : '';
+    const wrap = body => im ? `${imgT}<div class="mi-b">${body}</div>` : body;
+    if (!salon) return `<li class="mi${im ? ' has-img' : ''} reveal">${wrap(`<h4>${hh(s.name)}</h4>${pr}${s.desc ? `<p>${hh(s.desc)}</p>` : ''}`)}</li>`;
     const on = i === 0 && j === 0;
-    return `<li class="mi svc reveal"><h4>${hh(s.name)}</h4>${pr}${s.desc ? `<p>${hh(s.desc)}</p>` : '<p></p>'}<button type="button" class="add" data-name="${hh(s.name)}" data-price="${priceNum(s.price)}" aria-pressed="${on}" aria-label="Add ${hh(s.name)} to booking">+</button></li>`;
+    return `<li class="mi svc${im ? ' has-img' : ''} reveal">${wrap(`<h4>${hh(s.name)}</h4>${pr}${s.desc ? `<p>${hh(s.desc)}</p>` : '<p></p>'}`)}<button type="button" class="add" data-name="${hh(s.name)}" data-price="${priceNum(s.price)}" aria-pressed="${on}" aria-label="Add ${hh(s.name)} to booking">+</button></li>`;
   }).join('')}</ul>`).join('');
   const first = groups[0].items[0];
   const basket = salon ? `<aside class="basket reveal" aria-live="polite" data-cur="${hh(M.cur)}"><p class="eyebrow">${hh(M.C.eyebrow.book ? 'Your appointment' : '')}</p><h3>Your booking</h3><ul data-basket><li><span>${hh(first.name)}</span><span>${hh(M.cur + priceNum(first.price))}</span></li></ul>
@@ -2161,6 +2221,25 @@ registerPhotos('pets', {
   heroes: ['px:19145888', 'px:19145879'],
   pool: [['px:19145888', 'grooming bath wash'], ['px:6131165', 'bath wash puppy'], ['px:16145290', 'wash bath'], ['px:19145879', 'grooming brush trim groom']],
 });
+
+/* 10 Nov 2026: industry-match pass.
+   - Neutral or off-trade shots are kept only for services that ask for them ({ only: true }), never as general fill:
+     a plain kitchen (plumbing), city towers (estate agents), a body massage (hair salon), an empty boardroom (solicitors).
+   - New Pexels shots, found via their pexels.com/photo pages, fetched (HTTP 200, image/jpeg at 360 and 1600 wide) and viewed.
+   - More hero choices so each design number shows a different hero. */
+LIB.photos.plumbing.pool.push(['1556911220-bff31c812dba', 'kitchen sink', { only: true }]);
+LIB.photos.plumbing.heroes.push('px:6419128', 'px:7859953', 'px:5691536', '1607472586893-edb57bdc0e39');
+LIB.photos.realestate.pool.push(['1582407947304-fd86f028f716', 'commercial office', { only: true }],
+  ['px:23224991', 'viewing viewings buyers agent couple house'], ['px:7641868', 'viewing viewings buyers agent couple valuation'],
+  ['px:7937361', 'viewing new build buyers agent tour'], ['px:7415063', 'family buyers agent viewing kitchen'], ['px:8815932', 'keys buyers']);
+LIB.photos.realestate.heroes.push('px:23224991', 'px:7641868', 'px:7937361', 'px:7415063', 'px:8815932');
+LIB.photos.salon.pool.push(['1544161515-4ab6ce6db874', 'massage spa body', { only: true }]);
+LIB.photos.law.pool.push(['1497366811353-6870744d04b2', 'office commercial', { only: true }],
+  ['px:7876104', 'divorce family separation couple advice'], ['px:5668806', 'lawyers team solicitors about practice']);
+LIB.photos.law.heroes.push('px:7875891', 'px:8112162', 'px:5668806', 'px:7876104');
+LIB.photos.local.pool.push(['px:5668855', 'consultation client meeting desk advice'], ['px:7734650', 'client handshake customers welcome'],
+  ['px:8512176', 'client desk appointment consultation office']);
+LIB.photos.local.heroes.push('px:5668855', 'px:7734650', 'px:8512176');
 /* =====================================================================
    INDUSTRY RECIPES: which kits, section variants and section orders an
    industry may use. profiles = PROFILES keys (b1b-industries.js) it covers.
@@ -2330,12 +2409,192 @@ function industryFor(prof, key) {
   return { id: 'fallback-' + prof.fam, label: prof.label, fallback: true, kits: FALLBACK_KITS[prof.fam] || [LEGACY_KIT[key]], hero: FALLBACK_HERO[prof.fam] || [S.hero], orders: [S.order] };
 }
 /* =====================================================================
+   BATCH 1 OF NEW TRADES (10 Nov 2026). Each gets: a profile (detection keywords + synonyms for the
+   industry box), its own Pexels photo set, its own wording, a default main action and client-site kits.
+   Layouts are the existing ones (the native style's order + the family's hero variants).
+   Photos: found via their pexels.com/photo pages, fetched (HTTP 200, image/jpeg at 360 and 1600 wide)
+   and viewed on a contact sheet. Rejected: px:7140009 (graffiti wall), px:34123323 (404),
+   px:3951389 (staged hazmat portrait). Sample reviews/figures stay tagged as samples in previews.
+   ===================================================================== */
+const BATCH1 = [
+  { k: 'locksmith', label: 'Locksmiths', style: 'home', fam: 'trade', syn: 'locksmith lock change lockout locked out keys key cutting door locks security',
+    kw: /locksmith|lock ?out|locked out|lock chang|lock repair|lock fitting|key cutting|keys? cut|door locks?|upvc lock/i,
+    photos: [['px:35578808', 'key cutting keys shop workshop'], ['px:30413861', 'key cutting keys mobile street'], ['px:7641991', 'door lock locks keys security lockout change']],
+    kits: ['navy-yellow', 'red-condensed', 'graphite-orange'], act: 'call' },
+  { k: 'removals', label: 'Removals & moving', style: 'home', fam: 'trade', syn: 'removals removals company removal company movers moving house home move man and van relocation packing',
+    kw: /removals\b|removal (?:company|firm|service)|movers?\b|moving (?:house|home|company|service)|house mov|home mov|man (?:and|&|with a) van|relocation|packing service/i,
+    photos: [['px:7464232', 'house move boxes carrying team'], ['px:7464244', 'house move boxes team'], ['px:5933476', 'van furniture loading delivery'], ['px:7464403', 'van loading furniture team'],
+      ['px:4391486', 'van loading boxes'], ['px:4246089', 'boxes carrying stairs flat'], ['px:4506263', 'boxes couple new home'], ['px:7218675', 'boxes street move']],
+    kits: ['teal-mint', 'plumb-sky', 'navy-yellow'], act: 'quote' },
+  { k: 'painter', label: 'Painters & decorators', style: 'home', fam: 'trade', syn: 'painter decorator painting decorating wallpaper interior exterior',
+    kw: /painters?\b|painting|decorators?\b|decorating|wallpaper/i,
+    photos: [['px:5493653', 'painting walls interior roller'], ['px:5799020', 'painting walls ladder roller interior'], ['px:37556465', 'painting roller commercial new build'], ['px:6474462', 'painting roller walls']],
+    kits: ['terracotta', 'teal-mint', 'studio-paper'], act: 'quote' },
+  { k: 'pest', label: 'Pest control', style: 'home', fam: 'trade', syn: 'pest control exterminator rodents mice rats wasps bed bugs cockroaches fumigation',
+    kw: /pest|exterminat|rodent|\bmice\b|\brats?\b|wasps?\b|bed ?bugs?|cockroach|termite|fumigat/i,
+    photos: [['px:4176417', 'treatment fumigation spray'], ['px:4176608', 'treatment fumigation floor'], ['px:4099261', 'treatment spray home kitchen']],
+    kits: ['teal-mint', 'graphite-orange', 'navy-yellow'], act: 'call' },
+  { k: 'hvac', label: 'Air conditioning & HVAC', style: 'home', fam: 'trade', syn: 'air conditioning aircon ac hvac heat pump ventilation cooling refrigeration',
+    kw: /air ?con|hvac|\ba\/c\b|\bac (?:repair|install|service|unit)|heat pumps?|ventilation|refrigeration|cooling system/i,
+    photos: [['px:5463575', 'service servicing repair outdoor unit gas'], ['px:5463581', 'install installation rooftop unit'], ['px:5463580', 'repair service unit'], ['px:33671149', 'repair workshop unit indoor']],
+    kits: ['plumb-sky', 'ocean', 'clean-air'], act: 'quote' },
+  { k: 'vet', label: 'Veterinary clinic', style: 'clinic', fam: 'pets', syn: 'vet vets veterinary veterinarian animal hospital pet clinic',
+    kw: /\bvets?\b|veterinar|animal hospital|pet clinic/i,
+    photos: [['px:6235231', 'dog checkup exam consultation'], ['px:6235233', 'dog checkup stethoscope'], ['px:6234603', 'dog checkup exam'], ['px:6235118', 'dog small checkup'],
+      ['px:6235123', 'dog small checkup vaccinations'], ['px:7469222', 'dog checkup exam'], ['px:6816859', 'cat checkup exam'], ['px:6816862', 'cat treatment surgery bandage'], ['px:39550296', 'cat kitten team vet']],
+    kits: ['mint-clinic', 'sage', 'ocean'], act: 'book' },
+  { k: 'florist', label: 'Florists', style: 'salon', fam: 'retail', syn: 'florist flowers flower shop bouquets wedding flowers floral',
+    kw: /florist|flower shop|flowers? deliver|bouquets?|floral|wedding flowers/i,
+    photos: [['px:5414319', 'bouquet bouquets florist shop'], ['px:36613717', 'bouquet shop florist'], ['px:36222076', 'bouquet arrangement florist'], ['px:4466544', 'arrangement florist shop'], ['px:16526195', 'shop flowers florist']],
+    kits: ['sage', 'terracotta', 'salon-blush'], act: 'quote' },
+  { k: 'tattoo', label: 'Tattoo studio', style: 'salon', fam: 'creative', syn: 'tattoo tattoos tattooist tattoo artist piercing body art ink',
+    kw: /tattoo|piercing|body art|ink studio/i,
+    photos: [['px:15790365', 'tattoo artist custom'], ['px:10384906', 'tattoo arm custom'], ['px:14408646', 'tattoo close artist'], ['px:29491039', 'tattoo artist arm studio'], ['px:37023012', 'tattoo arm design'],
+      ['px:35658361', 'studio workspace ink'], ['px:28991540', 'studio interior'], ['px:29217591', 'ink needles equipment'], ['px:6593415', 'machine equipment']],
+    kits: ['barber-ink', 'noir-gold', 'studio-ink'], act: 'book' },
+  { k: 'driving', label: 'Driving school', style: 'clinic', fam: 'education', syn: 'driving school driving lessons driving instructor learner driver test',
+    kw: /driving (?:school|lessons?|instructor|test|academy)|learner drivers?|intensive course/i,
+    photos: [['px:17977199', 'lessons learner driver car'], ['px:17977197', 'lessons learner driver car'], ['px:9518019', 'lessons car wheel instructor']],
+    kits: ['lemon', 'ocean', 'red-condensed'], act: 'book' },
+  { k: 'childcare', label: 'Nursery & childcare', style: 'clinic', fam: 'education', syn: 'nursery childcare childminder daycare day care preschool kindergarten creche after school club',
+    kw: /nursery|child ?care|childminder|day ?care|pre-?school|kindergarten|creche|after.?school club|toddlers?/i,
+    photos: [['px:8535190', 'play playroom staff children'], ['px:8363565', 'children learning staff table'], ['px:8535567', 'play children toys'], ['px:8087861', 'children group class'],
+      ['px:4172988', 'painting crafts children'], ['px:7415985', 'drawing crafts children'], ['px:7156401', 'painting crafts children table'], ['px:8033884', 'crafts art children']],
+    kits: ['lemon', 'coral', 'mint-clinic'], act: 'book' },
+];
+BATCH1.slice().reverse().forEach(b => {
+  const ids = b.photos.map(p => p[0]);
+  PROFILES.unshift({ k: b.k, label: b.label, style: b.style, fam: b.fam, syn: b.syn, kw: b.kw, hero: ids[0], split: ids[1] || ids[0], about: ids[2] || ids[1] || ids[0], gallery: ids.slice(3), pool: [] });
+  // heroes: people-at-work / subject shots first; every id is eligible so designs rotate
+  registerPhotos(b.k, { heroes: ids.slice(0, Math.min(ids.length, 6)), pool: b.photos.map(p => [p[0], p[1]]) });
+  registerIndustry(b.k, { profiles: [b.k], label: b.label, kits: b.kits.filter(k => LIB.kits[k]), hero: FALLBACK_HERO[b.fam] || [STYLES[b.style].hero], orders: [STYLES[b.style].order.slice()] });
+});
+// 'vet' now has its own profile; pets keeps grooming, walking and boarding
+(PROFILES.find(p => p.k === 'pets') || {}).kw = /\bpet|dog|cat\b|groom|kennel|cattery|puppy|walker|walking/i;
+const PROF_ACT = Object.fromEntries(BATCH1.map(b => [b.k, b.act]));
+
+Object.assign(PROFILE_COPY, {
+  locksmith: { h1: ['Locked out? *We\'re on our way.*', 'Locks fitted, *fixed* and changed.', 'Secure doors, *fast* help.'], leadOpen: 'Fast, friendly locksmith help for homes and businesses.',
+    eyebrow: { services: 'Locksmith services', gallery: 'On the job', book: 'Call or message' }, h2: { services: 'Locks, keys and *security.*', gallery: 'Locks and *keys.*', book: 'Tell us what\'s *happened.*', why: 'Calm, quick and *careful.*' },
+    servicesIntro: 'The locksmith services you listed. Prices are shown only where you typed them.',
+    steps: [['Call or message', 'Tell us the door, the lock and how urgent it is.'], ['Clear price', 'We confirm the price with you before we start.'], ['Sorted', 'We fix, fit or change the lock and test it with you.']],
+    cta: { book: 'Book a locksmith', quote: 'Ask for a price', reserve: 'Book a locksmith' },
+    ui: { formMsg: 'What\'s the problem?', formMsgPh: 'e.g. locked out, lock change, broken key', formSubmit: 'Send', chipQuote: 'Fast response', actQuote: 'Tell us the lock and we\'ll give you a price.' } },
+  removals: { h1: ['Moving made *easy.*', 'Your move, *handled* with care.', 'From boxes to *home.*'], leadOpen: 'Careful, friendly removals from the first box to the last.',
+    eyebrow: { services: 'Removal services', gallery: 'Moving day', book: 'Get a quote' }, h2: { services: 'Everything your move *needs.*', gallery: 'Moves, *done* with care.', book: 'Get your *moving quote.*', why: 'Careful hands, *on time.*' },
+    servicesIntro: 'The moving services you listed. Prices are shown only where you typed them.',
+    steps: [['Tell us the move', 'From, to, the date and roughly how much there is.'], ['Get your quote', 'A clear price before moving day.'], ['Moving day', 'We wrap, load, drive and unload with care.']],
+    cta: { book: 'Book your move', quote: 'Get a moving quote', reserve: 'Book your move' },
+    ui: { quoteWhenLabel: 'When are you moving?', quoteWhen: ['This month', 'Next month', 'Not sure yet'], formMsg: 'Tell us about the move', formMsgPh: 'From, to, date and what you\'re moving', formSubmit: 'Get my quote', chipQuote: 'Free moving quote', actQuote: 'Tell us about your move and get a clear price.' } },
+  painter: { h1: ['Fresh walls, *clean* finish.', 'Painting and decorating, *done neatly.*', 'Colour, *carefully* applied.'], leadOpen: 'Neat, tidy painting and decorating, inside and out.',
+    eyebrow: { services: 'Painting & decorating', gallery: 'Recent work', book: 'Get a quote' }, h2: { services: 'Rooms, walls and *woodwork.*', gallery: 'Brush and *roller.*', book: 'Get your *quote.*', why: 'Neat lines, *tidy* rooms.' },
+    servicesIntro: 'The painting and decorating jobs you listed. Prices are shown only where you typed them.',
+    steps: [['Tell us the rooms', 'Which rooms or surfaces, and any colours in mind.'], ['Get your quote', 'A clear price and a start date that suits.'], ['Fresh finish', 'We protect, prepare, paint and tidy up after.']],
+    cta: { book: 'Book a visit', quote: 'Get a painting quote', reserve: 'Book a visit' } },
+  pest: { h1: ['Pests gone, *peace* back.', 'Fast, discreet *pest control.*', 'Your home, *pest-free.*'], leadOpen: 'Discreet, effective pest control for homes and businesses.',
+    eyebrow: { services: 'Pest control', gallery: 'Treatments', book: 'Call or message' }, h2: { services: 'The pests we *deal with.*', gallery: 'Careful *treatments.*', book: 'Tell us what you\'ve *seen.*', why: 'Discreet, safe and *thorough.*' },
+    servicesIntro: 'The pest control services you listed. Prices are shown only where you typed them.',
+    steps: [['Tell us the problem', 'What you\'ve seen, where and for how long.'], ['Visit and treatment', 'We find the cause and treat it safely.'], ['Follow-up', 'We check back to make sure they\'re gone.']],
+    cta: { book: 'Book a visit', quote: 'Ask for a price', reserve: 'Book a visit' },
+    ui: { formMsg: 'What have you seen?', formMsgPh: 'e.g. mice in the kitchen, wasp nest by the door', formSubmit: 'Send', chipQuote: 'Discreet visits', actQuote: 'Tell us the pest and we\'ll give you a price.' } },
+  hvac: { h1: ['Stay cool, *stay* comfortable.', 'Air conditioning, *fitted and fixed.*', 'Comfort, *all year* round.'], leadOpen: 'Air conditioning installs, servicing and repairs.',
+    eyebrow: { services: 'Air conditioning', gallery: 'On the job', book: 'Get a quote' }, h2: { services: 'Install, service and *repair.*', gallery: 'Units we *look after.*', book: 'Get your *quote.*', why: 'Qualified, tidy and *on time.*' },
+    servicesIntro: 'The air conditioning services you listed. Prices are shown only where you typed them.',
+    steps: [['Tell us the space', 'Rooms, sizes and what you need.'], ['Survey and price', 'A clear price for the right unit or repair.'], ['Fitted and tested', 'We install or fix it and show you how it works.']],
+    cta: { book: 'Book a service', quote: 'Get an AC quote', reserve: 'Book a service' } },
+  vet: { h1: ['Caring for the pets *you love.*', 'Kind, expert *vet care.*', 'Healthy pets, *happy* homes.'], leadOpen: 'Friendly, expert veterinary care for your pets.',
+    eyebrow: { services: 'Treatments', menu: 'Treatments', gallery: 'At the clinic', book: 'Book an appointment', why: 'Why owners trust us', process: 'Your visit' },
+    h2: { services: 'Care for every *stage.*', gallery: 'Calm, caring *visits.*', book: 'Book an *appointment.*', why: 'Gentle hands, *clear* advice.', process: 'Booking in *three* steps.', about: 'Vets who *care.*', reviews: 'Owners *say.*' },
+    servicesIntro: 'The treatments you listed. Prices are shown only where you typed them.',
+    steps: [['Book a time', 'Pick an appointment that suits you and your pet.'], ['Check-up', 'A calm examination and clear advice.'], ['Aftercare', 'A plan for treatment and any follow-up.']],
+    cta: { book: 'Book an appointment', quote: 'Ask a question', reserve: 'Book an appointment' },
+    reviews: [['So gentle with our anxious cat, and explained everything clearly.', 'Helen D.'], ['Got us in the same day and our dog was back to himself in no time.', 'Marcus L.'], ['Kind, honest advice and no pressure.', 'Priya N.']],
+    stats: [['15', '', 'years caring for pets'], ['5000', '+', 'pets registered'], ['4.9', '', 'average rating'], ['6', '', 'days a week']],
+    ui: { nav: 'Treatments', svcLabel: 'Treatment', bookIntro: 'Pick a treatment, a day and a time. We\'ll confirm by text.', schema: 'VeterinaryCare', clientWord: 'pet owners' } },
+  florist: { h1: ['Flowers for *every* moment.', 'Fresh, *beautiful* bouquets.', 'Made by hand, *with love.*'], leadOpen: 'Fresh flowers, arranged by hand for every occasion.',
+    eyebrow: { services: 'Flowers', menu: 'Flowers', gallery: 'In the shop', book: 'Order or ask' }, h2: { services: 'Bouquets and *arrangements.*', menu: 'Choose your *flowers.*', gallery: 'Fresh from the *shop.*', book: 'Order your *flowers.*', why: 'Fresh, local and *personal.*' },
+    servicesIntro: 'The flowers and services you listed. Prices are shown only where you typed them.',
+    steps: [['Choose', 'Pick a bouquet or tell us the occasion.'], ['We arrange', 'Hand-tied with fresh, seasonal flowers.'], ['Collect or delivery', 'Pick it up or we\'ll bring it to the door.']],
+    cta: { book: 'Order flowers', quote: 'Ask about an order', reserve: 'Order flowers' },
+    reviews: [['The bouquet was even more beautiful than the photo.', 'Grace H.'], ['Our wedding flowers were perfect. Thank you!', 'Sam & Leila'], ['Always fresh and they last for ages.', 'Tom R.']],
+    ui: { formMsg: 'What would you like?', formMsgPh: 'Occasion, colours, date and budget', formSubmit: 'Send my order request', chipQuote: 'Hand-tied', actQuote: 'Tell us the occasion and we\'ll suggest flowers.' } },
+  tattoo: { h1: ['Your idea, *inked* properly.', 'Custom tattoos, *carefully* done.', 'Art you\'ll *wear* with pride.'], leadOpen: 'Custom tattoos in a clean, friendly studio.',
+    eyebrow: { services: 'Tattoos', menu: 'Tattoos', gallery: 'In the studio', book: 'Book a consultation', why: 'Why people choose us', process: 'How it works', about: 'The studio', reviews: 'Client stories' },
+    h2: { services: 'What we *tattoo.*', menu: 'Choose your *session.*', gallery: 'Ink and *studio.*', book: 'Book a *consultation.*', why: 'Clean, careful and *creative.*', process: 'From idea to *ink.*', about: 'Artists who *care.*', reviews: 'Worn with *pride.*', faq: 'Before you *book.*' },
+    servicesIntro: 'The tattoo and piercing services you listed. Prices are shown only where you typed them.',
+    steps: [['Share your idea', 'Tell us the design, size and placement.'], ['Consultation', 'We sketch it with you and agree the price.'], ['Tattoo day', 'A clean, comfortable session and aftercare advice.']],
+    cta: { book: 'Book a consultation', quote: 'Ask about a design', reserve: 'Book a consultation' },
+    reviews: [['Took my rough idea and made it better than I imagined.', 'Jade K.'], ['Spotless studio, really calm and the linework is perfect.', 'Ollie B.'], ['Explained the aftercare properly. Healed beautifully.', 'Nadia F.']],
+    stats: [['10', '', 'years tattooing'], ['3000', '+', 'tattoos done'], ['4.9', '', 'average rating'], ['1:1', '', 'design consultations']],
+    ui: { nav: 'Tattoos', svcLabel: 'Tattoo', bookIntro: 'Pick a consultation time. We\'ll confirm by text.', formMsg: 'Tell us your idea', formMsgPh: 'Design, size, placement and any references', formSubmit: 'Send my idea', schema: 'TattooParlor', clientWord: 'clients' } },
+  driving: { h1: ['Pass with *confidence.*', 'Calm, patient *driving lessons.*', 'From first lesson to *full licence.*'], leadOpen: 'Patient, friendly driving lessons that get you test-ready.',
+    eyebrow: { services: 'Driving lessons', gallery: 'On the road', book: 'Book a lesson', reviews: 'Pupil stories' }, h2: { services: 'Lessons that *fit* you.', gallery: 'Behind the *wheel.*', book: 'Book your *first lesson.*', why: 'Calm, clear and *patient.*', reviews: 'Passed with *confidence.*' },
+    servicesIntro: 'The lessons and courses you listed. Prices are shown only where you typed them.',
+    steps: [['Book a lesson', 'Pick a time and where you\'d like to be picked up.'], ['Learn at your pace', 'Clear, calm teaching and a plan for your test.'], ['Pass your test', 'Mock tests and tips so you feel ready.']],
+    cta: { book: 'Book a lesson', quote: 'Ask about lessons', reserve: 'Book a lesson' },
+    reviews: [['Passed first time. So calm and patient the whole way.', 'Ellie M.'], ['I was really nervous and now I love driving.', 'Ravi S.'], ['Clear explanations and flexible lesson times.', 'Josh T.']],
+    stats: [['500', '+', 'pupils taught'], ['10', '', 'years instructing'], ['4.9', '', 'average rating'], ['1:1', '', 'lessons']],
+    ui: { nav: 'Lessons', svcLabel: 'Lesson', bookIntro: 'Pick a lesson, a day and a time. We\'ll confirm by text.', schema: 'DrivingSchool', clientWord: 'pupils' } },
+  childcare: { h1: ['A happy place to *grow.*', 'Caring, playful *childcare.*', 'Little ones, *big* smiles.'], leadOpen: 'Warm, caring childcare where little ones learn through play.',
+    eyebrow: { services: 'Our care', gallery: 'Play and learning', book: 'Book a visit', reviews: 'Parent stories', why: 'Why families choose us' }, h2: { services: 'Care that *fits* your family.', gallery: 'Learning through *play.*', book: 'Come and *visit.*', why: 'Safe, warm and *playful.*', reviews: 'Happy *families.*' },
+    servicesIntro: 'The sessions and care you listed. Prices are shown only where you typed them.',
+    steps: [['Book a visit', 'Come and see the setting and meet the team.'], ['Settling in', 'Short sessions so your child feels at home.'], ['Happy days', 'Play, learning and updates for you every day.']],
+    cta: { book: 'Book a visit', quote: 'Ask about places', reserve: 'Book a visit' },
+    reviews: [['Our daughter runs in every morning. The team are wonderful.', 'Amy C.'], ['Caring, organised and always happy to chat at pick-up.', 'Dan W.'], ['Lovely activities and we always know how the day went.', 'Fatima O.']],
+    stats: [['12', '', 'years caring for children'], ['40', '', 'places'], ['4.9', '', 'average rating'], ['5', '', 'days a week']],
+    ui: { nav: 'Our care', svcLabel: 'Session', bookIntro: 'Pick a day and a time to visit. We\'ll confirm by text.', formMsg: 'Tell us about your child', formMsgPh: 'Age, days needed and start date', formSubmit: 'Send', schema: 'ChildCare', clientWord: 'families' } },
+});
+/* =====================================================================
    SELECTION: kit + hero + section variants + section order, then photos,
    then the client's real facts. Pure functions of (form data, opts), so the
    admin rebuild at publish time produces exactly what the client approved.
    ===================================================================== */
 const SECTION_TYPES = ['services', 'menu', 'why', 'stats', 'about', 'gallery', 'reviews', 'process', 'faq', 'cta', 'book', 'footer', 'infobar', 'beforeafter', 'insurance'];
+/* Round 1 item 11: designs 1, 2 and 3 in the preview ("Show me another design") must differ in LAYOUT,
+   not just colour: a different hero structure from the previous two designs, a different section order
+   where the industry has more than one, and re-rolled section variants when too few changed. */
+const HERO_GENERIC = ['split', 'editorial', 'fullbleed', 'panel', 'mosaic', 'framed', 'arch'];
 function pickDesign(ctx) {
+  const base = pickDesign0(ctx), ix = +(ctx.opts && ctx.opts.design) || 0;
+  if (!ix || (ctx.opts && ctx.opts.style) || ctx.noSpread) return base;
+  const prev = [];
+  for (let j = Math.max(0, ix - 2); j < ix; j++) prev.push(pickDesign({ ...ctx, opts: { ...ctx.opts, design: j }, noSpread: j === 0 }));
+  const ind = industryFor(ctx.prof, ctx.key);
+  const fitsH = h => LIB.sections.hero[h] && LIB.sections.hero[h].fits(ctx);
+  const used = new Set(prev.map(p => p.hero));
+  if (used.has(base.hero)) {
+    const own = ind.hero.filter(h => fitsH(h) && !used.has(h));
+    const gen = HERO_GENERIC.filter(h => fitsH(h) && !used.has(h));
+    const pool = own.length ? own : gen;
+    if (pool.length) base.hero = seedPick(pool, base.seed, 'hero-spread'); base.variants.hero = base.hero;
+  }
+  const last = prev[prev.length - 1];
+  if (ind.orders.length > 1 && base.order.join() === last.order.join()) { base.orderIx = (last.orderIx + 1) % ind.orders.length; base.order = ind.orders[base.orderIx].slice(); }
+  const seen = o => prev.some(p => p.order.join() === o.join());
+  if (ind.orders.length === 1 || seen(base.order)) {
+    // one recipe only: rearrange the middle sections so the page reads in a different order
+    const fixed = new Set(['hero', 'infobar', 'ribbon', 'book', 'faq', 'cta']);
+    const mid = base.order.map((k, i) => [k, i]).filter(([k]) => !fixed.has(k));
+    if (mid.length >= 3) {
+      const ks = mid.map(m => m[0]);
+      const opts2 = [[ks[1], ks[0], ...ks.slice(2)], [...ks.slice(1, 3), ks[0], ...ks.slice(3)], [ks[0], ks[2], ks[1], ...ks.slice(3)]];
+      const start = ix % 2 ? 0 : 1;
+      for (let n = 0; n < 3; n++) {
+        const re = opts2[(start + n) % 3], o = base.order.slice();
+        mid.forEach(([, i], m) => { o[i] = re[m]; });
+        if (!seen(o)) { base.order = o; break; }
+      }
+    }
+  }
+  const changed = () => SECTION_TYPES.filter(t => base.order.includes(t) && base.variants[t] !== last.variants[t]).length;
+  for (let r = 0; r < 4 && changed() < 3; r++) SECTION_TYPES.forEach(t => {
+    if (!base.order.includes(t) || base.variants[t] !== last.variants[t]) return;
+    const all = Object.values(LIB.sections[t] || {}).filter(v => v.fits(ctx) && (!ind.variants || !ind.variants[t] || ind.variants[t].includes(v.id))).map(v => v.id).filter(id => id !== last.variants[t]);
+    if (all.length) base.variants[t] = seedPick(all, base.seed, 'spread-' + t + r);
+  });
+  return base;
+}
+function pickDesign0(ctx) {
   const { d, prof, key, opts } = ctx;
   const ind = industryFor(prof, key);
   const seed = designSeed(d, ind.id, opts);
@@ -2357,7 +2616,15 @@ function pickDesign(ctx) {
    No photo appears twice on one page; optional slots are simply left out when the pool runs dry. */
 const STOP = new Set(['and', 'the', 'for', 'with', 'your', 'our', 'from', 'all', 'any', 'new', 'full', 'per', 'hour', 'one', 'two', 'day', 'free', 'quote', 'service', 'services', 'package', 'basic', 'standard', 'premium']);
 const stemW = w => w.slice(0, 5);
-function photoPool(prof) {
+function photoPool(prof, blob) {
+  const sub = typeof subtypeFor === 'function' ? subtypeFor(prof, blob || '') : null;
+  if (sub) {
+    // the owner's cuisine / sub-trade set, plus the trade's room / service shots (never another cuisine's dishes)
+    const base = LIB.photos[prof.k] || { heroes: [], pool: [] };
+    const tags = new Map(); sub.pool.forEach(x => tags.set(x[0], x[1]));
+    base.pool.forEach(x => { if (SUB_NEUTRAL.test(x[1]) && !tags.has(x[0])) tags.set(x[0], x[1]); });
+    return { ids: [...tags.keys()], tags, only: new Set(), heroes: sub.heroes.slice(), extra: base, sub: sub.k };
+  }
   const extra = LIB.photos[prof.k] || { heroes: [], pool: [] };
   const tags = new Map();
   const add = (id, t) => { if (!id) return; tags.set(id, ((tags.get(id) || '') + ' ' + (t || '')).trim()); };
@@ -2367,9 +2634,11 @@ function photoPool(prof) {
   [prof.hero, prof.split, prof.about, ...prof.gallery, prof.contact].forEach(id => add(id, ''));
   return { ids: [...tags.keys()], tags, only, heroes: [...new Set([...(extra.heroes || []), prof.hero])], extra };
 }
-function allocPhotos(prof, up, services, name, need, seed, biasText) {
-  const P = photoPool(prof), used = new Set(), label = prof.label.replace(/ &.*$/, '');
+function allocPhotos(prof, up, services, name, need, seed, biasText, rot) {
   const blob = `${biasText || ''} ${name || ''} ${services.map(s => (s.name || '') + ' ' + (s.desc || '')).join(' ')}`;
+  const P = photoPool(prof, blob), used = new Set(), label = prof.label.replace(/ &.*$/, '');
+  // menus (food, salons, barbers): an item gets a photo only when its name matches a photo's keywords
+  const strict = prof.fam === 'food' || prof.fam === 'beauty';
   const take = id => { if (!id || used.has(id)) return null; used.add(id); return id; };
   const free = () => P.ids.filter(id => !used.has(id) && !P.only.has(id));
   const freeAll = () => P.ids.filter(id => !used.has(id));
@@ -2388,7 +2657,16 @@ function allocPhotos(prof, up, services, name, need, seed, biasText) {
       if (ranked.length) heroList = [...new Set(ranked.concat(heroList))];
     }
   }
-  const heroStock = upl.length ? null : take(seedShuffle(heroList, seed, 'heroPhoto').find(id => !used.has(id)));
+  // Hero rotates through the trade's hero list by design number (order fixed per business), so
+  // "Show me another design" never repeats the previous design's hero photo.
+  let heroStock = null;
+  if (!upl.length) {
+    const hl = heroList.filter(id => !P.only.has(id) && !used.has(id));
+    if (rot && hl.length) {
+      const order = prof.k === 'cleaning' ? hl : seedShuffle(hl, rot.biz, 'heroRot');
+      heroStock = take(order[rot.designIx % order.length]);
+    } else heroStock = take(seedShuffle(heroList, seed, 'heroPhoto').find(id => !used.has(id)));
+  }
   const hero = upl.length ? upl.shift() : heroStock;
   const heroExtra = [];
   for (let i = 0; i < (need.heroExtra || 0); i++) heroExtra.push(take(seedShuffle(P.heroes.concat(free()), seed, 'hx' + i).find(id => !used.has(id))));
@@ -2403,7 +2681,7 @@ function allocPhotos(prof, up, services, name, need, seed, biasText) {
       const hits = tagWords(id).reduce((a, t) => a + (words.some(w => stemW(w) === stemW(t) || (t.length > 3 && w.startsWith(t)) || (w.length > 3 && t.startsWith(w))) ? 1 : 0), 0);
       if (hits > bestScore) { best = id; bestScore = hits; }
     });
-    return take(best || cands.find(id => !P.only.has(id)));
+    return take(best || (strict ? null : cands.find(id => !P.only.has(id))));
   });
   // 3. the rest, in page-importance order; uploads fill the people/place slots first
   // a preferred "place" shot rotates with similar shots (interiors, team, reception) so businesses don't all share one photo
@@ -2469,7 +2747,14 @@ function extractFacts(d, services, hours) {
   const since = about.match(/\b(?:since|established(?: in)?|est\.?|founded(?: in)?|opened(?: in)?|trading since)\s*((?:19|20)\d\d)\b/i);
   const nowY = new Date().getFullYear();
   if (since && +since[1] <= nowY) add({ k: 'since', proof: `Established ${since[1]}`, chip: ['calendar', 'Established', since[1]], why: [`Here since ${since[1]}.`, sent(/since|established|founded|opened/i)], stat: { v: since[1], suf: '', l: 'the year we opened our doors', text: true } });
-  else if (yr && +yr[1] > 0) add({ k: 'years', proof: `${yr[1]}+ years' experience`, chip: ['star', `${yr[1]}+ years`, 'experience'], why: [`${yr[1]}+ years of experience.`, sent(/years?/i)], stat: { v: yr[1], suf: '+', l: 'years of experience' } });
+  else if (yr && +yr[1] > 0) {
+    // Round 1 item 8: exactly as typed: "12 years" stays "12 years" (a "+" only when the owner typed one)
+    const plus = /^\d{1,2}\+/.test(yr[0]) ? '+' : '', kind = (yr[2] || '').toLowerCase(), of = /\bof\s/i.test(yr[0]) && kind ? 'of ' : '';
+    const n = `${yr[1]}${plus} year${+yr[1] === 1 ? '' : 's'}`, tail = kind ? ` ${of}${kind}` : '';
+    add({ k: 'years', proof: n + tail, chip: ['star', n, kind ? of + kind : ''], why: [`${n}${tail}.`, sent(/years?/i)], stat: { v: yr[1], suf: plus, l: `year${+yr[1] === 1 ? '' : 's'}${tail}` } });
+  }
+  const rt = about.match(/\b(?:rated|rating(?: of)?|average(?: of)?)\s+([1-5]\.\d|[1-5])(?:\s*(?:\/\s*5|out of (?:5|five)|stars?|★))*(?:\s+(?:on|from|across)\s+(Google|Trustpilot|Tripadvisor|TripAdvisor|Yelp|Facebook|Checkatrade|Treatwell|Fresha|Booksy|Rated People|Which\?|Airbnb|Feefo|Doctify|Zocdoc))?/i);
+  if (rt) add({ k: 'rating', proof: `${rt[1]} ★${rt[2] ? ' on ' + rt[2] : ' rating'}`, chip: ['star', `${rt[1]} ★`, rt[2] ? 'on ' + rt[2] : 'rating'], stat: { v: rt[1], suf: ' ★', l: rt[2] ? 'on ' + rt[2] : 'average rating', text: true } });
   // only when the business says it about ITSELF ("X is a family-run practice", "we're independent"), not "for independent businesses"
   const fam = about.match(/\b(?:is|are|we're|we are|we've been|has been)\s+(?:an?\s+)?(?:small[, ]+|proudly\s+|friendly[, ]+)*(family[- ]run|family[- ]owned|independent(?:ly owned)?|locally owned)\b/i);
   if (fam) { const f = fam[1].toLowerCase().replace(/ /g, '-').replace('independently-owned', 'independently owned'); const F1 = f[0].toUpperCase() + f.slice(1);
@@ -2567,10 +2852,11 @@ function insuranceFacts(d) {
   const nameOk = s => s && s.length <= 32 && /^[A-Z0-9]/.test(s) && s.split(/\s+/).length <= 4 && !generic.test(s) && !/\d+\s*(?:months?|years?|%)|£|\$|€/.test(s);
   const listOf = s => s.split(/\s*(?:,|;|\/|\band\b|&)\s*/).map(x => x.trim().replace(/[.:!]$/, '')).filter(Boolean);
   let names = [];
-  [...field.split(/\n/), ...splitSentences(about)].forEach(line => {
+  // a bare list of names only counts in the insurance field itself, never in the about text ("Family run since 2012." is not an insurer)
+  [...field.split(/\n/).map(l => [l, true]), ...splitSentences(about).map(l => [l, false])].forEach(([line, isField]) => {
     const m = line.match(/\b(?:accept(?:s|ed|ing)?|work with|registered with|providers?|insurers?|insurance)\b(?:\s*(?:plans?|from|including|like|such as|:))*\s*(.+)$/i);
     if (m) names.push(...listOf(m[1]).filter(nameOk));
-    else if (line === line.replace(/\b(?:finance|interest|payment|monthly|spread|membership|plan|bill|nhs|private|patients?|cover|welcome)\b/ig, '') && listOf(line).every(nameOk)) names.push(...listOf(line));
+    else if (isField && line === line.replace(/\b(?:finance|interest|payment|monthly|spread|membership|plan|bill|nhs|private|patients?|cover|welcome)\b/ig, '') && listOf(line).every(nameOk)) names.push(...listOf(line));
   });
   names = [...new Set(names)].slice(0, 12);
   if (names.length && !F.some(f => f.k === 'direct')) F.push({ k: 'plans', icon: 'shield', t: 'Insurance welcome', b: `We accept ${names.length > 3 ? names.slice(0, 3).join(', ') + ' and more' : listJoin(names)}.` });
@@ -2680,7 +2966,7 @@ const H2_BEAUTY = {
 };
 const H2_FOOD = {
   menu: ['Something for *every* craving.', 'From the *kitchen.*', 'Our *menu.*'],
-  why: ['Why people *come back.*', 'Made with *care.*', 'The little *things.*'],
+  why: ['Why people *come back.*', 'Why guests *return.*', 'The little *things.*'],
   reviews: ['Words from our *guests.*', 'What guests *say.*', 'Happy *tables.*'],
   faq: ['Before you *visit.*', 'Good *questions.*'],
   gallery: ['A taste of the *day.*', 'From our *tables.*', 'Plates we *love.*'],
@@ -2752,7 +3038,8 @@ cxReg(['barber'], {
   h1: ['Sharp cuts, *good* company.', 'Look sharp. *Feel* sharper.', 'Your chair is *waiting.*', 'Fresh fades, *proper* chats.', 'Clean cuts, *every* visit.', 'Classic cuts, *modern* style.', 'Sharp lines, *easy* booking.', 'The chair you\'ll *look forward* to.'],
   place: ['Barbers in the heart of *{place}.*', 'Your barbers in *{place}.*'],
   lead: ['Skilled barbers, good chat and no rushing.', 'Proper cuts and a friendly chair.', 'Fades, trims and beard work done right.'],
-  h2: H2_BEAUTY,
+  // barber words, not salon ones (no "treatment", no "you time")
+  h2: { ...H2_BEAUTY, menu: ['Pick your *cut.*', 'Cuts and *prices.*', 'The price *list.*'], cta: ['Your chair is *waiting.*', 'Time for a *fresh cut?*', 'Look *sharp.*'], book: ['Book your *cut.*', 'Grab a *chair.*', 'Find your *time.*'], why: ['Why clients *come back.*', 'Sharp cuts, *good* chat.', 'Old-school *skills.*'] },
 });
 cxReg(['spa'], {
   h1: ['Your hour of *calm* starts here.', 'Relax, restore, *glow.*', 'Time out, *beautifully* done.', 'Breathe out. *Unwind.*', 'Calm hands, *glowing* skin.', 'Slow down and *feel* better.', 'Treatments that *restore.*'],
@@ -2764,7 +3051,7 @@ cxReg(['restaurant'], {
   h1: ['A table worth *coming back* to.', 'Pull up a chair. *Stay* a while.', 'Made to share, *made* to remember.', 'Good food, *good* people.', 'Seasonal plates, *warm* welcome.', 'Come hungry, *leave* happy.',
     'Dinner, *done* beautifully.', 'A table *waiting* for you.', 'Cooked with care, *served* with love.'],
   place: ['Eating well in *{place}.*', 'Your table in *{place}.*'],
-  lead: ['Honest cooking and a warm welcome.', 'Food made with care, served with a smile.', 'Good plates, good company.'],
+  lead: ['Honest cooking and a warm welcome.', 'Good plates, good company.'],
   h2: H2_FOOD,
 });
 cxReg(['cafe'], {
@@ -2776,7 +3063,7 @@ cxReg(['cafe'], {
 cxReg(['bakery'], {
   h1: ['Baked fresh, *every* morning.', 'Made by hand, *made* with love.', 'Proper bread, *beautiful* cakes.', 'Bread worth *getting up* for.', 'Fresh out of the *oven.*', 'Small batches, *big* flavour.', 'Cakes for every *celebration.*'],
   place: ['Fresh baking in *{place}.*'],
-  lead: ['Bread, pastries and cakes, made with care.', 'Baked by hand, in small batches.'],
+  lead: ['Bread, pastries and cakes, baked fresh.', 'Baked by hand, in small batches.'],
   h2: H2_FOOD,
 });
 /* -> { h1Pool, lead, h2, why } for this business, or null pieces where we keep the base copy */
@@ -2793,6 +3080,183 @@ function copyX(prof, seed, ctx) {
   const why = {}; Object.entries(WHY_T).forEach(([k, arr]) => { why[k] = fill(seedPick(arr, seed, 'why-' + k)); });
   return { h1Pool, lead, h2, why };
 }
+/* =====================================================================
+   OWNER-WORDED HERO (Round 1, item 4). The headline and lead are written from what the owner typed:
+   key phrases from the description ("charcoal grill", "rooftop terrace", "open till 2 AM"), the hours,
+   the town and the services. Nothing is added that was not typed. generateWithAI() returns null in
+   this build (preview and production alike), so this is the path every site uses.
+   ===================================================================== */
+const OWN_STOP = new Set('a an the and or of in on at to for with by from our we us you your is are be it its this that who which very really just also all every each more most so as off up out into over well here there them they their than then has have had been was were will can do does done get got make made'.split(' '));
+const OWN_GENERIC = new Set('friendly business company service services quality best great good professional team local people customers clients high reliable trusted amazing excellent affordable cheap top leading lovely nice welcoming warm happy experienced expert experts passionate dedicated committed offering offer provide providing based run city town area centre center station'.split(' '));
+const ownCap = s => s ? s[0].toUpperCase() + s.slice(1) : s;
+/* prose form of a typed item: "seekh Kebab" -> "seekh kebab" (keeps acronyms like NHS / BBQ / AC) */
+const OWN_PROPER = /^(?:pakistani|indian|italian|thai|chinese|japanese|turkish|lebanese|mexican|greek|french|spanish|american|british|english|korean|vietnamese|persian|afghan|bangladeshi|nepalese|caribbean|jamaican|portuguese|moroccan|ethiopian|nigerian|punjabi|lahori|kashmiri|neapolitan|sicilian|tuscan|cajun|hawaiian|swedish|irish|scottish|welsh|nhs|i)$/i;
+const ownProse = s => String(s || '').split(/\s+/).map(w => /^[A-Z0-9&\/-]{2,}$/.test(w) ? w : OWN_PROPER.test(w) ? w[0].toUpperCase() + w.slice(1).toLowerCase() : w.toLowerCase()).join(' ');
+function ownLateHours(d) {
+  // "Mon-Sun 5pm-2am" / "till 2 AM" -> "open till 2 AM" (only an early-morning close counts as late)
+  const txt = String(d.hours || '') + ' ' + String(d.about || '');
+  const m = txt.match(/(?:-|–|to|till|until)\s*(1[0-2]|[1-4])(?::(\d\d))?\s*(am|a\.m\.)/i);
+  if (m) return `open till ${m[1]}${m[2] && m[2] !== '00' ? ':' + m[2] : ''} AM`;
+  if (/\b24\s*\/\s*7\b|24 hours|24-hour/i.test(txt)) return 'open 24/7';
+  return '';
+}
+function ownerPhrases(d) {
+  const about = String(d.about || '').replace(/\(.*?made-up.*?\)/ig, '');
+  const name = cleanName(d.name).toLowerCase();
+  const out = [];
+  splitSentences(about).forEach((s, si) => {
+    s.replace(/[.!?]+$/, '')
+      .split(/\s*(?:(?<!\d)[,;:]|[,;:](?!\d)|[()])\s*|\s+[–—-]\s+|\s+(?:on|in|at) (?:a|an|the|our) (?=\w)|\s+with (?=\w)|\s+(?:serving|offering|covering|specialising in|specializing in|plus|across|throughout|near|around)\s+|\s+(?=in (?:north|south|east|west|central|the heart of|[A-Z])\b)|\s+and (?=(?:open|we|our)\b)/i)
+      .forEach((c, ci) => {
+        let t = c.trim();
+        for (let i = 0; i < 4; i++) t = t.replace(/^(?:and|but|so|also|here at [\w&' ]+|we(?:'re| are|'ve been| have been)?|i(?:'m| am)?|it's|this is|our|my|a|an|the|is|are|we|proudly|offer|offers|serve|serves|do|does|provide|provides|specialise in|specialize in|have|has)\s+/i, '');
+        t = t.replace(/\s+(?:every|each) (?:day|night|week)$/i, '').trim();
+        const words = t.split(/\s+/).filter(Boolean);
+        if (!words.length || words.length > 8 || t.length < 4) return;
+        if (name && t.toLowerCase() === name) return;
+        const content = words.filter(w => { const x = w.toLowerCase().replace(/[^a-z0-9/]/g, ''); return x && !OWN_STOP.has(x) && !OWN_GENERIC.has(x); });
+        if (!content.length) return;
+        const score = content.length + (/\d/.test(t) ? 2 : 0) - si * 0.3 - ci * 0.1;
+        out.push({ t, score, si, ci, content });
+      });
+  });
+  const seen = new Set();
+  return out.filter(p => { const k = p.t.toLowerCase(); if (seen.has(k)) return false; seen.add(k); return true; });
+}
+/* -> { h1Pool:[…], lead } built only from typed details; h1Pool is empty when nothing usable was typed */
+function ownerHero(d, services, place, opts) {
+  const P = ownerPhrases(d);
+  const late = ownLateHours(d);
+  // Only worth building the headline from the description when it says something specific about THIS business:
+  // "A dental practice in town with a friendly team" (trade words + filler only) falls back to the varied stock lines.
+  const tradeRe = opts && opts.tradeRe, filler = /^(practice|firm|clinic|studio|shop|agency|company|business|town|towns|city|cities|nearby|area|areas|team|staff|place|surgery|service|services|work|works|job|jobs)$/i;
+  const distinct = p => (p.content || []).some(w => { const x = w.toLowerCase().replace(/[^a-z0-9/]/g, ''); return x && !filler.test(x) && !(tradeRe && tradeRe.test(x)); }) || /\d/.test(p.t);
+  if (!P.some(p => p.si !== 9 && distinct(p))) {
+    const sents0 = splitSentences(String(d.about || '').replace(/\(.*?made-up.*?\)/ig, '')).map(s => s.trim()).filter(Boolean);
+    return { h1Pool: [], lead: sents0.slice(0, 2).join(' ') };
+  }
+  if (late && !P.some(p => /\b(open|till|until|24\/7)\b/i.test(p.t))) P.push({ t: late, score: 2.5, si: 9, ci: 0 });
+  const best = P.slice().sort((a, b) => b.score - a.score).slice(0, 3).sort((a, b) => a.si - b.si || a.ci - b.ci).map((p, i) => {
+    // Round 1 item 6: keep the owner's capitals when the phrase is a proper name ("Gas Safe registered", "NHS and private")
+    const w = p.t.split(/\s+/);
+    if (p.ci > 0 || OWN_PROPER.test(w[0]) || /^\p{Lu}{2,}/u.test(w[0]) || (w[1] && /^\p{Lu}/u.test(w[1]))) return p.t;   // mid-sentence capitals were typed on purpose
+    return p.t.replace(/^[A-Z][a-z]/, m => m.toLowerCase());
+  });
+  const svc = services.map(s => titleCase(s.name.replace(/^[^:]{2,24}:\s*/, ''))).filter(Boolean);
+  const pool = [];
+  const fit = s => s.replace(/\*/g, '').length <= 80;
+  if (best.length >= 3) pool.push(`${ownCap(best[0])}, *${best[1]},* ${best[2]}.`);
+  if (best.length >= 2) pool.push(`${ownCap(best[0])}, *${best[1]}.*`);
+  if (best.length && place) pool.push(`${ownCap(best[0])} in *${place}.*`);
+  if (svc.length >= 2) pool.push(`${ownCap(listJoin(svc.slice(0, 3)))}${place ? ` in *${place}.*` : '.'}`.replace(/^([^*]+)\.$/, (m, a) => a.replace(/(\S+)$/, '*$1.*')));
+  const h1Pool = pool.filter(fit);
+  // lead: the owner's own description (first two sentences, trimmed), never a stock line
+  const sents = splitSentences(String(d.about || '').replace(/\(.*?made-up.*?\)/ig, '')).map(s => s.trim()).filter(Boolean);
+  let lead = '';
+  for (const s of sents) { const n = (lead ? lead + ' ' : '') + s.replace(/([^.!?])$/, '$1.'); if (n.length > 190 && lead) break; lead = n; if (lead.length > 120) break; }
+  return { h1Pool, lead };
+}
+/* =====================================================================
+   TRADE WORDS (Round 1, item 5): each trade's own words for buttons, nav, section labels and form titles.
+   Merged on top of the existing packs (one level deep for eyebrow / h2 / cta / ui).
+   ===================================================================== */
+function tradeWords(k, over) {
+  const cur = PROFILE_COPY[k] || (PROFILE_COPY[k] = {});
+  Object.entries(over).forEach(([f, v]) => { cur[f] = v && typeof v === 'object' && !Array.isArray(v) ? { ...(cur[f] || {}), ...v } : v; });
+}
+tradeWords('barber', {
+  cta: { book: 'Book a cut', quote: 'Ask a question', reserve: 'Book a cut' },
+  eyebrow: { reviews: 'What clients say', book: 'Book a cut', process: 'Your visit', about: 'The shop' },
+  h2: { book: 'Book your *cut.*', reviews: 'Fresh from the *chair.*', process: 'In the chair in *three* steps.' },
+  steps: [['Book a cut', 'Pick a cut, a barber and a time.'], ['Take a seat', 'A quick chat about how you want it.'], ['Walk out sharp', 'Finished, styled and ready to go.']],
+  // sample reviews stay labelled as samples; these are about cuts, not colour or treatments
+  reviews: [['Best fade I\'ve had in years. In and out with no fuss.', 'Tom H.'], ['Good chat, sharp cut, fair price.', 'Ade O.'], ['Booked online, sat down on time and walked out looking sharp.', 'Chris M.']],
+  ui: { nav: 'Cuts & prices', svcLabel: 'Cut', bookIntro: 'Pick a cut, a day and a time. We\'ll confirm by text.', bookSubmit: 'Book my cut', clientWord: 'clients' },
+});
+tradeWords('salon', { cta: { book: 'Book an appointment', reserve: 'Book an appointment' }, eyebrow: { book: 'Book an appointment' }, ui: { bookSubmit: 'Book my appointment' } });
+tradeWords('spa', { cta: { book: 'Book a treatment', reserve: 'Book a treatment' }, eyebrow: { book: 'Book a treatment' }, ui: { nav: 'Treatments', svcLabel: 'Treatment', bookSubmit: 'Book my treatment' } });
+tradeWords('dental', { cta: { book: 'Book an appointment', reserve: 'Book an appointment' }, eyebrow: { book: 'Book an appointment' }, ui: { bookSubmit: 'Request my appointment' } });
+['medical', 'physio'].forEach(k => tradeWords(k, { cta: { book: 'Book an appointment', reserve: 'Book an appointment' }, eyebrow: { book: 'Book an appointment' } }));
+tradeWords('restaurant', { cta: { book: 'Reserve a table', reserve: 'Reserve a table' }, eyebrow: { book: 'Reserve a table' } });
+tradeWords('driving', { eyebrow: { why: 'Why pupils choose us', process: 'Your first lesson' }, h2: { why: 'Calm, clear and *patient.*' } });
+tradeWords('florist', { ui: { svcLabel: 'Flowers', nav: 'Flowers' } });
+tradeWords('retail', { ui: { svcLabel: 'Item', nav: 'Shop' } });
+tradeWords('gym', { ui: { svcLabel: 'Session', nav: 'Training' } });
+tradeWords('yoga', { ui: { svcLabel: 'Class', nav: 'Classes' } });
+tradeWords('tutor', { ui: { svcLabel: 'Subject', nav: 'Lessons' } });
+tradeWords('local', { cta: { book: 'Get in touch', quote: 'Get in touch', reserve: 'Get in touch' } });
+/* sample reviews / figures / steps that were borrowed from a neighbouring trade (still shown as labelled samples) */
+tradeWords('barber', { stats: [['10', '', 'years behind the chair'], ['200', '+', 'cuts a week'], ['4.9', '', 'average rating'], ['6', '', 'days a week']] });
+tradeWords('spa', {
+  reviews: [['I floated out of there. The most relaxing hour of my month.', 'Nadia F.'], ['Calm, spotless and my skin has never looked better.', 'Grace T.'], ['Booking was easy and the therapist really listened.', 'Lucy O.']],
+  stats: [['8', '', 'years in the studio'], ['1000', '+', 'treatments a year'], ['4.9', '', 'average rating'], ['6', '', 'days a week']] });
+tradeWords('cafe', {
+  stats: [['5', '', 'years on the high street'], ['300', '+', 'coffees a day'], ['4.8', '', 'average rating'], ['7', '', 'days a week']],
+  reviews: [['Best flat white in town and the pastries are always fresh.', 'Sophie L.'], ['Our favourite spot for a slow Saturday breakfast.', 'Mark & Jo'], ['Friendly staff and a lovely place to work for an hour.', 'Imran K.']] });
+tradeWords('bakery', {
+  steps: [['Order', 'Tell us what you\'d like and when.'], ['We bake', 'Made fresh for your date.'], ['Collect or delivery', 'Pick it up or we\'ll bring it to you.']],
+  stats: [['10', '', 'years baking'], ['50', '+', 'cakes a month'], ['4.9', '', 'average rating'], ['6', '', 'days a week']],
+  reviews: [['The birthday cake looked amazing and tasted even better.', 'Hannah P.'], ['Proper sourdough. We\'re here every Saturday.', 'James W.'], ['Ordered online, collected on time, everyone loved it.', 'Aisha M.']] });
+tradeWords('events', { reviews: [['They thought of everything. We just enjoyed our day.', 'Sam & Leila'], ['Calm, organised and so easy to work with.', 'Priya N.'], ['Our guests are still talking about it.', 'Ollie & Kate']] });
+tradeWords('carwash', { reviews: [['Car looks better than the day I bought it.', 'Dan R.'], ['Quick, careful and great value.', 'Sara P.'], ['Booked a valet online and it was ready when they said.', 'Mo A.']],
+  stats: [['5', '', 'years in the trade'], ['3000', '+', 'cars cleaned'], ['4.8', '', 'average review score'], ['7', '', 'days a week']] });
+['interior', 'architect'].forEach(k => tradeWords(k, {
+  stats: [['60', '+', 'projects completed'], ['12', '', 'years in practice'], ['4.9', '', 'average client rating'], ['1:1', '', 'design consultations']],
+  steps: [['First visit', 'We see the space and talk about how you use it.'], ['Design', 'Drawings and ideas you can react to.'], ['Make it happen', 'We guide the project through to the finish.']],
+  reviews: [['They understood how we live and designed around it.', 'Clare J.'], ['Clear drawings, sensible budget, beautiful result.', 'Rohan P.'], ['Our home feels twice the size.', 'Megan T.']] }));
+tradeWords('web', { stats: [['80', '+', 'sites launched'], ['8', '', 'years building for the web'], ['4.9', '', 'average client rating'], ['4', 'wk', 'typical site launch']] });
+tradeWords('marketing', { stats: [['100', '+', 'campaigns run'], ['8', '', 'years in marketing'], ['4.9', '', 'average client rating'], ['2', 'wk', 'typical campaign launch']] });
+/* =====================================================================
+   PHOTO SUB-TYPES (Round 1, item 3). When the owner's own words (name, trade, description, menu)
+   signal a cuisine or sub-trade, that set replaces the generic one, so a Pakistani grill gets karahi,
+   kebabs and naan, not pasta. Menu / service item photos are matched by keyword only (lib/40-select).
+   All ids: real Pexels photo pages found by web search, fetched at 360 and 1600 wide (HTTP 200
+   image/jpeg) and checked by eye on a contact sheet on 10 Nov 2026. Rejected: px:16736229 (not desi).
+   ===================================================================== */
+const SUBTYPES = {
+  restaurant: [
+    { k: 'desi', rx: /pakistan|indian|\bdesi\b|karahi|kadai|tikka|kebab|kabab|biryani|tandoor|\bnaan\b|curry|lahor|punjab|balti|\bbbq\b|barbecue|charcoal|seekh|nihari|haleem|tandoori|masala|halal grill/ig,
+      heroes: ['px:38762914', 'px:37058630', 'px:35610087', 'px:6522658', 'px:9562310', 'px:28180797'],
+      pool: [['px:6522658', 'seekh kebab kebabs naan grill'], ['px:5250389', 'kebab kebabs skewers grill tomatoes'], ['px:28180797', 'kebab skewers grill chef charcoal'], ['px:37080264', 'bbq skewers grill charcoal tikka'],
+        ['px:37058630', 'charcoal grill bbq skewers kebab'], ['px:35610087', 'grill charcoal bbq street skewers'], ['px:23708587', 'street food grill chef kitchen'], ['px:38762914', 'bbq platter mixed grill kebab tikka'],
+        ['px:36202022', 'karahi kadai curry chicken'], ['px:6522616', 'chicken tikka'], ['px:30021858', 'chicken tikka rice'], ['px:31771054', 'tandoori chicken'], ['px:9609832', 'tandoori chicken chutney'],
+        ['px:36895285', 'tandoori chicken leg'], ['px:32558917', 'naan tandoor bread roti'], ['px:30666774', 'naan bread garlic'], ['px:20446413', 'naan curry daal'], ['px:9562310', 'tandoor naan chef kitchen bread'],
+        ['px:5410410', 'biryani rice'], ['px:37309267', 'biryani rice chicken'], ['px:35267287', 'biryani lamb mutton rice raita'], ['px:34341985', 'biryani rice vegetable']] },
+    { k: 'italian', rx: /italian|pizza|pizzeria|pasta|trattoria|spaghetti|carbonara|lasagn|risotto|margherita|neapolitan|calzone/ig,
+      heroes: ['px:30120984', 'px:36430040', 'px:32872507', 'px:4431588'],
+      pool: [['px:30120984', 'pizza oven chef wood fired kitchen'], ['px:36430040', 'pizza oven wood fired'], ['px:32872507', 'pizza neapolitan oven margherita'], ['px:30343606', 'pizza margherita slice'],
+        ['px:35760004', 'pizza margherita slice'], ['px:6940996', 'pizza margherita sharing'], ['px:4431588', 'pasta spaghetti garlic'], ['px:11653569', 'pasta spaghetti tomato pomodoro'],
+        ['px:29039082', 'pasta spaghetti carbonara'], ['px:39345361', 'pasta carbonara']] },
+    { k: 'burger', rx: /burger|fast food|\bfries\b|\bdiner\b|smash|cheeseburger|hot dog|wings/ig,
+      heroes: ['px:29349611', 'px:33858065', 'px:2725744', 'px:19055025'],
+      pool: [['px:29349611', 'burger burgers grill chef kitchen'], ['px:31023375', 'burger burgers grill patties'], ['px:33858065', 'burger cheeseburger grill flame'], ['px:12031043', 'burger cheeseburger fries'],
+        ['px:2725744', 'burger cheeseburger fries chips'], ['px:19345995', 'burger cheeseburger fries'], ['px:19055025', 'burger cheeseburger fries'], ['px:22119675', 'burger fries chips']] },
+    { k: 'asian', rx: /sushi|ramen|japanese|\basian\b|dim sum|dumpling|noodle|chinese|\bthai\b|korean|vietnam|\bpho\b|\bbao\b|nigiri|maki|gyoza/ig,
+      heroes: ['px:8951178', 'px:8951045', 'px:36772661', 'px:39999752'],
+      pool: [['px:8951045', 'sushi chef kitchen'], ['px:8951178', 'sushi chef platter'], ['px:8951083', 'sushi chef roll maki'], ['px:36772661', 'sushi platter nigiri salmon maki'],
+        ['px:10296398', 'sushi nigiri salmon'], ['px:33712134', 'sushi nigiri'], ['px:4353085', 'sushi maki temaki nigiri'], ['px:35981914', 'sushi nigiri roe'],
+        ['px:40000084', 'ramen noodles'], ['px:39999752', 'ramen noodles broth'], ['px:31263150', 'ramen noodles egg'],
+        ['px:32393806', 'dim sum dumplings gyoza'], ['px:16845585', 'dumplings dim sum'], ['px:32393811', 'dim sum shumai dumplings']] },
+  ],
+};
+/* the sub-type a business belongs to, from its own words (most keyword hits wins), else null */
+function subtypeFor(prof, blob) {
+  const L = SUBTYPES[prof.k]; if (!L) return null;
+  let best = null, n = 0;
+  L.forEach(s => { const c = (String(blob).match(s.rx) || []).length; if (c > n) { n = c; best = s; } });
+  return best;
+}
+// generic restaurant shots that are not about one cuisine (rooms, service): kept alongside a sub-type set
+const SUB_NEUTRAL = /interior|dining room|waiter|guests|friends group/;
+// restaurants: typed cuisines are detected as restaurants too (a "Pizzeria" fell to the generic profile)
+(p => { if (p) p.kw = new RegExp(p.kw.source + '|pizz|burger|sushi|ramen|kebab|kabab|\\bgrill\\b|\\bbbq\\b|curry|biryani|tandoor|karahi|noodle|dim sum|takeaway|diner\\b|trattoria', 'i'); })(PROFILES.find(p => p.k === 'restaurant'));
+// barbers: drop the salon interior that sat in the barber set; add clipper / haircut shots
+(p => { if (!p) return; const bad = ['1560066984-138dadb4c035']; p.pool = p.pool.filter(x => !bad.includes(x[0])); p.gallery = p.gallery.filter(id => !bad.includes(id)); })(PROFILES.find(p => p.k === 'barber'));
+(x => { if (x) x.pool.push(['px:7447133', 'barber cut fade haircut clippers skin'], ['px:9992817', 'barber cut haircut mens'], ['px:36043163', 'clippers fade skin haircut barber']); })(LIB.photos.barber);
+// general clinics: clean clinic interiors, reception and consultations (dental keeps its own set)
+registerPhotos('medical', { heroes: ['px:7016405', 'px:8459996', 'px:31844508', 'px:7108284', 'px:6749750'],
+  pool: [['px:7016405', 'clinic room interior exam'], ['px:16571731', 'exam room clinic interior'], ['px:6285383', 'consultation doctor gp appointments'], ['px:6749750', 'doctor patient consultation checkup'],
+    ['px:8459996', 'waiting room clinic interior'], ['px:7108284', 'reception clinic interior'], ['px:7108329', 'reception registration clinic patients'], ['px:31844508', 'reception clinic interior']] });
 /* =====================================================================
    HERO VARIANTS. Each: fits(ctx) -> allowed for this business?
    needs(M) -> extra photo slots; css(M) -> its own CSS; html(M) -> markup.
@@ -3050,7 +3514,7 @@ registerVariant('reviews', 'wall', {
   css: M => `.site .rwall{columns:3 300px;column-gap:1.1rem}
 .site .rw{break-inside:avoid;margin:0 0 1.1rem;background:var(--bg);border:1px solid var(--line);border-radius:var(--radius);padding:1.6rem;display:flex;flex-direction:column;gap:.9rem;transition:transform .5s var(--ease),box-shadow .5s}
 .site .rw p{font:400 1.12rem/1.5 ${M.S.em === 'mark' ? 'var(--sans)' : (M.S.italic || 'var(--display)')}}
-.site .rw .stars{color:#f5b301;letter-spacing:.1em}
+.site .rw .stars{color:var(--star,#f5b301);letter-spacing:.1em}
 .site .rw footer{display:flex;align-items:center;gap:.6rem;font-weight:700;font-size:14px}
 .site .rw cite{font-style:normal}
 .site .rw .av{width:34px;height:34px;border-radius:50%;display:grid;place-items:center;background:var(--soft);color:var(--accent-text);font-weight:800}
@@ -3204,12 +3668,12 @@ registerVariant('hero', 'power', {
 <div class="hero-copy">${p.eyebrow}${p.h1}${p.lead}${p.actions}${p.proof}${chips ? `<div class="pw-chips">${chips}</div>` : ''}</div>
 <figure class="pw-photo">${p.heroImg('', 900, 1100)}</figure>
 </div></div></div></section>`; },
-  css: () => `.site .hero-power{padding:1rem 0 1.2rem;background:var(--bg)}
-.site .pw-shell{border-radius:28px;overflow:hidden;color:#fff;background:linear-gradient(105deg,#141433 0%,#241e62 48%,#c2410c 100%);padding:2.6rem 2.2rem}
+  css: M => `.site .hero-power{padding:1rem 0 1.2rem;background:var(--bg)}
+.site .pw-shell{border-radius:28px;overflow:hidden;color:#fff;background:${userTone(M) ? `linear-gradient(105deg,var(--deep) 0%,${mixC(/^#/.test(M.P.deep) ? M.P.deep : '#111111', /^#/.test(M.P.brand) ? M.P.brand : '#333333', .5)} 52%,${/^#/.test(M.P.brand) ? mixC(M.P.brand, '#000000', .15) : 'var(--brand)'} 100%)` : 'linear-gradient(105deg,#141433 0%,#241e62 48%,#c2410c 100%)'};padding:2.6rem 2.2rem}
 .site .pw-grid{display:grid;grid-template-columns:1.15fr .85fr;gap:1.6rem;align-items:center}
 .site .hero-power h1,.site .hero-power .lead,.site .hero-power .eyebrow,.site .hero-power .proof{color:#fff}
-.site .hero-power h1 em{color:#ffe1c4}
-.site .hero-power .eyebrow{color:#ffd7b0}
+.site .hero-power h1 em{color:${userTone(M) ? (/^#/.test(M.P.accent) ? mixC(M.P.accent, '#ffffff', .55) : '#fff') : '#ffe1c4'}}
+.site .hero-power .eyebrow{color:${userTone(M) ? (/^#/.test(M.P.accent) ? mixC(M.P.accent, '#ffffff', .65) : '#fff') : '#ffd7b0'}}
 .site .hero-power .proof{color:rgba(255,255,255,.86)}
 .site .hero-power .btn-ghost{color:#fff;border-color:rgba(255,255,255,.45)}
 .site .pw-photo{margin:0;border-radius:20px;overflow:hidden;min-height:280px;background:rgba(0,0,0,.2)}
@@ -3242,7 +3706,7 @@ registerVariant('hero', 'airy', {
     const side = (M.ctaKey === 'quote' || M.primary.kind === 'form') && M.services.length ? quoteCard(M) : '';
     return `<section class="hero hero-airy" ${p.lbl}><div class="wrap ay-grid"><div class="hero-copy">${p.eyebrow}${p.h1}${p.lead}${p.actions}${pills ? `<div class="ay-pills">${pills}</div>` : ''}${p.proof}</div>
 <figure class="ay-photo">${p.heroImg('', 900, 1100)}</figure>${side}</div></section>`; },
-  css: () => `.site .hero-airy{padding:2.8rem 0 3rem;background:linear-gradient(160deg,#e7f2ff 0%,#f7fbff 42%,#fff6d8 100%)}
+  css: M => `.site .hero-airy{padding:2.8rem 0 3rem;background:${userTone(M) ? 'linear-gradient(160deg,var(--soft) 0%,var(--bg) 46%,var(--surface) 100%)' : 'linear-gradient(160deg,#e7f2ff 0%,#f7fbff 42%,#fff6d8 100%)'}}
 .site .ay-grid{display:grid;grid-template-columns:1.1fr .9fr;gap:1.4rem 1.6rem;align-items:center}
 .site .ay-grid .qcard{grid-column:2;grid-row:2}
 .site .ay-photo{margin:0;border-radius:28px;overflow:hidden;background:var(--soft);aspect-ratio:4/5}
@@ -3527,7 +3991,7 @@ registerVariant('reviews', 'bento', {
 .site .rb p{font:400 1.08rem/1.5 ${M.S.em === 'italic' ? (M.S.italic || 'var(--display)') : 'var(--sans)'}}
 .site .rb0{background:var(--deep);color:#fff;border-color:transparent;grid-row:span 2;justify-content:flex-end}.site .rb0 p{font-size:1.35rem}
 .site .rb1{background:var(--brand);color:${lumC(M.P.brand) > .55 ? '#141414' : '#fff'};border-color:transparent}
-.site .rb .stars{color:#f5b301;letter-spacing:.1em}
+.site .rb .stars{color:var(--star,#f5b301);letter-spacing:.1em}
 .site .rb footer{display:flex;align-items:center;gap:.6rem;font-weight:700;font-size:14px;margin-top:auto}.site .rb cite{font-style:normal}
 .site .rb .av{width:34px;height:34px;border-radius:50%;display:grid;place-items:center;background:var(--soft);color:var(--accent-text);font-weight:800}
 .site .rb-ph{padding:0;overflow:hidden;min-height:320px;grid-row:span 2;justify-content:flex-end;color:#fff;isolation:isolate}

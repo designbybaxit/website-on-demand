@@ -4,7 +4,51 @@
    admin rebuild at publish time produces exactly what the client approved.
    ===================================================================== */
 const SECTION_TYPES = ['services', 'menu', 'why', 'stats', 'about', 'gallery', 'reviews', 'process', 'faq', 'cta', 'book', 'footer', 'infobar', 'beforeafter', 'insurance'];
+/* Round 1 item 11: designs 1, 2 and 3 in the preview ("Show me another design") must differ in LAYOUT,
+   not just colour: a different hero structure from the previous two designs, a different section order
+   where the industry has more than one, and re-rolled section variants when too few changed. */
+const HERO_GENERIC = ['split', 'editorial', 'fullbleed', 'panel', 'mosaic', 'framed', 'arch'];
 function pickDesign(ctx) {
+  const base = pickDesign0(ctx), ix = +(ctx.opts && ctx.opts.design) || 0;
+  if (!ix || (ctx.opts && ctx.opts.style) || ctx.noSpread) return base;
+  const prev = [];
+  for (let j = Math.max(0, ix - 2); j < ix; j++) prev.push(pickDesign({ ...ctx, opts: { ...ctx.opts, design: j }, noSpread: j === 0 }));
+  const ind = industryFor(ctx.prof, ctx.key);
+  const fitsH = h => LIB.sections.hero[h] && LIB.sections.hero[h].fits(ctx);
+  const used = new Set(prev.map(p => p.hero));
+  if (used.has(base.hero)) {
+    const own = ind.hero.filter(h => fitsH(h) && !used.has(h));
+    const gen = HERO_GENERIC.filter(h => fitsH(h) && !used.has(h));
+    const pool = own.length ? own : gen;
+    if (pool.length) base.hero = seedPick(pool, base.seed, 'hero-spread'); base.variants.hero = base.hero;
+  }
+  const last = prev[prev.length - 1];
+  if (ind.orders.length > 1 && base.order.join() === last.order.join()) { base.orderIx = (last.orderIx + 1) % ind.orders.length; base.order = ind.orders[base.orderIx].slice(); }
+  const seen = o => prev.some(p => p.order.join() === o.join());
+  if (ind.orders.length === 1 || seen(base.order)) {
+    // one recipe only: rearrange the middle sections so the page reads in a different order
+    const fixed = new Set(['hero', 'infobar', 'ribbon', 'book', 'faq', 'cta']);
+    const mid = base.order.map((k, i) => [k, i]).filter(([k]) => !fixed.has(k));
+    if (mid.length >= 3) {
+      const ks = mid.map(m => m[0]);
+      const opts2 = [[ks[1], ks[0], ...ks.slice(2)], [...ks.slice(1, 3), ks[0], ...ks.slice(3)], [ks[0], ks[2], ks[1], ...ks.slice(3)]];
+      const start = ix % 2 ? 0 : 1;
+      for (let n = 0; n < 3; n++) {
+        const re = opts2[(start + n) % 3], o = base.order.slice();
+        mid.forEach(([, i], m) => { o[i] = re[m]; });
+        if (!seen(o)) { base.order = o; break; }
+      }
+    }
+  }
+  const changed = () => SECTION_TYPES.filter(t => base.order.includes(t) && base.variants[t] !== last.variants[t]).length;
+  for (let r = 0; r < 4 && changed() < 3; r++) SECTION_TYPES.forEach(t => {
+    if (!base.order.includes(t) || base.variants[t] !== last.variants[t]) return;
+    const all = Object.values(LIB.sections[t] || {}).filter(v => v.fits(ctx) && (!ind.variants || !ind.variants[t] || ind.variants[t].includes(v.id))).map(v => v.id).filter(id => id !== last.variants[t]);
+    if (all.length) base.variants[t] = seedPick(all, base.seed, 'spread-' + t + r);
+  });
+  return base;
+}
+function pickDesign0(ctx) {
   const { d, prof, key, opts } = ctx;
   const ind = industryFor(prof, key);
   const seed = designSeed(d, ind.id, opts);
@@ -26,7 +70,15 @@ function pickDesign(ctx) {
    No photo appears twice on one page; optional slots are simply left out when the pool runs dry. */
 const STOP = new Set(['and', 'the', 'for', 'with', 'your', 'our', 'from', 'all', 'any', 'new', 'full', 'per', 'hour', 'one', 'two', 'day', 'free', 'quote', 'service', 'services', 'package', 'basic', 'standard', 'premium']);
 const stemW = w => w.slice(0, 5);
-function photoPool(prof) {
+function photoPool(prof, blob) {
+  const sub = typeof subtypeFor === 'function' ? subtypeFor(prof, blob || '') : null;
+  if (sub) {
+    // the owner's cuisine / sub-trade set, plus the trade's room / service shots (never another cuisine's dishes)
+    const base = LIB.photos[prof.k] || { heroes: [], pool: [] };
+    const tags = new Map(); sub.pool.forEach(x => tags.set(x[0], x[1]));
+    base.pool.forEach(x => { if (SUB_NEUTRAL.test(x[1]) && !tags.has(x[0])) tags.set(x[0], x[1]); });
+    return { ids: [...tags.keys()], tags, only: new Set(), heroes: sub.heroes.slice(), extra: base, sub: sub.k };
+  }
   const extra = LIB.photos[prof.k] || { heroes: [], pool: [] };
   const tags = new Map();
   const add = (id, t) => { if (!id) return; tags.set(id, ((tags.get(id) || '') + ' ' + (t || '')).trim()); };
@@ -36,9 +88,11 @@ function photoPool(prof) {
   [prof.hero, prof.split, prof.about, ...prof.gallery, prof.contact].forEach(id => add(id, ''));
   return { ids: [...tags.keys()], tags, only, heroes: [...new Set([...(extra.heroes || []), prof.hero])], extra };
 }
-function allocPhotos(prof, up, services, name, need, seed, biasText) {
-  const P = photoPool(prof), used = new Set(), label = prof.label.replace(/ &.*$/, '');
+function allocPhotos(prof, up, services, name, need, seed, biasText, rot) {
   const blob = `${biasText || ''} ${name || ''} ${services.map(s => (s.name || '') + ' ' + (s.desc || '')).join(' ')}`;
+  const P = photoPool(prof, blob), used = new Set(), label = prof.label.replace(/ &.*$/, '');
+  // menus (food, salons, barbers): an item gets a photo only when its name matches a photo's keywords
+  const strict = prof.fam === 'food' || prof.fam === 'beauty';
   const take = id => { if (!id || used.has(id)) return null; used.add(id); return id; };
   const free = () => P.ids.filter(id => !used.has(id) && !P.only.has(id));
   const freeAll = () => P.ids.filter(id => !used.has(id));
@@ -57,7 +111,16 @@ function allocPhotos(prof, up, services, name, need, seed, biasText) {
       if (ranked.length) heroList = [...new Set(ranked.concat(heroList))];
     }
   }
-  const heroStock = upl.length ? null : take(seedShuffle(heroList, seed, 'heroPhoto').find(id => !used.has(id)));
+  // Hero rotates through the trade's hero list by design number (order fixed per business), so
+  // "Show me another design" never repeats the previous design's hero photo.
+  let heroStock = null;
+  if (!upl.length) {
+    const hl = heroList.filter(id => !P.only.has(id) && !used.has(id));
+    if (rot && hl.length) {
+      const order = prof.k === 'cleaning' ? hl : seedShuffle(hl, rot.biz, 'heroRot');
+      heroStock = take(order[rot.designIx % order.length]);
+    } else heroStock = take(seedShuffle(heroList, seed, 'heroPhoto').find(id => !used.has(id)));
+  }
   const hero = upl.length ? upl.shift() : heroStock;
   const heroExtra = [];
   for (let i = 0; i < (need.heroExtra || 0); i++) heroExtra.push(take(seedShuffle(P.heroes.concat(free()), seed, 'hx' + i).find(id => !used.has(id))));
@@ -72,7 +135,7 @@ function allocPhotos(prof, up, services, name, need, seed, biasText) {
       const hits = tagWords(id).reduce((a, t) => a + (words.some(w => stemW(w) === stemW(t) || (t.length > 3 && w.startsWith(t)) || (w.length > 3 && t.startsWith(w))) ? 1 : 0), 0);
       if (hits > bestScore) { best = id; bestScore = hits; }
     });
-    return take(best || cands.find(id => !P.only.has(id)));
+    return take(best || (strict ? null : cands.find(id => !P.only.has(id))));
   });
   // 3. the rest, in page-importance order; uploads fill the people/place slots first
   // a preferred "place" shot rotates with similar shots (interiors, team, reception) so businesses don't all share one photo
@@ -138,7 +201,14 @@ function extractFacts(d, services, hours) {
   const since = about.match(/\b(?:since|established(?: in)?|est\.?|founded(?: in)?|opened(?: in)?|trading since)\s*((?:19|20)\d\d)\b/i);
   const nowY = new Date().getFullYear();
   if (since && +since[1] <= nowY) add({ k: 'since', proof: `Established ${since[1]}`, chip: ['calendar', 'Established', since[1]], why: [`Here since ${since[1]}.`, sent(/since|established|founded|opened/i)], stat: { v: since[1], suf: '', l: 'the year we opened our doors', text: true } });
-  else if (yr && +yr[1] > 0) add({ k: 'years', proof: `${yr[1]}+ years' experience`, chip: ['star', `${yr[1]}+ years`, 'experience'], why: [`${yr[1]}+ years of experience.`, sent(/years?/i)], stat: { v: yr[1], suf: '+', l: 'years of experience' } });
+  else if (yr && +yr[1] > 0) {
+    // Round 1 item 8: exactly as typed: "12 years" stays "12 years" (a "+" only when the owner typed one)
+    const plus = /^\d{1,2}\+/.test(yr[0]) ? '+' : '', kind = (yr[2] || '').toLowerCase(), of = /\bof\s/i.test(yr[0]) && kind ? 'of ' : '';
+    const n = `${yr[1]}${plus} year${+yr[1] === 1 ? '' : 's'}`, tail = kind ? ` ${of}${kind}` : '';
+    add({ k: 'years', proof: n + tail, chip: ['star', n, kind ? of + kind : ''], why: [`${n}${tail}.`, sent(/years?/i)], stat: { v: yr[1], suf: plus, l: `year${+yr[1] === 1 ? '' : 's'}${tail}` } });
+  }
+  const rt = about.match(/\b(?:rated|rating(?: of)?|average(?: of)?)\s+([1-5]\.\d|[1-5])(?:\s*(?:\/\s*5|out of (?:5|five)|stars?|★))*(?:\s+(?:on|from|across)\s+(Google|Trustpilot|Tripadvisor|TripAdvisor|Yelp|Facebook|Checkatrade|Treatwell|Fresha|Booksy|Rated People|Which\?|Airbnb|Feefo|Doctify|Zocdoc))?/i);
+  if (rt) add({ k: 'rating', proof: `${rt[1]} ★${rt[2] ? ' on ' + rt[2] : ' rating'}`, chip: ['star', `${rt[1]} ★`, rt[2] ? 'on ' + rt[2] : 'rating'], stat: { v: rt[1], suf: ' ★', l: rt[2] ? 'on ' + rt[2] : 'average rating', text: true } });
   // only when the business says it about ITSELF ("X is a family-run practice", "we're independent"), not "for independent businesses"
   const fam = about.match(/\b(?:is|are|we're|we are|we've been|has been)\s+(?:an?\s+)?(?:small[, ]+|proudly\s+|friendly[, ]+)*(family[- ]run|family[- ]owned|independent(?:ly owned)?|locally owned)\b/i);
   if (fam) { const f = fam[1].toLowerCase().replace(/ /g, '-').replace('independently-owned', 'independently owned'); const F1 = f[0].toUpperCase() + f.slice(1);
@@ -236,10 +306,11 @@ function insuranceFacts(d) {
   const nameOk = s => s && s.length <= 32 && /^[A-Z0-9]/.test(s) && s.split(/\s+/).length <= 4 && !generic.test(s) && !/\d+\s*(?:months?|years?|%)|£|\$|€/.test(s);
   const listOf = s => s.split(/\s*(?:,|;|\/|\band\b|&)\s*/).map(x => x.trim().replace(/[.:!]$/, '')).filter(Boolean);
   let names = [];
-  [...field.split(/\n/), ...splitSentences(about)].forEach(line => {
+  // a bare list of names only counts in the insurance field itself, never in the about text ("Family run since 2012." is not an insurer)
+  [...field.split(/\n/).map(l => [l, true]), ...splitSentences(about).map(l => [l, false])].forEach(([line, isField]) => {
     const m = line.match(/\b(?:accept(?:s|ed|ing)?|work with|registered with|providers?|insurers?|insurance)\b(?:\s*(?:plans?|from|including|like|such as|:))*\s*(.+)$/i);
     if (m) names.push(...listOf(m[1]).filter(nameOk));
-    else if (line === line.replace(/\b(?:finance|interest|payment|monthly|spread|membership|plan|bill|nhs|private|patients?|cover|welcome)\b/ig, '') && listOf(line).every(nameOk)) names.push(...listOf(line));
+    else if (isField && line === line.replace(/\b(?:finance|interest|payment|monthly|spread|membership|plan|bill|nhs|private|patients?|cover|welcome)\b/ig, '') && listOf(line).every(nameOk)) names.push(...listOf(line));
   });
   names = [...new Set(names)].slice(0, 12);
   if (names.length && !F.some(f => f.k === 'direct')) F.push({ k: 'plans', icon: 'shield', t: 'Insurance welcome', b: `We accept ${names.length > 3 ? names.slice(0, 3).join(', ') + ' and more' : listJoin(names)}.` });

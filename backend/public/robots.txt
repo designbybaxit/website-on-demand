@@ -1,4 +1,7 @@
 User-agent: *
-Disallow: /p/
+Allow: /
 Disallow: /admin
-Disallow: /api/
+Disallow: /p/
+Disallow: /s/
+
+Sitemap: https://webimade.com/sitemap.xml

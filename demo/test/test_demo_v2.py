@@ -14,6 +14,18 @@ def check(cond, msg):
     print(('  PASS ' if cond else '  FAIL ') + msg)
     if not cond: fails.append(msg)
 
+
+async def form_goto(pg, step):
+    await pg.locator(f'#formSteps li[data-fs="{step}"]').click()
+
+async def form_build(pg):
+    for _ in range(6):
+        if await pg.is_visible('#buildBtn'):
+            await pg.click('#buildBtn')
+            return
+        await pg.click('#formNext')
+    raise RuntimeError('build button never appeared')
+
 def serve():
     h = functools.partial(http.server.SimpleHTTPRequestHandler, directory=ROOT)
     http.server.ThreadingHTTPServer.allow_reuse_address = True
@@ -31,17 +43,17 @@ async def flow(b, key, mobile, upload=False):
     pg.on('pageerror', lambda e: errs.append(str(e)))
     await pg.goto(f'http://127.0.0.1:{PORT}/demo.html')
     # validation: WhatsApp required when it is the main action
-    await pg.select_option('#exPick', key); await pg.click('#fillExample')
+    await pg.click(f'#exChips [data-ex={key}]')
     await pg.check('input[name=mainAction][value=whatsapp]', force=True); await pg.fill('#f-wa', '')
-    await pg.click('#buildBtn')
+    await form_build(pg)
     check(await pg.is_visible('[data-f=whatsapp] .err-msg'), 'WhatsApp required when main action is WhatsApp')
-    await pg.click('#fillExample')
+    await pg.click('#exChips .ex-chip')
     if upload:
         await pg.set_input_files('#photoFile', [os.path.join(HERE, 'photo1.jpg'), os.path.join(HERE, 'photo2.jpg')])
         await pg.wait_for_function("document.querySelectorAll('#photoList img').length === 2")
-    await pg.click('#buildBtn')
+    await form_build(pg)
     await pg.wait_for_selector('#screen-preview.on', timeout=120000)
-    log = await pg.inner_text('#bot3')
+    log = await pg.text_content('#buildLog')
     check('Fonts embedded' in log and 'Fonts embedded: 0' not in log, 'web fonts embedded in preview picture')
     check('photos embedded' in log, 'photos embedded in preview picture')
     pv = await pg.evaluate('({mode:previews.mode, dw:previews.desktop.w, mw:previews.mobile.w, d:previews.desktop.url.slice(0,22), mh:previews.mobile.h, ms:previews.mobile.scale})')
@@ -88,7 +100,7 @@ async def fallback(b):
     print('\n== locked-frame fallback ==')
     pg = await b.new_page(viewport={'width': 1400, 'height': 900})
     await pg.goto(f'http://127.0.0.1:{PORT}/demo.html?preview=iframe')
-    await pg.select_option('#exPick', 'home'); await pg.click('#fillExample'); await pg.click('#buildBtn')
+    await pg.click('#exChips [data-ex=home]'); await form_build(pg)
     await pg.wait_for_selector('#screen-preview.on', timeout=120000); await pg.wait_for_timeout(2500)
     check(await pg.evaluate("previews.mode") == 'frame', 'fallback uses the locked frame')
     check(await pg.evaluate("document.querySelector('#lockedFrame iframe').getAttribute('sandbox')") == '', 'locked frame is script-less')

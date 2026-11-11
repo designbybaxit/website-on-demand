@@ -15,7 +15,7 @@ function nextDays(n, skipSunday) {
 const dayChips = (n, skip) => nextDays(n, skip).map((x, i) => `<button type="button" class="chipbtn${i ? '' : ' is-on'}" aria-pressed="${i ? 'false' : 'true'}"><small>${x.toLocaleDateString('en-GB', { weekday: 'short' })}</small>${x.getDate()}</button>`).join('');
 const slotChips = (arr, on = 1) => arr.map((t, i) => `<button type="button" class="chipbtn${i === on ? ' is-on' : ''}" aria-pressed="${i === on}">${t}</button>`).join('');
 const legalLine = () => `<p class="fine">By sending this you agree to our <a href="#terms">Terms</a> and <a href="#privacy">Privacy Policy</a>. Preview: nothing is sent until your site goes live.</p>`;
-const honey = () => `<div class="hp" aria-hidden="true"><label>Company website<input type="text" name="company_url" tabindex="-1" autocomplete="off"></label></div>`;
+const honey = () => `<div class="hp" aria-hidden="true" style="position:absolute;left:-9999px;width:1px;height:1px;overflow:hidden"><label>Leave this field empty<input type="text" name="company_url" tabindex="-1" autocomplete="off"></label></div>`;
 const svcOptions = M => M.services.map(s => `<option>${hh(svcName(s.name))}</option>`).join('');
 
 function topbarHTML(M) {
@@ -102,14 +102,20 @@ function processHTML(M) {
 }
 function menuHTML(M) {
   const groups = groupServices(M.services), salon = M.key === 'salon' && M.ctaKey === 'book';
-  let gi = 0; const gImg = groups.map(g => { const idx = M.services.findIndex(s => svcName(s.name) === g.items[0].name); return M.ph.services[idx >= 0 ? idx : gi++] || ''; });
+  // food / salon / barber menus: each item shows its own keyword-matched photo (or none); other menus keep one photo per group
+  const perItem = M.fam === 'food' || M.fam === 'beauty';
+  const itemImg = s => { const idx = M.services.findIndex(x => svcName(x.name) === s.name); return idx >= 0 ? M.ph.services[idx] || '' : ''; };
+  let gi = 0; const gImg = perItem ? groups.map(() => '') : groups.map(g => { const idx = M.services.findIndex(s => svcName(s.name) === g.items[0].name); return M.ph.services[idx >= 0 ? idx : gi++] || ''; });
   const tabs = groups.length > 1 ? `<div class="tabs" role="tablist" aria-label="Menu sections">${groups.map((g, i) => `<button class="tab" type="button" role="tab" id="t-${i}" aria-controls="m-${i}" aria-selected="${i ? 'false' : 'true'}"${i ? ' tabindex="-1"' : ''}>${hh(g.name)}</button>`).join('')}</div>` : '';
   const panels = groups.map((g, i) => `<ul class="menu-list" id="m-${i}" role="tabpanel"${groups.length > 1 ? ` aria-labelledby="t-${i}"` : ''}${i ? ' hidden' : ''}>${gImg[i] ? `<li class="menu-img" aria-hidden="true"><img src="${gImg[i]}" alt="" loading="lazy" width="640" height="420"></li>` : ''}${g.items.map((s, j) => {
     const dur = svcDuration(s);
     const pr = `${dur ? `<span class="dur">${hh(dur)}</span>` : ''}${s.priceT ? `<span class="pr">${hh(s.priceT)}</span>` : ''}`;
-    if (!salon) return `<li class="mi reveal"><h4>${hh(s.name)}</h4>${pr}${s.desc ? `<p>${hh(s.desc)}</p>` : ''}</li>`;
+    const im = perItem ? itemImg(s) : '';
+    const imgT = im ? `<img class="mi-img" src="${im}" alt="${hh(s.name)}" loading="lazy" width="640" height="420">` : '';
+    const wrap = body => im ? `${imgT}<div class="mi-b">${body}</div>` : body;
+    if (!salon) return `<li class="mi${im ? ' has-img' : ''} reveal">${wrap(`<h4>${hh(s.name)}</h4>${pr}${s.desc ? `<p>${hh(s.desc)}</p>` : ''}`)}</li>`;
     const on = i === 0 && j === 0;
-    return `<li class="mi svc reveal"><h4>${hh(s.name)}</h4>${pr}${s.desc ? `<p>${hh(s.desc)}</p>` : '<p></p>'}<button type="button" class="add" data-name="${hh(s.name)}" data-price="${priceNum(s.price)}" aria-pressed="${on}" aria-label="Add ${hh(s.name)} to booking">+</button></li>`;
+    return `<li class="mi svc${im ? ' has-img' : ''} reveal">${wrap(`<h4>${hh(s.name)}</h4>${pr}${s.desc ? `<p>${hh(s.desc)}</p>` : '<p></p>'}`)}<button type="button" class="add" data-name="${hh(s.name)}" data-price="${priceNum(s.price)}" aria-pressed="${on}" aria-label="Add ${hh(s.name)} to booking">+</button></li>`;
   }).join('')}</ul>`).join('');
   const first = groups[0].items[0];
   const basket = salon ? `<aside class="basket reveal" aria-live="polite" data-cur="${hh(M.cur)}"><p class="eyebrow">${hh(M.C.eyebrow.book ? 'Your appointment' : '')}</p><h3>Your booking</h3><ul data-basket><li><span>${hh(first.name)}</span><span>${hh(M.cur + priceNum(first.price))}</span></li></ul>

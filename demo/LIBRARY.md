@@ -139,30 +139,6 @@ Photos: a pool entry may carry `{only: true}` (an implant model, a toothache): i
 
 Copy variants (`copyX()` in `50-copy.js`): each industry has several headline lists, lines with `{place}`, and lines gated on facts (nervous patients, emergencies, families, Gas Safe, 24/7, …), plus lead openers and section-title packs. They are picked with the design seed, so 20 dental businesses share a headline in under 12% of pairs (test). No line states a fact the client didn't give.
 
-## Industry splits (salon, trades, cleaning)
-
-Dental recipes are unchanged. Salon, barber and spa no longer share one recipe. Plumbing and electrical no longer share one recipe with roofers and builders. Home/office cleaning and exterior pressure washing are separate. The client never sees this list; `detectProfile()` reads the business name, the typed trade and the services.
-
-| Recipe | Profiles | What changes |
-|---|---|---|
-| `salon` | salon | Editorial / blush / olive kits, split two-photo hero, duration shown only when typed |
-| `barber` | barber | Dark gold, ink and amber kits, craftsmanship hero, price board |
-| `spa` | spa | Stone, mist and linen kits, calm heroes |
-| `plumbing` | plumbing | Friendly blue kits, estimate card in the hero, real phone number |
-| `electric` | electric | Indigo, signal, night and paper kits, gradient hero, the client's own service names as chips |
-| `trades` | roofing, build | The earlier trades kits, not the electrician or plumber sets |
-| `cleaning` | cleaning | Airy kits. Office-only wording prefers office photos; a home-only cleaner does not |
-| `pressure` | pressure | Industrial kits and exterior photos. A passing "clean" does not steal this |
-| `local` | local | Unknown or empty custom trades |
-
-A coarse dropdown (Home services, Hair salon, …) still wins until the name or services clearly name a different trade. One stray word in the about text is not enough, so a custom description is not silently reclassified.
-
-Restaurant recipes are the ones already in the builder. The restaurant reference note is empty, so this pass does not claim a new restaurant set.
-
-**Photos.** New Pexels ids were fetched and looked at on 6 Nov 2026. Shots with a readable plate, car badge, sale sign, phone number or logo were left out. Pressure-washing people-at-work shots without branding are few: two are in the hero pool, and house exteriors fill the rest. They are example stock, not the client's finished jobs. If a trade has no curated pool, the page uses the neutral local set (meetings, a shop doorway, notes). It does not borrow dental or plumbing photos.
-
-**Limits.** There is no florist, drone or other specialist pool beyond the profiles in `b1b-industries.js`. Those businesses get a complete page from their own words, prices and the neutral photos. Durations appear only when the client typed minutes or hours. Licences, insurance, eco claims and 24-hour cover appear only when they typed them.
-
 ## Tests
 
 - `demo/test/test_demo.py`, section **template library**: determinism; 5 dental and 5 plumber names that differ pairwise in ≥3 design dimensions; no repeated photo on any page; reshuffle changes the design; no sample tags in live mode; ≥3 kits per priority industry; variant registry counts.

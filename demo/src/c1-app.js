@@ -2,7 +2,7 @@
    APP (client side of the demo): intake form -> 3 bots -> preview -> go live
    BRAND – rename the agency / change prices here; everything picks it up
    ===================================================================== */
-const BRAND = { name: 'SiteSpark', domain: 'sitespark.site', setup: 50, monthly: 29, domainConnect: 10, currency: '$' };
+const BRAND = { name: 'WebiMade', domain: 'webimade.com', setup: 50, monthly: 29, domainConnect: 10, currency: '$' };
 const STORE_KEY = 'sitespark_demo_v2';
 const $ = (s, r = document) => r.querySelector(s);
 const $$ = (s, r = document) => Array.from(r.querySelectorAll(s));
@@ -15,11 +15,20 @@ const MAX_PHOTOS = 6;
 
 $$('[data-brand]').forEach(e => e.textContent = BRAND.name);
 $$('[data-brand-initial]').forEach(e => e.textContent = BRAND.name[0]);
-document.title = BRAND.name + ' – Your website, ready to preview';
+document.title = BRAND.name + ' | Get a website for your business';
+(function absolutizeShareMeta() {
+  // Canonical, OG and Twitter URLs always point at the public site, even on the preview Worker.
+  const site = 'https://webimade.com';
+  document.querySelectorAll('meta[property="og:image"], meta[name="twitter:image"]').forEach(m => {
+    const v = m.getAttribute('content');
+    if (v && v.startsWith('/')) m.setAttribute('content', site + v);
+  });
+})();
 
 const COLOURS = [['', 'Auto – match my industry'], ['#1d4ed8', 'Blue'], ['#0f766e', 'Teal'], ['#15803d', 'Green'], ['#b91c1c', 'Red'], ['#ea580c', 'Orange'], ['#c8a24a', 'Gold'], ['#6d28d9', 'Purple'], ['#be185d', 'Pink'], ['#111827', 'Black'], ['custom', 'Pick my own…']];
-const COLOUR_WORDS = { blue: '#1d4ed8', teal: '#0f766e', green: '#15803d', red: '#b91c1c', orange: '#ea580c', gold: '#c8a24a', yellow: '#eab308', purple: '#6d28d9', pink: '#be185d', navy: '#1e3a8a' };
+const COLOUR_WORDS = { blue: '#1d4ed8', teal: '#0f766e', green: '#15803d', red: '#b91c1c', orange: '#ea580c', gold: '#c8a24a', yellow: '#eab308', purple: '#6d28d9', pink: '#be185d', navy: '#1e3a8a', burgundy: '#7f1d2d', maroon: '#7f1d2d', emerald: '#047857', coral: '#f26b5b', olive: '#5b6b2a', brown: '#7c4a21', silver: '#9ca3af', champagne: '#d4b483' };
 const ACT_DEFAULT = { clinic: 'book', restaurant: 'reserve', home: 'quote', realestate: 'quote', salon: 'book', law: 'quote' };
+let actAuto = false;   // true while the main-action radio was picked by us, not the owner
 const industryLabel = d => d.industry === 'other' ? (d.industryOther || 'Other') : (INDUSTRIES.find(i => i[0] === d.industry) || [0, d.industry])[1];
 const styleLabel = k => (STYLES[k] && STYLES[k].label) || k;
 
@@ -73,18 +82,39 @@ async function apiSavePreview(opts) {
   current.shareUrl = r.url; current.shareExpires = r.expiresAt; current.savedVersion = current.version;
   return built.doc;
 }
+let shareSavePromise = null, shareSaveState = 'idle', shareSaveError = '';
+function startShareSave(opts) {
+  shareSaveState = 'saving'; shareSaveError = '';
+  const p = apiSavePreview(opts).then(doc => { shareSaveState = 'ready'; return doc; }).catch(err => {
+    shareSaveState = 'error'; shareSaveError = (err && err.message) || 'Please try again.'; current.shareUrl = null; throw err;
+  });
+  shareSavePromise = p; return p;
+}
+async function retryShareSave() {
+  if (!API || !current || shareSaveState === 'saving') return;
+  shareSaveState = 'saving'; renderShare(); setOpenPreviewState();
+  try { const doc = await startShareSave(cleanOpts(current.opts)); setPreviewDoc(doc); upsert(current); renderPreview(); }
+  catch (err) { console.warn(err); renderShare(); setOpenPreviewState(); }
+}
+function setOpenPreviewState() {
+  const open = $('#openPv'); if (!open) return;
+  if (API && current && current.shareUrl) { open.href = current.shareUrl; open.classList.remove('is-wait'); open.setAttribute('aria-disabled', 'false'); }
+  else if (API) { open.href = '#'; open.classList.toggle('is-wait', shareSaveState === 'saving'); open.setAttribute('aria-disabled', shareSaveState === 'saving' ? 'true' : 'false'); }
+  else if (previews) { open.href = previews.url; open.classList.remove('is-wait'); open.removeAttribute('aria-disabled'); }
+}
 
 /* =====================================================================
    PREVIEW BOT: the client gets the full, working website.
-   - "Open your website preview" opens it in a NEW TAB: window.open('') is
-     called synchronously inside the click (so iOS Safari and popup blockers
-     allow it) and the page is written straight into it. If the browser
-     refuses, the button is a real <a target="_blank"> to a Blob URL and the
-     browser follows that instead.
+   - Live / server mode: "Open your website preview" is an <a> to the hosted
+     /p/<id> link. If the save is still running, the button waits ("Getting
+     your link…") and then opens that real URL — never an about:blank tab.
+     If the save fails, a retry control is shown instead.
+   - Static demo: window.open('') is called synchronously inside the click
+     (so iOS Safari and popup blockers allow it) and the page is written
+     straight into it. If the browser refuses, the button is a real
+     <a target="_blank"> to a Blob URL and the browser follows that instead.
    - The same document runs inside the page in a sandboxed iframe with a
      desktop / mobile toggle.
-   Live version: the preview is a hosted, expiring link on our server
-   (e.g. https://preview.<domain>/<id>), so it works on any device and can be shared.
    ===================================================================== */
 let pvBlobUrl = null;
 function previewTitle() { return `${current.data.name}: website preview`; }
@@ -94,8 +124,13 @@ function setPreviewDoc(doc) {
   previews = { doc, url: pvBlobUrl, bytes: new Blob([doc]).size };
 }
 function openPreviewTab(e) {
-  if (!previews) return;
-  if (API && current && current.shareUrl) { current.previewOpens = (current.previewOpens || 0) + 1; return; }   // real hosted link: normal navigation
+  if (!previews) { if (e) e.preventDefault(); return; }
+  if (API) {
+    if (current && current.shareUrl) { current.previewOpens = (current.previewOpens || 0) + 1; upsert(current); return; }   // real hosted link: normal navigation
+    if (e) e.preventDefault();
+    openHostedWhenReady();
+    return;
+  }
   let w = null;
   try { w = window.open('', '_blank'); } catch (_) { w = null; }
   if (w && w.document) {
@@ -112,6 +147,25 @@ function openPreviewTab(e) {
   // window.open was blocked or failed: let the <a target="_blank" href="blob:..."> do its default navigation
   $('#pvOpened').innerHTML = `If no new tab appeared, <a href="${previews.url}" target="_blank" rel="noopener">tap here to open the preview</a>.`;
 }
+async function openHostedWhenReady() {
+  const status = $('#pvOpened');
+  if (status) status.textContent = 'Getting your link…';
+  const btn = $('#openPv'); if (btn) btn.classList.add('is-wait');
+  renderShare();
+  try {
+    if (shareSaveState === 'saving' && shareSavePromise) await shareSavePromise;
+    else if (!current.shareUrl) await startShareSave(cleanOpts(current.opts));
+  } catch (err) { console.warn(err); }
+  if (current && current.shareUrl) {
+    setOpenPreviewState(); renderShare();
+    let w = null; try { w = window.open(current.shareUrl, '_blank', 'noopener'); } catch (_) { w = null; }
+    if (!w) { if (status) status.innerHTML = `Your link is ready. <a href="${esc(current.shareUrl)}" target="_blank" rel="noopener">Tap here to open the preview</a>.`; }
+    else { current.previewOpens = (current.previewOpens || 0) + 1; upsert(current); if (status) status.textContent = 'Opened in a new tab. Switch tabs to see it.'; }
+  } else {
+    if (status) status.textContent = 'We could not create your shareable link. Try again.';
+    renderShare(); setOpenPreviewState();
+  }
+}
 /* ---------------- State & storage ---------------- */
 let editing = false, services = [], logoData = '', photos = [], baPairs = [], baDraft = {}, current = null, previews = null, device = 'desktop';
 function load() { try { return JSON.parse(localStorage.getItem(STORE_KEY)) || []; } catch { return []; } }
@@ -126,28 +180,100 @@ function save(list) {
 function upsert(sub) { const l = load(); const i = l.findIndex(x => x.id === sub.id); sub.updatedAt = new Date().toISOString(); if (i >= 0) l.splice(i, 1); l.unshift(sub); save(l); }
 
 /* ---------------- Intake form ---------------- */
-$('#industry').innerHTML += INDUSTRIES.map(i => `<option value="${i[0]}">${esc(i[1])}</option>`).join('');
+/* Industry: a typeable combobox. The hidden #industry / #industryOther keep the values the builder expects:
+   a category key ('clinic'…'law'), or 'other' + the trade as typed. */
+const IND_OPTS = [
+  ...INDUSTRIES.filter(i => i[0] !== 'other').map(i => ({ label: i[1], industry: i[0], other: '', cat: true })),
+  ...PROFILES.filter(p => p.k !== 'local').map(p => {
+    const nat = Object.keys(NATIVE_PROFILE).find(c => NATIVE_PROFILE[c] === p.k);
+    return { label: p.label, syn: p.syn || '', industry: nat || 'other', other: nat ? '' : p.label, cat: false };
+  })];
+function resolveIndustry(text) {
+  const t = String(text || '').trim(), low = t.toLowerCase();
+  if (!t) return { industry: '', other: '' };
+  const hit = IND_OPTS.find(o => o.label.toLowerCase() === low);
+  return hit ? { industry: hit.industry, other: hit.other } : { industry: 'other', other: t.slice(0, 40) };
+}
+function setIndustryValue(text) {
+  const r = resolveIndustry(text);
+  $('#industry').value = r.industry; $('#industryOther').value = r.other;
+  syncIndustry(); syncExtras();
+}
+const combo = (() => {
+  const inp = $('#industryInput'), list = $('#industryList');
+  let items = [], active = -1;
+  const mk = (q, s) => { const i = s.toLowerCase().indexOf(q.toLowerCase()); return !q || i < 0 ? esc(s) : esc(s.slice(0, i)) + '<mark>' + esc(s.slice(i, i + q.length)) + '</mark>' + esc(s.slice(i + q.length)); };
+  function open() {
+    const q = inp.value.trim(), ql = q.toLowerCase();
+    const starts = o => o.label.toLowerCase().split(/[^a-z]+/).some(w => w.startsWith(ql));
+    items = q ? IND_OPTS.filter(o => (o.label + ' ' + (o.syn || '')).toLowerCase().includes(ql)).sort((a, b) => (starts(b) - starts(a)) || (b.cat - a.cat)).slice(0, 8)
+      : IND_OPTS.filter(o => o.cat);
+    const exact = items.some(o => o.label.toLowerCase() === ql);
+    if (q && !exact) items.push({ label: q, typed: true });
+    active = -1;
+    list.innerHTML = items.map((o, i) => `<li role="option" id="indOpt${i}" data-i="${i}" aria-selected="false"${o.typed ? ' class="typed"' : ''}>${o.typed ? `<span>Use “<b>${esc(o.label)}</b>”</span>` : `<span>${mk(q, o.label)}</span>`}${o.cat ? '<small>Category</small>' : ''}</li>`).join('');
+    list.hidden = !items.length; inp.setAttribute('aria-expanded', String(!!items.length)); inp.removeAttribute('aria-activedescendant');
+    // keep the open list clear of the sticky Continue bar
+    if (items.length) requestAnimationFrame(() => {
+      const dock = inp.closest('form') && inp.closest('form').querySelector('.sticky-act'); if (!dock) return;
+      const over = list.getBoundingClientRect().bottom - dock.getBoundingClientRect().top + 12;
+      if (over > 0) window.scrollBy({ top: over, behavior: 'auto' });
+    });
+  }
+  function close() { list.hidden = true; inp.setAttribute('aria-expanded', 'false'); inp.removeAttribute('aria-activedescendant'); active = -1; }
+  function move(n) {
+    if (list.hidden) open(); if (!items.length) return;
+    active = (active + n + items.length) % items.length;
+    $$('li', list).forEach((li, i) => li.setAttribute('aria-selected', String(i === active)));
+    const li = $('#indOpt' + active); inp.setAttribute('aria-activedescendant', li.id); li.scrollIntoView({ block: 'nearest' });
+  }
+  function choose(i) { const o = items[i]; if (!o) return; inp.value = o.label; setIndustryValue(o.label); close(); }
+  inp.addEventListener('input', () => { setIndustryValue(inp.value); open(); });
+  inp.addEventListener('focus', open);
+  inp.addEventListener('click', () => { if (list.hidden) open(); });
+  inp.addEventListener('blur', () => setTimeout(close, 120));
+  inp.addEventListener('keydown', e => {
+    if (e.key === 'ArrowDown') { e.preventDefault(); move(1); }
+    else if (e.key === 'ArrowUp') { e.preventDefault(); move(-1); }
+    else if (e.key === 'Enter') { if (!list.hidden) { e.preventDefault(); if (active >= 0) choose(active); else close(); } }
+    else if (e.key === 'Escape') { if (!list.hidden) { e.preventDefault(); close(); } }
+    else if (e.key === 'Tab') close();
+  });
+  list.addEventListener('mousedown', e => e.preventDefault());   // keep focus in the input
+  list.addEventListener('click', e => { const li = e.target.closest('li[data-i]'); if (li) { choose(+li.dataset.i); inp.focus(); close(); } });
+  return { close };
+})();
+// show the stored values as text (fill example, edit my details, start over)
+function showIndustryText() {
+  const v = $('#industry').value, o = $('#industryOther').value;
+  const cat = INDUSTRIES.find(i => i[0] === v && v !== 'other');
+  $('#industryInput').value = v === 'other' ? o : cat ? cat[1] : '';
+}
 $('#f-country').innerHTML = Object.entries(COUNTRIES).map(([k, c]) => `<option value="${k}">${esc(c.label)} (${esc(c.cur.trim())})</option>`).join('');
 $('#colour').innerHTML = COLOURS.map(c => `<option value="${c[0]}">${c[1]}</option>`).join('');
 $('#chTheme').innerHTML += Object.keys(STYLES).map(k => `<option value="${k}">${esc(styleLabel(k))}</option>`).join('');
 $('#chColour').innerHTML += COLOURS.filter(c => c[0] && c[0] !== 'custom').map(c => `<option value="${c[0]}">${c[1]}</option>`).join('');
 const EX_LABEL = { salon: 'Hair salon', clinic: 'Dental clinic', restaurant: 'Restaurant', home: 'Plumber', realestate: 'Estate agent', law: 'Law firm', graphic: 'Graphic design studio', gym: 'Gym & personal training' };
-$('#exPick').innerHTML = Object.keys(EXAMPLES).map(k => `<option value="${k}">${esc(EX_LABEL[k] || k)}</option>`).join('');
+$('#exChips').innerHTML = Object.keys(EXAMPLES).map(k => `<button type="button" class="ex-chip" data-ex="${k}">${esc(EX_LABEL[k] || k)}</button>`).join('');
 
 function syncIndustry() {
   const f = $('#intake').elements, v = f.industry.value;
-  $('#industryOther').style.display = v === 'other' ? 'block' : 'none';
   const k = v ? styleFor({ industry: v, industryOther: f.industryOther.value }) : '';
   $('#styleHint').textContent = k ? 'Style: ' + styleLabel(k) : '';
-  if (v && !$('input[name=mainAction]:checked')) { const r = $(`input[name=mainAction][value=${ACT_DEFAULT[k] || 'quote'}]`); if (r) r.checked = true; syncAction(); }
+  // the default action follows the typed trade until the owner picks one themselves
+  if (v && (!$('input[name=mainAction]:checked') || actAuto)) {
+    let want = ACT_DEFAULT[k] || 'quote';
+    try { const p = detectProfile({ name: '', industry: v, industryOther: f.industryOther.value, about: '', services: [] }); if (PROF_ACT[p.k]) want = PROF_ACT[p.k]; } catch (e) { /* keep the style default */ }
+    const r = $(`input[name=mainAction][value=${want}]`); if (r) { r.checked = true; actAuto = true; } syncAction();
+  }
 }
 function syncAction() {
   const wa = ($('input[name=mainAction]:checked') || {}).value === 'whatsapp';
   $('#waOpt').innerHTML = wa ? '<span class="req">*</span>' : '(optional)';
 }
 const syncColour = () => { $('#colourCustom').style.display = $('#colour').value === 'custom' ? 'block' : 'none'; };
-$('#industry').onchange = syncIndustry; $('#industryOther').oninput = syncIndustry; $('#colour').onchange = syncColour;
-$$('input[name=mainAction]').forEach(r => r.onchange = syncAction);
+$('#colour').onchange = syncColour;
+$$('input[name=mainAction]').forEach(r => r.onchange = () => { actAuto = false; syncAction(); });
 
 function renderSvcs() {
   $('#svcList').innerHTML = services.map((s, i) => `<div class="svc" data-i="${i}">
@@ -220,9 +346,90 @@ function syncExtras() {
   $('#baField').style.display = !v || ['clinic', 'salon', 'home', 'other'].includes(v) ? '' : 'none';
   $('#insField').style.display = !v || ['clinic', 'salon', 'other'].includes(v) ? '' : 'none';
 }
-$('#industry').addEventListener('change', syncExtras);
 
 const TEXT_FIELDS = ['name', 'industryOther', 'city', 'areas', 'about', 'phone', 'whatsapp', 'email', 'address', 'hours', 'reviews', 'stats', 'insurance', 'facebook', 'instagram', 'other'];
+const FORM_STEPS = [
+  { id: 1, label: 'Your business', fields: ['name', 'industry', 'about'] },
+  { id: 2, label: 'Services', fields: ['services'] },
+  { id: 3, label: 'Contact', fields: ['phone', 'email', 'whatsapp'] },
+  { id: 4, label: 'Extras', fields: [] }
+];
+let formStep = 1, formMax = 1;
+function fieldErrors(d) {
+  return { name: !d.name, industry: !d.industry || (d.industry === 'other' && !d.industryOther), about: d.about.length < 30,
+    services: !d.services.length, phone: d.phone.replace(/\D/g, '').length < 6, email: !isEmail(d.email),
+    whatsapp: d.mainAction === 'whatsapp' ? d.whatsapp.replace(/\D/g, '').length < 6 : false };
+}
+function applyErrors(bad, keys) {
+  const allow = keys ? new Set(keys) : null;
+  $$('#intake .f[data-f]').forEach(el => {
+    const on = !allow || allow.has(el.dataset.f);
+    el.classList.toggle('invalid', !!(on && bad[el.dataset.f]));
+  });
+}
+function stepForField(f) {
+  const i = FORM_STEPS.findIndex(s => s.fields.includes(f));
+  return i >= 0 ? i + 1 : 4;
+}
+function showFormStep(n, opts) {
+  n = Math.max(1, Math.min(FORM_STEPS.length, n));
+  formStep = n;
+  formMax = Math.max(formMax, n);
+  $$('#intake .form-step').forEach(el => {
+    const on = +el.dataset.fs === n;
+    el.classList.remove('on');
+    if (on) { void el.offsetWidth; el.classList.add('on'); }
+  });
+  $$('#formSteps li').forEach(li => {
+    const i = +li.dataset.fs;
+    li.classList.toggle('on', i === n);
+    li.classList.toggle('done', i < n);
+    li.classList.toggle('reached', i <= formMax && i !== n);
+    const open = i <= formMax;
+    li.tabIndex = open ? 0 : -1;
+    li.setAttribute('aria-disabled', open ? 'false' : 'true');
+    if (i === n) li.setAttribute('aria-current', 'step'); else li.removeAttribute('aria-current');
+  });
+  $('#formProgressBar').style.width = ((n / FORM_STEPS.length) * 100) + '%';
+  const last = n === FORM_STEPS.length;
+  $('#formBack').hidden = n === 1;
+  $('#formNext').hidden = last;
+  $('#buildBtn').hidden = !last;
+  $('#formStepNote').textContent = last ? 'All optional. Skip if you like.' : ('Step ' + n + ' of ' + FORM_STEPS.length + ' · ' + FORM_STEPS[n - 1].label);
+  $('#screen-form').classList.toggle('form-deep', n > 1);
+  if (!opts || !opts.keepErr) $('#formErr').style.display = 'none';
+  const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  window.scrollTo({ top: 0, behavior: reduce ? 'auto' : 'smooth' });
+  if (!opts || !opts.noFocus) {
+    const root = $('#intake .form-step.on');
+    const invalid = root && root.querySelector('.invalid input, .invalid select, .invalid textarea');
+    const first = invalid || (root && root.querySelector('input:not([type=hidden]):not([type=file]):not([type=radio]), select, textarea'));
+    if (first) try { first.focus({ preventScroll: true }); } catch (_) {}
+  }
+}
+function goFormStep(n) {
+  n = +n;
+  if (!n || n === formStep) return;
+  if (n > formMax + 1) return;
+  if (n > formStep && !validateStep(formStep)) return;
+  if (n > formMax && n !== formStep + 1) return;
+  showFormStep(n);
+}
+function validateStep(step, d) {
+  d = d || readForm();
+  const keys = FORM_STEPS[step - 1].fields;
+  const bad = fieldErrors(d);
+  applyErrors(bad, keys);
+  const ok = keys.every(k => !bad[k]);
+  $('#formErr').style.display = ok ? 'none' : 'block';
+  if (!ok) {
+    const el = $('#intake .form-step.on .invalid');
+    if (el) el.scrollIntoView({ behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth', block: 'center' });
+    const inp = el && el.querySelector('input,select,textarea');
+    if (inp) try { inp.focus({ preventScroll: true }); } catch (_) {}
+  }
+  return ok;
+}
 function fillForm(d) {
   const f = $('#intake').elements;
   TEXT_FIELDS.forEach(k => f[k].value = d[k] || '');
@@ -233,10 +440,16 @@ function fillForm(d) {
   services = (d.services || []).map(s => ({ ...s })); if (!services.length) services = [{ name: '', desc: '', price: '' }]; renderSvcs();
   setLogo(d.logo || ''); photos = (d.photos || []).slice(0, MAX_PHOTOS); renderPhotos();
   baPairs = (d.ba || []).slice(0, MAX_BA).map(p => ({ ...p })); baDraft = {}; renderBA();
-  syncIndustry(); syncAction(); syncExtras();
+  actAuto = false; showIndustryText(); syncIndustry(); syncAction(); syncExtras();
   $$('#intake .invalid').forEach(el => el.classList.remove('invalid')); $('#formErr').style.display = 'none';
 }
-$('#fillExample').onclick = () => fillForm(EXAMPLES[$('#exPick').value]);
+$('#exChips').onclick = e => {
+  const b = e.target.closest('.ex-chip'); if (!b) return;
+  fillForm(EXAMPLES[b.dataset.ex]); formMax = FORM_STEPS.length; showFormStep(formStep, { noFocus: true });
+  $$('#exChips .ex-chip').forEach(c => { c.classList.toggle('on', c === b); c.setAttribute('aria-pressed', c === b); });
+  $('#exDone').textContent = `✓ Filled with the ${b.textContent} example. Check the fields below, or jump to any step.`;
+};
+showFormStep(1, { noFocus: true });
 
 function readForm() {
   const f = $('#intake').elements, g = k => f[k].value.trim();
@@ -249,15 +462,41 @@ function readForm() {
 }
 function baShown(sel) { return $(sel).style.display !== 'none'; }
 function validate(d) {
-  const bad = { name: !d.name, industry: !d.industry || (d.industry === 'other' && !d.industryOther), about: d.about.length < 30,
-    services: !d.services.length, phone: d.phone.replace(/\D/g, '').length < 6, email: !isEmail(d.email),
-    whatsapp: d.mainAction === 'whatsapp' ? d.whatsapp.replace(/\D/g, '').length < 6 : false };
-  $$('#intake .f[data-f]').forEach(el => el.classList.toggle('invalid', !!bad[el.dataset.f]));
+  const bad = fieldErrors(d);
+  applyErrors(bad);
   const ok = !Object.values(bad).some(Boolean);
   $('#formErr').style.display = ok ? 'none' : 'block';
-  if (!ok) $('#intake .invalid').scrollIntoView({ behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth', block: 'center' });
+  if (!ok) {
+    const first = Object.keys(bad).find(k => bad[k]);
+    const dest = stepForField(first);
+    if (dest !== formStep) showFormStep(dest, { noFocus: true, keepErr: true });
+    const el = $('#intake .invalid');
+    if (el) el.scrollIntoView({ behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth', block: 'center' });
+    const inp = el && el.querySelector('input,select,textarea');
+    if (inp) try { inp.focus({ preventScroll: true }); } catch (_) {}
+  }
   return ok;
 }
+$('#formNext').onclick = () => goFormStep(formStep + 1);
+$('#formBack').onclick = () => showFormStep(formStep - 1);
+$('#formProgress').addEventListener('click', e => {
+  const li = e.target.closest('li[data-fs]');
+  if (li) goFormStep(li.dataset.fs);
+});
+$('#formProgress').addEventListener('keydown', e => {
+  if (e.key !== 'Enter' && e.key !== ' ') return;
+  const li = e.target.closest('li[data-fs]');
+  if (!li) return;
+  e.preventDefault();
+  goFormStep(li.dataset.fs);
+});
+$('#intake').addEventListener('keydown', e => {
+  if (e.key !== 'Enter') return;
+  if (e.target.matches('textarea,button,[type=submit],[type=file]')) return;
+  e.preventDefault();
+  if (formStep < FORM_STEPS.length) $('#formNext').click();
+  else $('#buildBtn').click();
+});
 $('#intake').onsubmit = e => {
   e.preventDefault();
   const d = readForm();
@@ -271,82 +510,158 @@ $('#intake').onsubmit = e => {
   runPipeline(keep ? { summary: ['Updated details from the form'] } : null);
 };
 
-/* ---------------- Pipeline ---------------- */
-function botSet(n, state, status, lines) {
-  const b = $('#bot' + n); b.className = 'bot ' + state;
-  $('.st', b).innerHTML = (state === 'run' ? '<span class="spin"></span> ' : '') + esc(status);
-  if (lines) $('ul', b).innerHTML = lines.map(l => `<li>${esc(l)}</li>`).join('');
-  $('.ic', b).textContent = state === 'done' ? '✓' : n;
+/* ---------------- Pipeline: a friendly "building your website" animation over the real build ---------------- */
+// Beats add s1..s6 to #bx (CSS assembles the mock site), then .done, then the preview is revealed.
+// The details of each build still go to the console and to the hidden #buildLog (for the team and the tests).
+const buildLog = lines => { $('#buildLog').textContent = lines.join('\n'); console.info('[build]\n' + lines.join('\n')); };
+function buildAnim(d, change) {
+  const bx = $('#bx'), reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const name = String(d.name || '').trim() || 'Your business';
+  let kind = (d.industry === 'other' ? d.industryOther : industryLabel(d)) || '';
+  kind = kind.split(/[\/(,]/)[0].trim().toLowerCase();
+  const beats = change ? ['Reading your changes…', 'Updating the look…', 'Refreshing your headline…', 'Re-laying your page…', 'Checking your services…', 'Almost ready…']
+    : ['Reading your details…', kind ? `Picking a look for your ${kind}…` : `Picking a look for ${name}…`, 'Writing your headline…', 'Laying out your page…',
+      `Adding your ${d.services && d.services.length > 1 ? d.services.length + ' services' : 'services'}…`, 'Almost ready…'];
+  const waitMsgs = ['Adding the final touches…', 'Polishing the details…', 'Making it look good on phones…', 'Almost ready…'];
+  // ~8.5s in total (about 7s for changes): 6 slow beats + a short finish, so people can watch the site come together. The real site must be on screen for at least MIN_SHOW before we move on.
+  const per = reduce ? 200 : change ? 1000 : 1250, MIN_SHOW = reduce ? 700 : 5000, FINISH = reduce ? 250 : 900;
+  const steps = $$('#bxSteps li');
+  let alive = true, workDone = false, beat = -1, doc = null, loaded = false, revealedAt = 0;
+  // The real website, scaled into the browser window and the phone. Beats "scroll" it so people see it come together.
+  const frames = [
+    { box: $('#bx .bx-real'), fr: $('#bxFrame'), w: 1280, h: 2600, pan: [0, 0, 0, 560, 1180, 0] },
+    { box: $('#bx .bx-ph-real'), fr: $('#bxPhFrame'), w: 390, h: 2800, pan: [0, 0, 0, 760, 1560, 0] }];
+  frames.forEach(f => { f.reel = $('.bx-reel', f.box); f.fr.onload = null; f.fr.removeAttribute('srcdoc'); f.fr.style.cssText = `width:${f.w}px;height:${f.h}px`; f.reel.style.transform = ''; });
+  const place = () => frames.forEach(f => {
+    const k = (f.box.clientWidth || f.w * .4) / f.w, y = f.pan[Math.max(0, Math.min(beat, 5))] || 0;
+    f.reel.style.transform = `scale(${k}) translateY(${-y}px)`;
+  });
+  const reveal = () => {
+    if (revealedAt || !loaded || !alive) return;
+    place(); revealedAt = performance.now(); bx.classList.add('real');
+  };
+  const msg = t => { const m = $('#bxMsg'); m.textContent = t; m.style.animation = 'none'; void m.offsetWidth; m.style.animation = ''; };
+  const bar = p => { $('#bxBar').style.width = p + '%'; };
+  bx.className = 'bx'; $('#bxErr').hidden = true; $('#bxType').textContent = ''; bar(4);
+  $('#bxUrl').textContent = slug(name) + '.' + BRAND.domain.split('.').pop();
+  $('#pipeTitle').textContent = change ? 'Updating your website…' : 'Building your website…';
+  $('#pipeSub').textContent = change ? `Making your changes to ${name}.` : `Sit tight, we're putting ${name} online.`;
+  steps.forEach(li => li.className = '');
+  const type = async () => {   // the mock headline "writes itself" (only seen if the real site is not ready yet)
+    const el = $('#bxType');
+    if (reduce) { el.textContent = name; return; }
+    const step = Math.max(18, Math.min(60, 620 / name.length));
+    for (let i = 1; i <= name.length && alive; i++) { el.textContent = name.slice(0, i); await sleep(step); }
+  };
+  const beatsDone = (async () => {
+    await new Promise(r => requestAnimationFrame(() => r()));
+    for (let i = 0; i < beats.length && alive; i++) {
+      beat = i;
+      bx.classList.add('s' + (i + 1)); msg(beats[i]); bar(Math.round(8 + (i + 1) * 84 / beats.length));
+      steps.forEach((li, j) => li.className = j < i ? 'ok' : j === i ? 'on' : '');
+      if (i === 2) type();
+      if (i >= 1) { reveal(); if (revealedAt) place(); }
+      await sleep(per);
+    }
+  })();
+  // a slow build keeps the scene alive with gentle messages until the work is done
+  beatsDone.then(async () => { for (let k = 0; alive && !workDone; k++) { await sleep(1700); if (alive && !workDone) msg(waitMsgs[k % waitMsgs.length]); } });
+  return {
+    setDoc(html) {   // the real HTML from buildSite: load it into the scene, reveal on the next beat
+      if (!alive || doc) return; doc = html;
+      const f0 = frames[0], f1 = frames[1];
+      const ready = () => { if (loaded) return; loaded = true; if (beat >= 1) reveal(); };
+      f0.fr.onload = ready; setTimeout(ready, 1200);
+      f0.fr.srcdoc = html;
+      setTimeout(() => { if (alive) f1.fr.srcdoc = html; }, 160);
+    },
+    async finish() {
+      workDone = true; await beatsDone; if (!alive) return;
+      if (!revealedAt) { for (let t = 0; !loaded && t < 15; t++) await sleep(100); loaded = true; reveal(); }
+      const left = MIN_SHOW - (performance.now() - revealedAt); if (left > 0) await sleep(left);
+      $('#bxType').textContent = name;
+      steps.forEach(li => li.className = 'ok');
+      bx.classList.add('done'); bar(100); msg(change ? 'Your changes are ready!' : 'Your website is ready!');
+      await sleep(FINISH); alive = false;
+    },
+    fail(err) {
+      alive = false; workDone = true;
+      bx.classList.add('err');
+      $('#bxErrMsg').textContent = (err && err.message ? 'Details: ' + err.message + '. ' : '') + 'Your details are safe. Please try again, or go back and check them.';
+      $('#bxErr').hidden = false;
+      $('#pipeTitle').textContent = 'We hit a snag';
+      $('#pipeSub').textContent = 'Nothing is lost. You can try again right away.';
+      $('#bxErr').scrollIntoView({ block: 'center', behavior: 'smooth' });
+    }
+  };
 }
-const cleanOpts = o => { const r = {}; if (o.style) r.style = o.style; if (o.accent) r.accent = o.accent; if (typeof o.dark === 'boolean') r.dark = o.dark; if (o.headline) r.headline = o.headline; if (+o.design > 0) r.design = +o.design; return r; };
-let running = false;
+const cleanOpts = o => { const r = {}; if (o.style) r.style = o.style; if (o.accent) r.accent = o.accent; if (o.minimal) r.minimal = true; if (o.white) r.white = true; if (typeof o.dark === 'boolean') r.dark = o.dark; if (o.headline) r.headline = o.headline; if (+o.design > 0) r.design = +o.design; return r; };
+let running = false, lastChange = null;
 async function runPipeline(change) {
-  if (running) return; running = true;
+  if (running) return; running = true; lastChange = change || null;
+  let anim = null;
   try {
+    previewBurstDone = false;
+    if (stepMax > 1) stepMax = 1;
     show('pipeline');
-    $('#pipeTitle').textContent = change ? 'Updating your website…' : 'Building your website…';
-    [1, 2, 3].forEach(n => botSet(n, '', 'Waiting…', []));
     const d = current.data, t0 = performance.now();
-    // 1 · Intake bot
-    botSet(1, 'run', 'Checking your details…');
-    await sleep(700);
+    anim = buildAnim(d, change);
+    await new Promise(r => requestAnimationFrame(() => setTimeout(r, 120)));   // let the first beat paint before the (synchronous) build work
     const rv = parseReviews(d.reviews).length, st = parseStats(d.stats).length;
-    botSet(1, 'done', 'Details received', change ? [`Change request for ${current.id} (version ${current.version})`, ...change.summary, 'Passed to Builder bot'] : [
+    const log = change ? [`Change request for ${current.id} (version ${current.version})`, ...change.summary] : [
       `New request ${current.id}: "${d.name}"`,
       `Industry: ${industryLabel(d)} (matched: ${detectProfile(d).label})${d.city ? ' · ' + d.city : ''} · ${COUNTRIES[d.country].label} (${COUNTRIES[d.country].cur.trim()})`,
       `${d.services.length} service${d.services.length > 1 ? 's' : ''}; main action: ${d.mainAction || 'default for the industry'}${d.whatsapp ? '; WhatsApp on' : ''}`,
       `${d.photos.length ? d.photos.length + ' photo' + (d.photos.length > 1 ? 's' : '') + ' uploaded' : 'No photos, so stock photos will be used'}; logo: ${d.logo ? 'uploaded' : 'text logo'}`,
-      `${rv ? rv + ' real review' + (rv > 1 ? 's' : '') : 'No reviews, so labelled sample reviews in the preview'}; ${st ? st + ' figure' + (st > 1 ? 's' : '') : 'no figures given'}`,
-      'Details packaged and passed to Builder bot']);
-    // 2 · Builder bot
-    botSet(2, 'run', 'Writing copy and designing your website…');
-    await sleep(900);
+      `${rv ? rv + ' real review' + (rv > 1 ? 's' : '') : 'No reviews, so labelled sample reviews in the preview'}; ${st ? st + ' figure' + (st > 1 ? 's' : '') : 'no figures given'}`];
     const ai = await generateWithAI(d);
     const opts = cleanOpts(current.opts);
     const desk = buildSite(d, opts, ai, {});
+    anim.setDoc(desk.doc);   // show the real website inside the build animation straight away
     const M = desk.M;
     current.styleKey = M.key; current.placeholders = M.placeholders.slice();
     const words = desk.markup.replace(/<script[\s\S]*?<\/script>/g, '').replace(/<style>[\s\S]*?<\/style>/g, '').replace(/<[^>]+>/g, ' ').split(/\s+/).filter(Boolean).length;
-    botSet(2, 'done', 'Website designed', [
-      `Business type: ${M.prof.label}; design: ${M.kit.label.replace(/ \(.*$/, "")} kit, ${M.heroV} hero${opts.accent ? ', main colour ' + opts.accent : ''}${M.P.dark ? ', dark' : ''}`,
-      ai ? 'Copy written by AI' : 'Copy: AI hook not connected in this demo, so the built-in industry copy wrote it from your details',
+    log.push(`Business type: ${M.prof.label}; design: ${M.kit.label.replace(/ \(.*$/, "")} kit, ${M.heroV} hero${opts.accent ? ', main colour ' + opts.accent : ''}${M.P.dark ? ', dark' : ''}`,
+      ai ? 'Copy written by AI' : 'Copy written from your details by the built-in industry copy',
       `Sections: header, ${M.order.join(', ')}, footer`,
       `About ${words} words; one long page that works on phones and desktops`,
-      `${M.placeholders.length} item${M.placeholders.length === 1 ? '' : 's'} to swap before launch`,
-      'Website files kept on our side; passed to Preview bot']);
-    // 3 · Preview bot
-    botSet(3, 'run', API ? 'Saving your preview and making your private link…' : 'Preparing your live preview…');
-    await sleep(500);
+      `${M.placeholders.length} item${M.placeholders.length === 1 ? '' : 's'} to swap before launch`);
     let doc = desk.doc, saveNote = 'Live version: a private, expiring preview link on our server';
     if (API) {
-      try { doc = await apiSavePreview(opts); saveNote = 'Private preview link ready: open it on any phone or computer, or share it'; }
+      try { doc = await startShareSave(opts); saveNote = 'Private preview link ready: open it on any phone or computer, or share it'; }
       catch (err) { console.warn(err); current.shareUrl = null; saveNote = 'Could not save your preview link just now (' + err.message + '). You can still view it here; we will retry when you continue.'; }
     }
     setPreviewDoc(doc);
-    const log = [`Full working website ready (${Math.round(previews.bytes / 1024)} KB, one file)`,
+    log.push(`Full working website ready (${Math.round(previews.bytes / 1024)} KB, one file)`,
       'Opens in a new tab: menu, buttons, animations, sliders and forms all work (forms send nothing in a preview)',
-      'Also shown below with a desktop / mobile switch',
-      saveNote];
-    botSet(3, 'done', 'Preview ready', [...log, `Total time: ${((performance.now() - t0) / 1000).toFixed(1)}s`]);
+      'Also shown below with a desktop / mobile switch', saveNote, `Build time: ${((performance.now() - t0) / 1000).toFixed(1)}s`);
+    buildLog(log);
     current.status = change ? 'changes applied, awaiting approval' : 'preview sent, awaiting approval';
     upsert(current);
-    await sleep(700);
+    await anim.finish();
     device = innerWidth < 700 ? 'mobile' : 'desktop';
     $('#changes').classList.remove('on');
     show('preview'); renderPreview();
   } catch (err) {
     console.error(err);
-    botSet(2, 'err', 'Something went wrong: ' + (err && err.message));
+    if (anim) anim.fail(err);
+    else { show('pipeline'); $('#bx').className = 'bx err'; $('#bxErrMsg').textContent = 'Details: ' + (err && err.message); $('#bxErr').hidden = false; }
   } finally { running = false; }
 }
+$('#bxBack').onclick = () => { $('#bx').className = 'bx'; show('form'); };
+$('#bxRetry').onclick = () => { if (current) runPipeline(lastChange); };
 
 /* ---------------- Preview (client side, fully interactive) ---------------- */
 function fitFrame() {
   const box = $('#liveBox'); if (!box) return;
-  const fr = $('iframe', box), vw = device === 'mobile' ? 390 : 1280, vh = device === 'mobile' ? 844 : 860;
+  const fr = $('iframe', box), all = $$('iframe', box), vw = device === 'mobile' ? 390 : 1280, vh = device === 'mobile' ? 844 : 860;
   const k = Math.min(1, box.clientWidth / vw);
-  fr.style.cssText = `width:${vw}px;height:${Math.round(vh)}px;transform:scale(${k});transform-origin:0 0`;
-  box.style.height = Math.round(vh * k) + 'px';
+  // Website first: size the frame so the whole window fits in the first view (never shorter than a useful minimum).
+  const top = box.getBoundingClientRect().top + scrollY, mob = device === 'mobile';
+  const h = Math.round(Math.max(mob ? 460 : 420, Math.min(vh * k, innerHeight - top - (mob ? 22 : 24))));
+  all.forEach(f => { const op = f.style.opacity; f.style.cssText = `width:${vw}px;height:${Math.round(h / k)}px;transform:scale(${k});transform-origin:0 0` + (op !== '' ? `;opacity:${op}` : ''); });
+  void fr;
+  box.style.height = h + 'px';
 }
 function renderDesignNav() {
   const i = +current.opts.design || 0, n = Math.max(current.designMax || 0, i) + 1;
@@ -364,13 +679,13 @@ async function switchDesign(to) {
   try {
     $('#dNote').textContent = 'Building design ' + (to + 1) + '…';
     current.opts.design = to; current.designMax = Math.max(current.designMax || 0, to);
-    current.version++;
-    current.revisions.push({ at: new Date().toISOString(), design: to, notes: `Switched to design ${to + 1}` });
+    // Round 1 item 12: browsing designs is not a change, so the version number stays put
+    current.revisions.push({ at: new Date().toISOString(), design: to, designSwitch: true, notes: `Switched to design ${to + 1}` });
     const opts = cleanOpts(current.opts), ai = await generateWithAI(current.data);
     const built = buildSite(current.data, opts, ai, {});
     current.styleKey = built.M.key; current.placeholders = built.M.placeholders.slice();
     let doc = built.doc;
-    if (API) { try { doc = await apiSavePreview(opts); } catch (err) { console.warn(err); current.shareUrl = null; } }
+    if (API) { try { doc = await startShareSave(opts); } catch (err) { console.warn(err); current.shareUrl = null; } }
     setPreviewDoc(doc); upsert(current);
     $('#dNote').textContent = API && !current.shareUrl ? 'Showing design ' + (to + 1) + '. We could not save it just now; we will retry when you press Apply.' : 'Step back and forth through designs. The one showing when you press Apply is the one we keep.';
     designBusy = false; renderPreview();
@@ -388,16 +703,43 @@ function renderPreview() {
   const ph = current.placeholders || [];
   const samp = ph.filter(p => /^Sample|^Stock|^Some sections/.test(p));
   $('#pvSamples').textContent = samp.length ? 'Yellow "sample" tags mark placeholder content (' + samp.map(s => s.split(/[:(]/)[0].trim().toLowerCase()).join(', ') + '). We replace them with your real ones, or remove them, before launch.' : '';
-  const open = $('#openPv'); open.href = (API && current.shareUrl) || previews.url; open.onclick = openPreviewTab;
-  $('#pvOpened').textContent = '';
-  if (API) renderShare();
+  const open = $('#openPv'); if (open) open.onclick = openPreviewTab;
+  setOpenPreviewState();
+  const opened = $('#pvOpened'); if (opened) opened.textContent = '';
+  renderShare();
+  placeOpenInShareRow();
   const host = API ? `${location.host}/s/${slug(current.data.name)}` : `${slug(current.data.name)}.${BRAND.domain}`;
   const inner = `<div class="live" id="liveBox"><iframe id="liveFrame" title="Live preview of your website" sandbox="allow-scripts allow-popups allow-forms allow-popups-to-escape-sandbox"></iframe></div>`;
-  $('#stage').innerHTML = device === 'desktop'
+  // Round 1 item 13: no white flash. Same device: the old page stays on screen while the new one loads
+  // underneath, then the new one fades in. Device change: a loader shows until the new page is ready.
+  const stage = $('#stage'), old = $('#liveFrame'), sameDev = old && stage.dataset.dev === device;
+  if (sameDev) {
+    if (old.dataset.doc === previews.doc) { stage.querySelectorAll('.url').forEach(u => u.textContent = `🔒 ${host} · preview`); fitFrame(); return; }
+    const box = $('#liveBox'), nf = document.createElement('iframe');
+    nf.title = old.title; nf.setAttribute('sandbox', old.getAttribute('sandbox'));
+    box.querySelectorAll('iframe:not(#liveFrame)').forEach(f => f.remove());
+    box.appendChild(nf); nf.style.opacity = '0'; fitFrame(); nf.style.opacity = '0';
+    let done = false;
+    const swap = () => {
+      if (done) return; done = true;
+      requestAnimationFrame(() => { nf.classList.add('pv-in'); nf.style.opacity = '1'; });
+      setTimeout(() => { if (old.isConnected) old.remove(); nf.id = 'liveFrame'; nf.classList.remove('pv-in'); nf.style.opacity = ''; }, 260);
+    };
+    nf.onload = swap; setTimeout(swap, 2500);
+    nf.dataset.doc = previews.doc; nf.srcdoc = previews.doc;
+    return;
+  }
+  stage.dataset.dev = device;
+  stage.innerHTML = device === 'desktop'
     ? `<div class="browser"><div class="bar"><span class="dot"></span><span class="dot"></span><span class="dot"></span><span class="url">🔒 ${esc(host)} · preview</span></div>${inner}</div>`
     : `<div class="phone"><div class="screenwrap">${inner}</div></div>`;
   fitFrame();
-  $('#liveFrame').srcdoc = previews.doc;
+  const fr = $('#liveFrame'), lb = $('#liveBox');
+  lb.classList.add('pv-loading'); fr.style.opacity = '0';
+  const shown = () => { lb.classList.remove('pv-loading'); fr.classList.add('pv-in'); fr.style.opacity = '1'; setTimeout(() => { fr.classList.remove('pv-in'); fr.style.opacity = ''; }, 260); };
+  let once = false; const show1 = () => { if (!once) { once = true; requestAnimationFrame(shown); } };
+  fr.onload = show1; setTimeout(show1, 2500);
+  fr.dataset.doc = previews.doc; fr.srcdoc = previews.doc;
 }
 addEventListener('resize', () => { if ($('#screen-preview').classList.contains('on')) fitFrame(); });
 $$('.toggle button').forEach(b => b.onclick = () => { device = b.dataset.dev; renderPreview(); });
@@ -405,20 +747,24 @@ $$('.toggle button').forEach(b => b.onclick = () => { device = b.dataset.dev; re
 /* ---------------- Request changes -> re-run builder ---------------- */
 $('#reqBtn').onclick = () => { $('#changes').classList.toggle('on'); if ($('#changes').classList.contains('on')) $('#changes').scrollIntoView({ behavior: 'smooth' }); };
 $('#chips').onclick = e => { const t = e.target.dataset.t; if (t) { const n = $('#chNotes'); n.value = (n.value.trim() ? n.value.trim().replace(/[.]?$/, '. ') : '') + t; } };
-$('#editDetails').onclick = () => { editing = true; fillForm(current.data); show('form'); };
+$('#editDetails').onclick = () => { editing = true; fillForm(current.data); formMax = FORM_STEPS.length; showFormStep(1, { noFocus: true }); show('form'); };
 $('#rerunBtn').onclick = () => {
   const notes = $('#chNotes').value.trim(), lower = notes.toLowerCase(), headline = $('#chHeadline').value.trim();
   let style = $('#chTheme').value, accent = $('#chColour').value, dark;
   if (/\b(dark|darker|black|moody|night)\b/.test(lower)) dark = true;
   else if (/\b(light|lighter|bright|brighter|white)\b/.test(lower)) dark = false;
+  const minimal = /\b(minimal|minimalist|clean|simple|plain|simpler)\b/.test(lower) || undefined, white = (dark !== true && /\bwhite\b/.test(lower)) || undefined;
   if (!style) { const m = lower.match(/\b(clinic|restaurant|salon|spa|law|legal|estate|property|plumb|trade)\w*/); if (m) style = { clinic: 'clinic', restaurant: 'restaurant', salon: 'salon', spa: 'salon', law: 'law', legal: 'law', estate: 'realestate', property: 'realestate', plumb: 'home', trade: 'home' }[m[1]]; }
-  if (!accent) { const w = Object.keys(COLOUR_WORDS).find(w => new RegExp('\\b' + w + '\\b').test(lower)); if (w) accent = COLOUR_WORDS[w]; }
+  if (!accent) { const hits = Object.keys(COLOUR_WORDS).map(w => [w, lower.search(new RegExp('\\b' + w + '\\b'))]).filter(h => h[1] >= 0).sort((a, b) => a[1] - b[1]); if (hits.length) accent = COLOUR_WORDS[hits[0][0]]; }
   const reshuffle = /\b(another|different|new|next|fresh)\s+(design|look|layout|template)\b|\breshuffle\b/.test(lower);
   if (!style && !accent && !headline && !notes && dark === undefined) { $('#chNotes').focus(); $('#chNotes').placeholder = 'Tell us what to change first…'; return; }
   const o = current.opts, summary = [];
   if (style && style !== (o.style || current.styleKey)) { o.style = style; summary.push(`Style → ${styleLabel(style)}`); }
   if (accent && accent !== o.accent) { o.accent = accent; summary.push(`Main colour → ${accent}`); }
   if (dark !== undefined && dark !== o.dark) { o.dark = dark; summary.push(dark ? 'Darker look' : 'Lighter look'); }
+  if (minimal && !o.minimal) { o.minimal = true; summary.push('Minimal look: white canvas, colour only on buttons and accents'); }
+  if (white && !o.white) { o.white = true; summary.push('White background'); }
+  if (dark === true && (o.minimal || o.white) && !minimal) { o.white = false; }
   if (reshuffle) { o.design = (+o.design || 0) + 1; current.designMax = Math.max(current.designMax || 0, o.design); summary.push(`New design from the template library (#${o.design + 1})`); }
   if (headline) { o.headline = headline; summary.push(`Headline → "${clientHeadline(headline).replace(/\*/g, '')}"`); }
   if (notes) summary.push(`Note saved for the team: "${notes.length > 90 ? notes.slice(0, 90) + '…' : notes}"`);
@@ -485,7 +831,7 @@ $('#payBtn').onclick = async () => {
   $('#thxEmail').textContent = email;
   show('thanks');
 };
-$('#startOver').onclick = () => { $('#intake').reset(); services = [{ name: '', desc: '', price: '' }]; renderSvcs(); setLogo(''); photos = []; renderPhotos(); baPairs = []; baDraft = {}; renderBA(); syncExtras(); syncIndustry(); syncColour(); syncAction(); current = null; previews = null; show('form'); };
+$('#startOver').onclick = () => { $('#intake').reset(); $('#exDone').textContent = ''; $$('#exChips .ex-chip').forEach(c => { c.classList.remove('on'); c.removeAttribute('aria-pressed'); }); $('#industry').value = ''; $('#industryOther').value = ''; showIndustryText(); services = [{ name: '', desc: '', price: '' }]; renderSvcs(); setLogo(''); photos = []; renderPhotos(); baPairs = []; baDraft = {}; renderBA(); syncExtras(); syncIndustry(); syncColour(); syncAction(); current = null; previews = null; formMax = 1; stepMax = 0; previewBurstDone = false; showFormStep(1, { noFocus: true }); show('form'); };
 
 /* ---------------- Admin (#admin) ---------------- */
 function renderAdmin() {
@@ -528,14 +874,39 @@ $('#clearBtn').onclick = () => { if (confirm('Delete all saved submissions in th
 
 /* ---------------- Server mode: share link box and wording ---------------- */
 function renderShare() {
-  let box = $('#shareBox');
-  if (!box) { box = document.createElement('div'); box.id = 'shareBox'; box.className = 'card'; box.style.cssText = 'margin-top:14px'; $('.open-card').after(box); }
-  if (!current.shareUrl) { box.innerHTML = '<p class="note" style="margin:0">Your private preview link could not be saved yet. Check your connection; we will try again when you continue.</p>'; return; }
+  const box = $('#shareBox'), bar = $('#shareBar');
+  if (!box) return;
+  parkOpenButton();
+  if (!API) { box.hidden = true; box.innerHTML = ''; if (bar) bar.classList.remove('has-link'); return; }
+  box.hidden = false; if (bar) bar.classList.add('has-link');
+  if (shareSaveState === 'saving') {
+    box.innerHTML = '<p class="pv-share-wait note" role="status" style="margin:0"><span class="spin" aria-hidden="true"></span> Getting your link…</p>';
+    return;
+  }
+  if (!current.shareUrl) {
+    box.innerHTML = `<div class="pv-share-err" role="alert"><p class="note" style="margin:0;color:var(--bad)">We could not save your shareable link just now. Check your connection and try again${shareSaveError ? ' (' + esc(shareSaveError) + ')' : ''}.</p>
+      <button type="button" class="btn sm" id="shareRetry">Try again</button></div>`;
+    $('#shareRetry').onclick = () => retryShareSave();
+    return;
+  }
   const exp = current.shareExpires ? new Date(current.shareExpires).toLocaleDateString([], { day: 'numeric', month: 'long', year: 'numeric' }) : '';
-  box.innerHTML = `<h2 style="margin:0 0 4px;font-size:18px">Your private preview link</h2><p class="hint" style="margin:0 0 10px">Open it on your phone or send it to a partner. Only people with the link can see it${exp ? `; it works until ${esc(exp)}` : ''}.</p>
-   <div class="row" style="gap:8px;flex-wrap:nowrap"><input type="text" id="shareUrl" readonly value="${esc(current.shareUrl)}" style="flex:1;min-width:0" aria-label="Preview link"><button type="button" class="btn sm" id="shareCopy">Copy link</button></div>`;
+  box.innerHTML = `<div class="pv-share-meta"><span class="pv-share-label">Your shareable link</span><span class="pv-share-hint">${exp ? 'Private · works until ' + esc(exp) : 'Private — only people with the link can see it'}</span></div>
+    <div class="pv-share-row"><input type="text" id="shareUrl" readonly value="${esc(current.shareUrl)}" aria-label="Preview link"><button type="button" class="btn sm" id="shareCopy">Copy link</button></div>`;
   $('#shareUrl').onclick = e => e.target.select();
   $('#shareCopy').onclick = async () => { try { await navigator.clipboard.writeText(current.shareUrl); } catch (_) { $('#shareUrl').select(); document.execCommand && document.execCommand('copy'); } $('#shareCopy').textContent = 'Copied ✓'; setTimeout(() => { const b = $('#shareCopy'); if (b) b.textContent = 'Copy link'; }, 1800); };
+  placeOpenInShareRow();
+}
+function parkOpenButton() {
+  const open = document.querySelector('.pv-open');
+  const bar = $('#shareBar');
+  if (open && bar && open.parentElement !== bar) bar.appendChild(open);
+}
+function placeOpenInShareRow() {
+  const row = document.querySelector('#shareBox .pv-share-row');
+  const open = document.querySelector('.pv-open');
+  const bar = $('#shareBar');
+  if (row && open && !row.contains(open)) row.appendChild(open);
+  else if (!row && open && bar && open.parentElement !== bar) bar.appendChild(open);
 }
 if (API) {
   const pvNote = $$('#screen-preview > p.note'); if (pvNote.length) pvNote[pvNote.length - 1].innerHTML = 'Happy with it? Approve it, then press <b>Apply now</b>. No payment is taken on this page.';
@@ -547,17 +918,118 @@ if (API) {
     $('p', th).innerHTML = "Thank you! We've saved your website and your details. We'll email <b id=\"thxEmail\"></b> a secure payment link, and your website goes live as soon as it's paid.";
     $('p.note', th).id = 'thxLink'; $('p.note', th).textContent = '';
   }
-  $$('.foot a[href="#admin"]').forEach(a => a.remove());
+  $$('.foot .foot-admin').forEach(el => el.remove());
 }
 
 /* ---------------- Router ---------------- */
+const STEP_NAMES = ['form', 'pipeline', 'preview', 'approve'];
+let stepMax = 0;
+let previewBurstDone = false;
+
+function updateSteps(name) {
+  const idx = name === 'thanks' ? 3 : STEP_NAMES.indexOf(name);
+  if (idx > stepMax) stepMax = idx;
+  $$('#stepsNav .step, #stepsNav span').forEach((s, i) => {
+    const reached = i <= stepMax && idx >= 0;
+    s.classList.toggle('on', i === idx);
+    s.classList.toggle('done', i < idx);
+    s.classList.toggle('is-enabled', reached);
+    s.setAttribute('aria-disabled', reached ? 'false' : 'true');
+    s.tabIndex = reached ? 0 : -1;
+    if (i === idx) s.setAttribute('aria-current', 'step');
+    else s.removeAttribute('aria-current');
+  });
+}
+
+function showPipelineDone() {
+  show('pipeline');
+  const bx = $('#bx');
+  if (!bx) return;
+  bx.className = 'bx s1 s2 s3 s4 s5 s6 done';
+  $('#bxErr').hidden = true;
+  const bar = $('#bxBar'); if (bar) bar.style.width = '100%';
+  const name = current && current.data && current.data.name;
+  const title = $('#pipeTitle'); if (title) title.textContent = 'Your website is ready!';
+  const sub = $('#pipeSub'); if (sub) sub.textContent = name ? `Here's how we put ${name} together.` : '';
+  const msg = $('#bxMsg'); if (msg) msg.textContent = 'Your website is ready!';
+  $$('#bxSteps li').forEach(li => { li.className = 'ok'; });
+}
+
+function goStep(name) {
+  const idx = STEP_NAMES.indexOf(name);
+  if (idx < 0 || idx > stepMax) return;
+  if (name === 'form') { show('form'); return; }
+  if (name === 'pipeline') {
+    if (running) { show('pipeline'); return; }
+    if (current) showPipelineDone();
+    return;
+  }
+  if (name === 'preview') {
+    if (current && previews) { show('preview'); renderPreview(); }
+    return;
+  }
+  if (name === 'approve') {
+    if (typeof $('#approveBtn').onclick === 'function') $('#approveBtn').onclick();
+    else show('approve');
+  }
+}
+
+function goHome(e) {
+  if (e) e.preventDefault();
+  if (location.hash === '#admin') {
+    try { history.replaceState(null, '', location.pathname + location.search); } catch (_) {}
+  }
+  show('form');
+  const start = document.getElementById('start');
+  if (start) start.scrollIntoView({ block: 'start' });
+  else window.scrollTo(0, 0);
+}
+
+function celebratePreview() {
+  if (previewBurstDone) return;
+  previewBurstDone = true;
+  const layer = $('#pvBurst');
+  if (!layer) return;
+  const reduce = !!(window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches);
+  if (reduce) { layer.innerHTML = ''; return; }
+  const colors = ['#0F5B59', '#14A69A', '#55C7B0', '#A6F3E1', '#DFF6F1'];
+  const bits = [];
+  for (let i = 0; i < 16; i++) {
+    const ang = (Math.PI * 2 * i) / 16 + (Math.random() * 0.4 - 0.2);
+    const dist = 48 + Math.random() * 90;
+    const dx = Math.cos(ang) * dist;
+    const dy = Math.sin(ang) * dist * 0.72 - 10;
+    bits.push(`<i style="--x:18%;--y:38%;--s:${(5 + Math.random()*5).toFixed(1)}px;--c:${colors[i % colors.length]};--r:${Math.round(Math.random()*80-20)}deg;--dx:${dx.toFixed(1)}px;--dy:${dy.toFixed(1)}px"></i>`);
+  }
+  layer.innerHTML = bits.join('');
+  setTimeout(() => { if (layer) layer.innerHTML = ''; }, 1000);
+}
+
 function show(name) {
   $$('.screen').forEach(s => s.classList.toggle('on', s.id === 'screen-' + name));
-  const idx = name === 'thanks' ? 3 : ['form', 'pipeline', 'preview', 'approve'].indexOf(name);
-  $$('#stepsNav span').forEach((s, i) => s.classList.toggle('on', i === idx));
+  const idx = name === 'thanks' ? 3 : STEP_NAMES.indexOf(name);
+  if (idx >= 0) updateSteps(name);
   $('#stepsNav').style.visibility = name === 'admin' ? 'hidden' : 'visible';
   window.scrollTo(0, 0);
+  if (name === 'preview') celebratePreview();
 }
+
+const brandHome = $('#brandHome');
+if (brandHome) brandHome.addEventListener('click', goHome);
+
+$('#stepsNav').addEventListener('click', ev => {
+  const step = ev.target.closest('[data-step]');
+  if (!step || step.getAttribute('aria-disabled') === 'true') return;
+  goStep(step.dataset.step);
+});
+$('#stepsNav').addEventListener('keydown', ev => {
+  if (ev.key !== 'Enter' && ev.key !== ' ') return;
+  const step = ev.target.closest('[data-step]');
+  if (!step || step.getAttribute('aria-disabled') === 'true') return;
+  ev.preventDefault();
+  goStep(step.dataset.step);
+});
+
 function route() {
   if (location.hash === '#admin' && API) { location.href = '/admin'; return; }
   if (location.hash === '#admin') { renderAdmin(); show('admin'); }

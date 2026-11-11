@@ -140,7 +140,7 @@ registerVariant('reviews', 'wall', {
   css: M => `.site .rwall{columns:3 300px;column-gap:1.1rem}
 .site .rw{break-inside:avoid;margin:0 0 1.1rem;background:var(--bg);border:1px solid var(--line);border-radius:var(--radius);padding:1.6rem;display:flex;flex-direction:column;gap:.9rem;transition:transform .5s var(--ease),box-shadow .5s}
 .site .rw p{font:400 1.12rem/1.5 ${M.S.em === 'mark' ? 'var(--sans)' : (M.S.italic || 'var(--display)')}}
-.site .rw .stars{color:#f5b301;letter-spacing:.1em}
+.site .rw .stars{color:var(--star,#f5b301);letter-spacing:.1em}
 .site .rw footer{display:flex;align-items:center;gap:.6rem;font-weight:700;font-size:14px}
 .site .rw cite{font-style:normal}
 .site .rw .av{width:34px;height:34px;border-radius:50%;display:grid;place-items:center;background:var(--soft);color:var(--accent-text);font-weight:800}

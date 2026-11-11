@@ -1,0 +1,15 @@
+{
+  // Marketing-website experiment. Static assets only (plus this worker as a
+  // pass-through to assets). Do not point this at wod or wod-brand-preview.
+  "name": "wod-site-test",
+  "main": "worker.js",
+  "compatibility_date": "2026-11-01",
+  "workers_dev": true,
+  "preview_urls": false,
+  "assets": {
+    "directory": "./public",
+    "binding": "ASSETS",
+    "html_handling": "auto-trailing-slash",
+    "not_found_handling": "none"
+  }
+}

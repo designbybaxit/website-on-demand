@@ -30,5 +30,59 @@ cat > public/_headers <<'H'
   X-Frame-Options: DENY
 /
   Cache-Control: public, max-age=60
+/brand/*
+  Cache-Control: public, max-age=86400
+/og-image.png
+  Cache-Control: public, max-age=86400
+/og-image.jpg
+  Cache-Control: public, max-age=86400
+/favicon.ico
+  Cache-Control: public, max-age=86400
+/favicon.svg
+  Cache-Control: public, max-age=86400
+/favicon-16.png
+  Cache-Control: public, max-age=86400
+/favicon-32.png
+  Cache-Control: public, max-age=86400
+/favicon-512.png
+  Cache-Control: public, max-age=86400
+/apple-touch-icon.png
+  Cache-Control: public, max-age=86400
+/site.webmanifest
+  Cache-Control: public, max-age=86400
+  Content-Type: application/manifest+json
+/robots.txt
+  Cache-Control: public, max-age=3600
+/sitemap.xml
+  Cache-Control: public, max-age=3600
 H
-printf 'User-agent: *\nDisallow: /p/\nDisallow: /admin\nDisallow: /api/\n' > public/robots.txt
+cat > public/robots.txt <<'R'
+User-agent: *
+Allow: /
+Disallow: /admin
+Disallow: /p/
+Disallow: /s/
+
+Sitemap: https://webimade.com/sitemap.xml
+R
+cat > public/sitemap.xml <<'S'
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <url>
+    <loc>https://webimade.com/</loc>
+  </url>
+</urlset>
+S
+# Favicons from logo-final-v2; logo lockup, OG image and manifest from brand/web.
+V2=../brand/logo-final-v2
+ASSETS=../brand/web
+if [ -d "$V2" ]; then
+  cp -a "$V2/favicon-16.png" "$V2/favicon-32.png" "$V2/favicon.svg" "$V2/favicon-512.png" public/
+  cp -a "$V2/favicon-180.png" public/apple-touch-icon.png
+fi
+if [ -d "$ASSETS" ]; then
+  cp -a "$ASSETS/favicon.ico" "$ASSETS/og-image.png" "$ASSETS/site.webmanifest" public/
+  if [ -f "$ASSETS/og-image.jpg" ]; then cp -a "$ASSETS/og-image.jpg" public/; fi
+  mkdir -p public/brand
+  cp -a "$ASSETS/brand/." public/brand/
+fi

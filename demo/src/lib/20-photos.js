@@ -144,3 +144,22 @@ registerPhotos('pets', {
   heroes: ['px:19145888', 'px:19145879'],
   pool: [['px:19145888', 'grooming bath wash'], ['px:6131165', 'bath wash puppy'], ['px:16145290', 'wash bath'], ['px:19145879', 'grooming brush trim groom']],
 });
+
+/* 10 Nov 2026: industry-match pass.
+   - Neutral or off-trade shots are kept only for services that ask for them ({ only: true }), never as general fill:
+     a plain kitchen (plumbing), city towers (estate agents), a body massage (hair salon), an empty boardroom (solicitors).
+   - New Pexels shots, found via their pexels.com/photo pages, fetched (HTTP 200, image/jpeg at 360 and 1600 wide) and viewed.
+   - More hero choices so each design number shows a different hero. */
+LIB.photos.plumbing.pool.push(['1556911220-bff31c812dba', 'kitchen sink', { only: true }]);
+LIB.photos.plumbing.heroes.push('px:6419128', 'px:7859953', 'px:5691536', '1607472586893-edb57bdc0e39');
+LIB.photos.realestate.pool.push(['1582407947304-fd86f028f716', 'commercial office', { only: true }],
+  ['px:23224991', 'viewing viewings buyers agent couple house'], ['px:7641868', 'viewing viewings buyers agent couple valuation'],
+  ['px:7937361', 'viewing new build buyers agent tour'], ['px:7415063', 'family buyers agent viewing kitchen'], ['px:8815932', 'keys buyers']);
+LIB.photos.realestate.heroes.push('px:23224991', 'px:7641868', 'px:7937361', 'px:7415063', 'px:8815932');
+LIB.photos.salon.pool.push(['1544161515-4ab6ce6db874', 'massage spa body', { only: true }]);
+LIB.photos.law.pool.push(['1497366811353-6870744d04b2', 'office commercial', { only: true }],
+  ['px:7876104', 'divorce family separation couple advice'], ['px:5668806', 'lawyers team solicitors about practice']);
+LIB.photos.law.heroes.push('px:7875891', 'px:8112162', 'px:5668806', 'px:7876104');
+LIB.photos.local.pool.push(['px:5668855', 'consultation client meeting desk advice'], ['px:7734650', 'client handshake customers welcome'],
+  ['px:8512176', 'client desk appointment consultation office']);
+LIB.photos.local.heroes.push('px:5668855', 'px:7734650', 'px:8512176');
