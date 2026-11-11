@@ -51,7 +51,7 @@ registerVariant('hero', 'mosaic', {
   label: 'Copy left, three-photo collage right (people at work + two details)',
   needs: () => ({ heroExtra: 2 }),
   html: M => { const p = heroParts(M), x = M.ph.heroExtra;
-    const extra = x.map((src, i) => `<figure class="mo-${'bc'[i]}" data-depth="${[26, 40][i]}"><img src="${src}" alt="" width="700" height="820" loading="eager"></figure>`).join('');
+    const extra = x.map((src, i) => `<figure class="mo-${'bc'[i]}" data-depth="${[26, 40][i]}"><img src="${uattr(src)}" alt="" width="700" height="820" loading="eager"></figure>`).join('');
     return `<section class="hero hero-mosaic" ${p.lbl}><div class="hero-bg" aria-hidden="true"><span class="blob b1"></span><span class="blob b2"></span></div>
 <div class="wrap hero-grid"><div class="hero-copy">${p.eyebrow}${p.h1}${p.lead}${p.actions}${p.proof}</div>
 <div class="mosaic${x.length < 2 ? ' solo' : ''}"><figure class="mo-a hero-img">${p.heroImg('', 900, 1100)}</figure>${extra}${p.chipData[0] ? `<div class="chip chip-a" data-depth="30"><span class="chip-ico">${svgI(p.chipData[0][0])}</span><div><small>${hh(p.chipData[0][1])}</small><b>${hh(p.chipData[0][2])}</b></div></div>` : ''}</div></div></section>`; },

@@ -97,7 +97,7 @@ function heroParts(M) {
   if (M.wa) proofItems.push('Reply on WhatsApp');
   if (M.place) proofItems.push('Local to ' + M.place);
   const proof = proofItems.length ? `<div class="proof">${[...new Set(proofItems)].slice(0, 3).map(t => `<span>${svgI('check')}${hh(t)}</span>`).join('')}</div>` : '';
-  const heroImg = (cls, w, h, alt) => `<img src="${ph.hero}"${ph.heroSet ? ` srcset="${ph.heroSet}" sizes="(max-width: 900px) 92vw, 50vw"` : ''} alt="${hh(alt || ph.alts.hero)}" width="${w}" height="${h}" fetchpriority="high"${cls ? ` class="${cls}"` : ''}>`;
+  const heroImg = (cls, w, h, alt) => `<img src="${uattr(ph.hero)}"${ph.heroSet ? ` srcset="${escSrcset(ph.heroSet)}" sizes="(max-width: 900px) 92vw, 50vw"` : ''} alt="${hh(alt || ph.alts.hero)}" width="${w}" height="${h}" fetchpriority="high"${cls ? ` class="${cls}"` : ''}>`;
   const chipData = heroChips(M);
   const chips = chipData.map((c, i) => `<div class="chip chip-${'abc'[i]}" data-depth="${[30, 50, 20][i]}"><span class="chip-ico">${svgI(c[0])}</span><div><small>${hh(c[1])}</small><b>${hh(c[2])}</b></div></div>`).join('');
   return { h1, eyebrow, lead, prim, sec, actions, proof, heroImg, chipData, chips, lbl: 'aria-labelledby="hero-title"' };
@@ -124,7 +124,7 @@ function heroHTML(M) {
   if (v === 'arch') {
     return `<section class="hero hero-arch" ${lbl}><div class="hero-bg" aria-hidden="true"><span class="blob b1"></span><span class="blob b2"></span></div>
 <div class="wrap hero-grid"><div class="hero-copy">${eyebrow}${h1}${lead}${actions}${proof}</div>
-<div class="arch-wrap" data-tilt><div class="arch">${heroImg('', 900, 1125)}</div><div class="circle" data-depth="40"><img src="${ph.circle}" alt="${hh(ph.alts.circle || '')}" width="420" height="420"></div>
+<div class="arch-wrap" data-tilt><div class="arch">${heroImg('', 900, 1125)}</div><div class="circle" data-depth="40"><img src="${uattr(ph.circle)}" alt="${hh(ph.alts.circle || '')}" width="420" height="420"></div>
 <a class="spinb" href="${M.primary.href}" aria-label="${hh(M.primary.label)}"><svg viewBox="0 0 120 120" aria-hidden="true"><defs><path id="cp" d="M60 60m-44 0a44 44 0 1 1 88 0a44 44 0 1 1-88 0"/></defs><text><textPath href="#cp">${hh((M.primary.short + ' · ' + (M.place || 'online') + ' · ').toUpperCase())}</textPath></text></svg><b aria-hidden="true">↘</b></a></div></div></section>`;
   }
   if (v === 'form') {

@@ -562,6 +562,53 @@ const svgI = (k, cls = '') => `<svg class="i ${cls}" viewBox="0 0 24 24" aria-hi
 const WA_SVG = '<svg class="wa-ic" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M12 2a10 10 0 0 0-8.6 15l-1.4 5 5.2-1.4A10 10 0 1 0 12 2zm0 18.2c-1.5 0-3-.4-4.3-1.2l-.3-.2-3.1.8.8-3-.2-.3A8.2 8.2 0 1 1 12 20.2zm4.5-6.1c-.2-.1-1.5-.7-1.7-.8-.2-.1-.4-.1-.6.1l-.8 1c-.1.2-.3.2-.5.1a6.7 6.7 0 0 1-3.3-2.9c-.3-.4.3-.4.7-1.3.1-.2 0-.3 0-.4l-.8-1.8c-.2-.5-.4-.4-.6-.4h-.5a1 1 0 0 0-.7.3 3 3 0 0 0-.9 2.2 5.2 5.2 0 0 0 1.1 2.8 11.9 11.9 0 0 0 4.6 4c1.7.7 2.3.8 3.2.6.5-.1 1.5-.6 1.7-1.2.2-.6.2-1.1.2-1.2-.1-.1-.3-.2-.5-.3z"/></svg>';
 
 const hh = s => String(s ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+/* URL allowlist (keep in sync with backend/src/security.js). Stored/published: https: or /i/<id>/<key>. */
+const SAFE_UPLOAD = /^\/i\/[A-Za-z0-9]+\/[A-Za-z0-9]+$/;
+const SAFE_DATA_IMG = /^data:image\/(jpeg|png|webp);base64,[A-Za-z0-9+/]+=*$/i;
+function isHttpsUrl(s) {
+  try { const u = new URL(String(s)); return u.protocol === 'https:' && !u.username && !u.password; } catch { return false; }
+}
+function isUploadUrl(s) {
+  const t = String(s || '');
+  if (SAFE_UPLOAD.test(t)) return true;
+  try { const u = new URL(t); return u.protocol === 'https:' && !u.username && !u.password && SAFE_UPLOAD.test(u.pathname) && !u.search && !u.hash; } catch { return false; }
+}
+function isSafeDataImg(s) {
+  const t = String(s || '');
+  return t.length <= 2e6 && SAFE_DATA_IMG.test(t);
+}
+function safeUrl(s, kind = 'img') {
+  const t = String(s == null ? '' : s).trim();
+  if (!t) return '';
+  if (kind === 'social') return isHttpsUrl(t) ? t : '';
+  if (isUploadUrl(t) || isHttpsUrl(t)) return t;
+  if (kind === 'preview' && isSafeDataImg(t)) return t;
+  return '';
+}
+const uattr = (s, kind = 'preview') => hh(safeUrl(s, kind) || '');
+const safeHref = (s, kind = 'social') => hh(safeUrl(s, kind) || '');
+function escSrcset(s) {
+  return String(s || '').split(',').map(part => {
+    const bits = part.trim().split(/\s+/);
+    if (!bits[0]) return '';
+    const url = safeUrl(bits[0], 'preview');
+    if (!url) return '';
+    return hh(url) + (bits[1] ? ' ' + bits.slice(1).join(' ') : '');
+  }).filter(Boolean).join(', ');
+}
+function sanitizeSiteData(d, opts = {}) {
+  const kind = opts.allowData ? 'preview' : 'img';
+  if (!d || typeof d !== 'object') return {};
+  const out = { ...d };
+  out.logo = safeUrl(d.logo, kind);
+  out.photos = Array.isArray(d.photos) ? d.photos.map(p => safeUrl(p, kind)).filter(Boolean) : [];
+  if (Array.isArray(d.ba)) out.ba = d.ba.map(p => p && typeof p === 'object' ? { ...p, b: safeUrl(p.b, kind), a: safeUrl(p.a, kind) } : p).filter(p => p && p.b && p.a);
+  out.facebook = safeUrl(d.facebook, 'social');
+  out.instagram = safeUrl(d.instagram, 'social');
+  out.other = safeUrl(d.other, 'social');
+  return out;
+}
+
 const hashStr = s => { let h = 7; for (const c of String(s)) h = (h * 31 + c.charCodeAt(0)) >>> 0; return h; };
 const pick = (arr, seed) => arr[seed % arr.length];
 const cleanName = n => String(n || '').replace(/\s*\((demo|example)\)\s*/ig, ' ').trim();
@@ -739,6 +786,7 @@ function offersFreeQuote(d) {
   return /\bfree\s+(?:quotes?|estimates?)\b|\bquotes?\s+(?:are|is)\s+free\b|\bno[- ](?:charge|fee)\s+(?:for\s+)?quotes?\b/i.test(text);
 }
 function siteModel(d, opts = {}, ai = null) {
+  d = sanitizeSiteData(d, { allowData: true });
   // content + imagery follow the real business; the look is the nearest of the six styles
   const prof = detectProfile(d);
   const key = opts.style && STYLES[opts.style] ? opts.style : (d.industry && d.industry !== 'other' && STYLES[d.industry] ? d.industry : prof.style);
@@ -1490,7 +1538,7 @@ function heroParts(M) {
   if (M.wa) proofItems.push('Reply on WhatsApp');
   if (M.place) proofItems.push('Local to ' + M.place);
   const proof = proofItems.length ? `<div class="proof">${[...new Set(proofItems)].slice(0, 3).map(t => `<span>${svgI('check')}${hh(t)}</span>`).join('')}</div>` : '';
-  const heroImg = (cls, w, h, alt) => `<img src="${ph.hero}"${ph.heroSet ? ` srcset="${ph.heroSet}" sizes="(max-width: 900px) 92vw, 50vw"` : ''} alt="${hh(alt || ph.alts.hero)}" width="${w}" height="${h}" fetchpriority="high"${cls ? ` class="${cls}"` : ''}>`;
+  const heroImg = (cls, w, h, alt) => `<img src="${uattr(ph.hero)}"${ph.heroSet ? ` srcset="${escSrcset(ph.heroSet)}" sizes="(max-width: 900px) 92vw, 50vw"` : ''} alt="${hh(alt || ph.alts.hero)}" width="${w}" height="${h}" fetchpriority="high"${cls ? ` class="${cls}"` : ''}>`;
   const chipData = heroChips(M);
   const chips = chipData.map((c, i) => `<div class="chip chip-${'abc'[i]}" data-depth="${[30, 50, 20][i]}"><span class="chip-ico">${svgI(c[0])}</span><div><small>${hh(c[1])}</small><b>${hh(c[2])}</b></div></div>`).join('');
   return { h1, eyebrow, lead, prim, sec, actions, proof, heroImg, chipData, chips, lbl: 'aria-labelledby="hero-title"' };
@@ -1517,7 +1565,7 @@ function heroHTML(M) {
   if (v === 'arch') {
     return `<section class="hero hero-arch" ${lbl}><div class="hero-bg" aria-hidden="true"><span class="blob b1"></span><span class="blob b2"></span></div>
 <div class="wrap hero-grid"><div class="hero-copy">${eyebrow}${h1}${lead}${actions}${proof}</div>
-<div class="arch-wrap" data-tilt><div class="arch">${heroImg('', 900, 1125)}</div><div class="circle" data-depth="40"><img src="${ph.circle}" alt="${hh(ph.alts.circle || '')}" width="420" height="420"></div>
+<div class="arch-wrap" data-tilt><div class="arch">${heroImg('', 900, 1125)}</div><div class="circle" data-depth="40"><img src="${uattr(ph.circle)}" alt="${hh(ph.alts.circle || '')}" width="420" height="420"></div>
 <a class="spinb" href="${M.primary.href}" aria-label="${hh(M.primary.label)}"><svg viewBox="0 0 120 120" aria-hidden="true"><defs><path id="cp" d="M60 60m-44 0a44 44 0 1 1 88 0a44 44 0 1 1-88 0"/></defs><text><textPath href="#cp">${hh((M.primary.short + ' · ' + (M.place || 'online') + ' · ').toUpperCase())}</textPath></text></svg><b aria-hidden="true">↘</b></a></div></div></section>`;
   }
   if (v === 'form') {
@@ -1589,7 +1637,7 @@ function topbarHTML(M) {
   return `<div class="topbar${emergency ? ' alert' : ''}"><div class="wrap topbar-in">${left}${mid}${right}</div></div>`;
 }
 function logoHTML(M) {
-  const mark = M.d.logo ? `<span class="logo-mark img"><img src="${M.d.logo}" alt="" width="120" height="44"></span>` : `<span class="logo-mark" aria-hidden="true">${hh(M.initials)}</span>`;
+  const mark = M.d.logo ? `<span class="logo-mark img"><img src="${uattr(M.d.logo)}" alt="" width="120" height="44"></span>` : `<span class="logo-mark" aria-hidden="true">${hh(M.initials)}</span>`;
   return `${mark}<span><b>${hh(M.logoBold)}</b>${M.logoRest ? ' ' + hh(M.logoRest) : ''}</span>`;
 }
 function headerHTML(M) {
@@ -1640,7 +1688,7 @@ function servicesHTML(M) {
       : M.primary.kind === 'call' ? `<a class="link" href="${telHref(M.d.phone)}">Call about ${hh(lowerFirst(nm))} ${svgI('arrow')}</a>`
         : `<a class="link" href="#book" data-pick="${hh(nm)}">${hh(M.C.verb)} ${hh(lowerFirst(nm))} ${svgI('arrow')}</a>`;
     const dur = svcDuration(s);
-    return `<article class="card${M.ph.services[i] ? ' has-img' : ''} reveal">${M.ph.services[i] ? `<figure class="card-img"><img src="${M.ph.services[i]}" alt="${hh(nm)}" loading="lazy" width="640" height="420"></figure>` : ''}<div class="card-body"><div class="ico">${svgI(s.icon)}</div><h3>${hh(nm)}</h3>${s.desc ? `<p>${hh(s.desc)}</p>` : ''}${s.priceT ? `<div class="price">${hh(s.priceT)}</div>` : ''}${dur ? `<div class="dur">${hh(dur)}</div>` : ''}${act}</div></article>`;
+    return `<article class="card${M.ph.services[i] ? ' has-img' : ''} reveal">${M.ph.services[i] ? `<figure class="card-img"><img src="${uattr(M.ph.services[i])}" alt="${hh(nm)}" loading="lazy" width="640" height="420"></figure>` : ''}<div class="card-body"><div class="ico">${svgI(s.icon)}</div><h3>${hh(nm)}</h3>${s.desc ? `<p>${hh(s.desc)}</p>` : ''}${s.priceT ? `<div class="price">${hh(s.priceT)}</div>` : ''}${dur ? `<div class="dur">${hh(dur)}</div>` : ''}${act}</div></article>`;
   }).join('');
   return `<section id="services" class="section alt"><div class="wrap">${head(M, 'services', M.C.servicesIntro)}<div class="cards ${cls}">${cards}</div></div></section>`;
 }
@@ -1650,12 +1698,12 @@ function whyHTML(M) {
   const badge = fb ? [fb.chip[0], fb.chip[1], fb.chip[2]] : M.hours.length ? ['clock', M.hours[0][0] || 'Open', M.hours[0][1]] : M.place ? ['pin', 'Find us', M.place] : ['phone', 'Talk to us', M.d.phone];
   const story = '';
   return `<section id="why" class="section${M.key === 'law' ? ' alt' : ''}"><div class="wrap split${rev ? ' rev' : ''}">
-<div class="split-media reveal"><div class="frame">${M.ph.split ? `<img src="${M.ph.split}" alt="${hh(M.ph.alts.split || '')}" loading="lazy" width="1000" height="800">` : ''}</div><div class="badge-float"><span class="bi">${svgI(badge[0])}</span><div><b>${hh(badge[1])}</b><span>${hh(badge[2])}</span></div></div></div>
+<div class="split-media reveal"><div class="frame">${M.ph.split ? `<img src="${uattr(M.ph.split)}" alt="${hh(M.ph.alts.split || '')}" loading="lazy" width="1000" height="800">` : ''}</div><div class="badge-float"><span class="bi">${svgI(badge[0])}</span><div><b>${hh(badge[1])}</b><span>${hh(badge[2])}</span></div></div></div>
 <div class="split-copy"><p class="eyebrow reveal">${hh(M.C.eyebrow.why)}</p><h2 class="reveal">${headHTML(M.C.h2.why)}</h2>${story}
 <ul class="checks">${M.why.map(w => `<li class="reveal"><b>${hh(w[0])}</b> ${hh(w[1])}</li>`).join('')}</ul>${btnPrimary(M, 'reveal')}</div></div></section>`;
 }
 function processHTML(M) {
-  const steps = M.steps.map((s, i) => `<li class="reveal">${M.ph.steps ? `<figure class="step-img"><img src="${M.ph.steps[i]}" alt="" loading="lazy" width="640" height="400"></figure>` : ''}<span class="num">0${i + 1}</span><h3>${hh(s[0])}</h3><p>${hh(s[1])}</p></li>`).join('');
+  const steps = M.steps.map((s, i) => `<li class="reveal">${M.ph.steps ? `<figure class="step-img"><img src="${uattr(M.ph.steps[i])}" alt="" loading="lazy" width="640" height="400"></figure>` : ''}<span class="num">0${i + 1}</span><h3>${hh(s[0])}</h3><p>${hh(s[1])}</p></li>`).join('');
   const offerSvc = M.services.find(s => s.priceT && /\d/.test(s.priceT));
   const offer = offerSvc ? `<div class="offer reveal"><div><p class="eyebrow">${hh(M.U.offerEyebrow)}</p><h3>${hh(svcName(offerSvc.name))}, <em>${hh(offerSvc.priceT)}</em></h3>${offerSvc.desc ? `<p>${hh(offerSvc.desc)}</p>` : ''}</div>${btnPrimary(M, 'btn-light btn-lg').replace('btn btn-primary btn-light', 'btn btn-light')}</div>` : '';
   return `<section id="process" class="section${M.key === 'law' ? '' : ' alt'}"><div class="wrap">${head(M, 'process')}<ol class="steps">${steps}</ol>${M.key !== 'restaurant' && M.key !== 'salon' ? offer : ''}</div></section>`;
@@ -1667,11 +1715,11 @@ function menuHTML(M) {
   const itemImg = s => { const idx = M.services.findIndex(x => svcName(x.name) === s.name); return idx >= 0 ? M.ph.services[idx] || '' : ''; };
   let gi = 0; const gImg = perItem ? groups.map(() => '') : groups.map(g => { const idx = M.services.findIndex(s => svcName(s.name) === g.items[0].name); return M.ph.services[idx >= 0 ? idx : gi++] || ''; });
   const tabs = groups.length > 1 ? `<div class="tabs" role="tablist" aria-label="Menu sections">${groups.map((g, i) => `<button class="tab" type="button" role="tab" id="t-${i}" aria-controls="m-${i}" aria-selected="${i ? 'false' : 'true'}"${i ? ' tabindex="-1"' : ''}>${hh(g.name)}</button>`).join('')}</div>` : '';
-  const panels = groups.map((g, i) => `<ul class="menu-list" id="m-${i}" role="tabpanel"${groups.length > 1 ? ` aria-labelledby="t-${i}"` : ''}${i ? ' hidden' : ''}>${gImg[i] ? `<li class="menu-img" aria-hidden="true"><img src="${gImg[i]}" alt="" loading="lazy" width="640" height="420"></li>` : ''}${g.items.map((s, j) => {
+  const panels = groups.map((g, i) => `<ul class="menu-list" id="m-${i}" role="tabpanel"${groups.length > 1 ? ` aria-labelledby="t-${i}"` : ''}${i ? ' hidden' : ''}>${gImg[i] ? `<li class="menu-img" aria-hidden="true"><img src="${uattr(gImg[i])}" alt="" loading="lazy" width="640" height="420"></li>` : ''}${g.items.map((s, j) => {
     const dur = svcDuration(s);
     const pr = `${dur ? `<span class="dur">${hh(dur)}</span>` : ''}${s.priceT ? `<span class="pr">${hh(s.priceT)}</span>` : ''}`;
     const im = perItem ? itemImg(s) : '';
-    const imgT = im ? `<img class="mi-img" src="${im}" alt="${hh(s.name)}" loading="lazy" width="640" height="420">` : '';
+    const imgT = im ? `<img class="mi-img" src="${uattr(im)}" alt="${hh(s.name)}" loading="lazy" width="640" height="420">` : '';
     const wrap = body => im ? `${imgT}<div class="mi-b">${body}</div>` : body;
     if (!salon) return `<li class="mi${im ? ' has-img' : ''} reveal">${wrap(`<h4>${hh(s.name)}</h4>${pr}${s.desc ? `<p>${hh(s.desc)}</p>` : ''}`)}</li>`;
     const on = i === 0 && j === 0;
@@ -1694,7 +1742,7 @@ function calcHTML(M) {
 }
 function galleryHTML(M) {
   const g = M.ph.gallery.slice(0, 5);
-  const fig = g.map((src, i) => `<figure class="reveal"><img src="${src}" alt="${hh(M.ph.galleryStock ? M.prof.label + ' example ' + (i + 1) : M.name + ' photo ' + (i + 1))}" loading="lazy" width="800" height="600"></figure>`).join('');
+  const fig = g.map((src, i) => `<figure class="reveal"><img src="${uattr(src)}" alt="${hh(M.ph.galleryStock ? M.prof.label + ' example ' + (i + 1) : M.name + ' photo ' + (i + 1))}" loading="lazy" width="800" height="600"></figure>`).join('');
   return `<section id="gallery" class="section"><div class="wrap">${head(M, 'gallery')}<div class="gallery g${g.length}">${fig}</div>${M.ph.galleryStock ? `<div class="sample-row"><span class="sample-tag">${SAMPLE_PHOTOS}</span></div>` : ''}</div></section>`;
 }
 function reviewsHTML(M) {
@@ -1762,7 +1810,7 @@ ${U.soon ? `<fieldset><legend>How soon?</legend><div class="slots" data-chips>${
 }
 function bookHTML(M) {
   const b = bookParts(M);
-  return `<section id="book" class="section book-sec">${M.ph.contact ? `<div class="book-bg" aria-hidden="true"><img src="${M.ph.contact}" alt="" loading="lazy" width="1400" height="900"></div>` : ''}<div class="wrap book"><div class="book-copy reveal"><p class="eyebrow">${hh(b.eyebrow)}</p><h2>${headHTML(b.h2)}</h2><p>${hh(b.intro)}</p>${infoList(M)}${b.waBtn}</div>${b.form}</div></section>`;
+  return `<section id="book" class="section book-sec">${M.ph.contact ? `<div class="book-bg" aria-hidden="true"><img src="${uattr(M.ph.contact)}" alt="" loading="lazy" width="1400" height="900"></div>` : ''}<div class="wrap book"><div class="book-copy reveal"><p class="eyebrow">${hh(b.eyebrow)}</p><h2>${headHTML(b.h2)}</h2><p>${hh(b.intro)}</p>${infoList(M)}${b.waBtn}</div>${b.form}</div></section>`;
 }
 
 /* About: the client's own words + two photos */
@@ -1774,7 +1822,7 @@ function aboutHTML(M) {
   if (M.services.length) facts.push(['sparkle', `${M.services.length} ${M.services.length > 1 ? M.U.nav.toLowerCase() : M.U.nav.toLowerCase().replace(/s$/, '')}`]);
   if (M.hours.length) facts.push(['clock', (M.hours[0][0] ? M.hours[0][0] + ': ' : '') + M.hours[0][1]]);
   return `<section id="about" class="section about-sec"><div class="wrap about">
-<div class="about-media reveal"><figure class="am-a"><img src="${M.ph.about}" alt="${hh(M.ph.alts.about || M.name)}" loading="lazy" width="900" height="1100"></figure>${M.ph.about2 ? `<figure class="am-b"><img src="${M.ph.about2}" alt="" loading="lazy" width="700" height="700"></figure>` : ''}</div>
+<div class="about-media reveal"><figure class="am-a"><img src="${uattr(M.ph.about)}" alt="${hh(M.ph.alts.about || M.name)}" loading="lazy" width="900" height="1100"></figure>${M.ph.about2 ? `<figure class="am-b"><img src="${uattr(M.ph.about2)}" alt="" loading="lazy" width="700" height="700"></figure>` : ''}</div>
 <div class="about-copy"><p class="eyebrow reveal">${hh(M.C.eyebrow.about)}</p><h2 class="reveal">${headHTML(M.C.h2.about)}</h2>${paras.map(p => `<p class="reveal">${hh(p)}</p>`).join('')}
 ${facts.length ? `<ul class="about-facts reveal">${facts.map(f => `<li>${svgI(f[0])}${hh(f[1])}</li>`).join('')}</ul>` : ''}</div></div></section>`;
 }
@@ -1811,7 +1859,7 @@ function footerHTML(M) {
   const legal = M.U.legal ? `<p class="legal">${hh(M.U.legal)}</p>` : '';
   return `<footer class="footer"><div class="wrap"><div class="footer-in"><div><a href="#top" class="brand">${logoHTML(M)}</a><p>${hh(about.trim())}</p></div>
 <div><h4>Visit</h4><ul>${visit.length ? visit.map(v => `<li>${hh(v)}</li>`).join('') : `<li>${hh(M.place || 'Get in touch')}</li>`}</ul></div>
-<div><h4>Contact</h4><ul>${d.phone ? `<li><a href="${telHref(d.phone)}">${hh(d.phone)}</a></li>` : ''}${d.email ? `<li><a href="mailto:${hh(d.email)}">${hh(d.email)}</a></li>` : ''}${M.wa ? `<li><a href="${hh(M.waLink('Hi ' + M.name))}" target="_blank" rel="noopener">WhatsApp</a></li>` : ''}${socials.map(s => `<li><a href="${hh(s[1])}" target="_blank" rel="noopener">${s[0]}</a></li>`).join('')}</ul></div></div>
+<div><h4>Contact</h4><ul>${d.phone ? `<li><a href="${telHref(d.phone)}">${hh(d.phone)}</a></li>` : ''}${d.email ? `<li><a href="mailto:${hh(d.email)}">${hh(d.email)}</a></li>` : ''}${M.wa ? `<li><a href="${hh(M.waLink('Hi ' + M.name))}" target="_blank" rel="noopener">WhatsApp</a></li>` : ''}${socials.map(s => `<li><a href="${safeHref(s[1])}" target="_blank" rel="noopener">${s[0]}</a></li>`).join('')}</ul></div></div>
 ${legal}<div class="foot-base"><span>© ${yr} ${hh(d.name)} · <a href="#privacy">Privacy</a> · <a href="#terms">Terms</a></span><span>Website by <a href="${STUDIO.url}" target="_blank" rel="noopener">${STUDIO.name}</a></span></div></div></footer>`;
 }
 function fixedUI(M) {
@@ -3310,7 +3358,7 @@ registerVariant('hero', 'mosaic', {
   label: 'Copy left, three-photo collage right (people at work + two details)',
   needs: () => ({ heroExtra: 2 }),
   html: M => { const p = heroParts(M), x = M.ph.heroExtra;
-    const extra = x.map((src, i) => `<figure class="mo-${'bc'[i]}" data-depth="${[26, 40][i]}"><img src="${src}" alt="" width="700" height="820" loading="eager"></figure>`).join('');
+    const extra = x.map((src, i) => `<figure class="mo-${'bc'[i]}" data-depth="${[26, 40][i]}"><img src="${uattr(src)}" alt="" width="700" height="820" loading="eager"></figure>`).join('');
     return `<section class="hero hero-mosaic" ${p.lbl}><div class="hero-bg" aria-hidden="true"><span class="blob b1"></span><span class="blob b2"></span></div>
 <div class="wrap hero-grid"><div class="hero-copy">${p.eyebrow}${p.h1}${p.lead}${p.actions}${p.proof}</div>
 <div class="mosaic${x.length < 2 ? ' solo' : ''}"><figure class="mo-a hero-img">${p.heroImg('', 900, 1100)}</figure>${extra}${p.chipData[0] ? `<div class="chip chip-a" data-depth="30"><span class="chip-ico">${svgI(p.chipData[0][0])}</span><div><small>${hh(p.chipData[0][1])}</small><b>${hh(p.chipData[0][2])}</b></div></div>` : ''}</div></div></section>`; },
@@ -3390,7 +3438,7 @@ registerVariant('services', 'rows', {
   label: 'Wide rows: photo left, details right, two per line', fits: notFood,
   html: M => `<section id="services" class="section alt"><div class="wrap">${head(M, 'services', M.C.servicesIntro)}<div class="srows">${M.services.map((s, i) => { const nm = svcName(s.name);
     const dur = svcDuration(s);
-    return `<article class="srow reveal">${M.ph.services[i] ? `<figure><img src="${M.ph.services[i]}" alt="${hh(nm)}" loading="lazy" width="640" height="420"></figure>` : ''}<div class="srow-b"><span class="srow-n">${String(i + 1).padStart(2, '0')}</span><h3>${hh(nm)}</h3>${s.desc ? `<p>${hh(s.desc)}</p>` : ''}<div class="srow-f">${s.priceT ? `<span class="price">${hh(s.priceT)}</span>` : ''}${dur ? `<span class="dur">${hh(dur)}</span>` : ''}${svcLink(M, nm)}</div></div></article>`; }).join('')}</div></div></section>`,
+    return `<article class="srow reveal">${M.ph.services[i] ? `<figure><img src="${uattr(M.ph.services[i])}" alt="${hh(nm)}" loading="lazy" width="640" height="420"></figure>` : ''}<div class="srow-b"><span class="srow-n">${String(i + 1).padStart(2, '0')}</span><h3>${hh(nm)}</h3>${s.desc ? `<p>${hh(s.desc)}</p>` : ''}<div class="srow-f">${s.priceT ? `<span class="price">${hh(s.priceT)}</span>` : ''}${dur ? `<span class="dur">${hh(dur)}</span>` : ''}${svcLink(M, nm)}</div></div></article>`; }).join('')}</div></div></section>`,
   css: M => `.site .srows{display:grid;grid-template-columns:1fr 1fr;gap:1.2rem}
 .site .srow{display:grid;grid-template-columns:42% 1fr;background:var(--bg);border:1px solid var(--line);border-radius:var(--radius);overflow:hidden;transition:transform .5s var(--ease),box-shadow .5s,border-color .5s}
 .site .srow figure{margin:0;overflow:hidden;background:var(--soft);min-height:220px}
@@ -3409,7 +3457,7 @@ registerVariant('services', 'bento', {
   label: 'Bento grid: one big feature tile, the rest as photo tiles with text over a gradient', fits: notFood,
   html: M => `<section id="services" class="section"><div class="wrap">${head(M, 'services', M.C.servicesIntro)}<div class="bento n${Math.min(M.services.length, 7)}">${M.services.map((s, i) => { const nm = svcName(s.name);
     const dur = svcDuration(s);
-    return `<article class="bt reveal${i === 0 ? ' big' : ''}">${M.ph.services[i] ? `<img src="${M.ph.services[i]}" alt="${hh(nm)}" loading="lazy" width="640" height="420">` : ''}<div class="bt-b"><div class="bt-top"><span class="bt-ico">${svgI(s.icon)}</span>${s.priceT ? `<span class="bt-pr">${hh(s.priceT)}</span>` : ''}${dur ? `<span class="dur">${hh(dur)}</span>` : ''}</div><h3>${hh(nm)}</h3>${s.desc ? `<p>${hh(s.desc)}</p>` : ''}${svcLink(M, nm)}</div></article>`; }).join('')}</div></div></section>`,
+    return `<article class="bt reveal${i === 0 ? ' big' : ''}">${M.ph.services[i] ? `<img src="${uattr(M.ph.services[i])}" alt="${hh(nm)}" loading="lazy" width="640" height="420">` : ''}<div class="bt-b"><div class="bt-top"><span class="bt-ico">${svgI(s.icon)}</span>${s.priceT ? `<span class="bt-pr">${hh(s.priceT)}</span>` : ''}${dur ? `<span class="dur">${hh(dur)}</span>` : ''}</div><h3>${hh(nm)}</h3>${s.desc ? `<p>${hh(s.desc)}</p>` : ''}${svcLink(M, nm)}</div></article>`; }).join('')}</div></div></section>`,
   css: M => `.site .bento{display:grid;grid-template-columns:repeat(3,1fr);grid-auto-rows:260px;gap:1rem}
 .site .bt{position:relative;border-radius:var(--radius);overflow:hidden;background:var(--deep);color:#fff;display:flex;isolation:isolate}
 .site .bt.big{grid-column:span 2;grid-row:span 2}
@@ -3433,7 +3481,7 @@ registerVariant('menu', 'tabs', { label: 'Tabbed menu / service list (salon gets
 registerVariant('why', 'split', { label: 'Photo with fact badge + tick list', needs: () => ({ split: 1 }), html: whyHTML });
 registerVariant('why', 'tiles', {
   label: 'Heading + tall photo tile + one tile per real reason', needs: () => ({ split: 1 }),
-  html: M => `<section id="why" class="section"><div class="wrap">${head(M, 'why')}<div class="wtiles n${M.why.length}">${M.ph.split ? `<figure class="wt-ph reveal"><img src="${M.ph.split}" alt="${hh(M.ph.alts.split || '')}" loading="lazy" width="1000" height="800"></figure>` : ''}${M.why.map((w, i) => `<div class="wt reveal"><span class="wt-n">${String(i + 1).padStart(2, '0')}</span><h3>${hh(w[0])}</h3><p>${hh(w[1])}</p></div>`).join('')}</div><div class="wt-cta reveal">${btnPrimary(M, 'btn-lg')}</div></div></section>`,
+  html: M => `<section id="why" class="section"><div class="wrap">${head(M, 'why')}<div class="wtiles n${M.why.length}">${M.ph.split ? `<figure class="wt-ph reveal"><img src="${uattr(M.ph.split)}" alt="${hh(M.ph.alts.split || '')}" loading="lazy" width="1000" height="800"></figure>` : ''}${M.why.map((w, i) => `<div class="wt reveal"><span class="wt-n">${String(i + 1).padStart(2, '0')}</span><h3>${hh(w[0])}</h3><p>${hh(w[1])}</p></div>`).join('')}</div><div class="wt-cta reveal">${btnPrimary(M, 'btn-lg')}</div></div></section>`,
   css: M => `.site .wtiles{display:grid;grid-template-columns:1.1fr 1fr 1fr;gap:1rem}
 .site .wt-ph{grid-row:span 2;border-radius:var(--radius);overflow:hidden;margin:0;min-height:380px;background:var(--soft)}
 .site .wt-ph img{width:100%;height:100%;object-fit:cover}
@@ -3448,7 +3496,7 @@ registerVariant('why', 'tiles', {
 });
 registerVariant('why', 'sticky', {
   label: 'Sticky heading + photo on the left, large numbered reasons scrolling on the right', needs: () => ({ split: 1 }),
-  html: M => `<section id="why" class="section alt"><div class="wrap wsticky"><div class="ws-l"><p class="eyebrow reveal">${hh(M.C.eyebrow.why)}</p><h2 class="reveal">${headHTML(M.C.h2.why)}</h2>${M.ph.split ? `<figure class="ws-ph reveal"><img src="${M.ph.split}" alt="${hh(M.ph.alts.split || '')}" loading="lazy" width="1000" height="800"></figure>` : ''}</div>
+  html: M => `<section id="why" class="section alt"><div class="wrap wsticky"><div class="ws-l"><p class="eyebrow reveal">${hh(M.C.eyebrow.why)}</p><h2 class="reveal">${headHTML(M.C.h2.why)}</h2>${M.ph.split ? `<figure class="ws-ph reveal"><img src="${uattr(M.ph.split)}" alt="${hh(M.ph.alts.split || '')}" loading="lazy" width="1000" height="800"></figure>` : ''}</div>
 <ol class="ws-list">${M.why.map((w, i) => `<li class="reveal"><span>${String(i + 1).padStart(2, '0')}</span><div><h3>${hh(w[0])}</h3><p>${hh(w[1])}</p></div></li>`).join('')}<li class="ws-cta reveal">${btnPrimary(M, 'btn-lg')}</li></ol></div></section>`,
   css: M => `.site .wsticky{display:grid;grid-template-columns:1fr 1.1fr;gap:4rem;align-items:start}
 .site .ws-l{position:sticky;top:110px}
@@ -3475,7 +3523,7 @@ registerVariant('about', 'wide', {
   html: M => { const sents = splitSentences(M.d.about); const paras = [sents.slice(0, 2).join(' '), sents.slice(2, 5).join(' ')].map(t => t.trim()).filter(Boolean);
     const facts = M.facts.filter(f => f.proof).slice(0, 4).map(f => f.proof);
     if (M.place) facts.push(M.place);
-    return `<section id="about" class="section about-sec"><div class="wrap">${M.ph.about ? `<figure class="aw-ph reveal"><img src="${M.ph.about}" alt="${hh(M.ph.alts.about || M.name)}" loading="lazy" width="1600" height="700"></figure>` : ''}
+    return `<section id="about" class="section about-sec"><div class="wrap">${M.ph.about ? `<figure class="aw-ph reveal"><img src="${uattr(M.ph.about)}" alt="${hh(M.ph.alts.about || M.name)}" loading="lazy" width="1600" height="700"></figure>` : ''}
 <div class="aw"><div><p class="eyebrow reveal">${hh(M.C.eyebrow.about)}</p><h2 class="reveal">${headHTML(M.C.h2.about)}</h2></div><div class="aw-copy">${paras.map(p => `<p class="reveal">${hh(p)}</p>`).join('')}${facts.length ? `<ul class="about-facts reveal">${facts.map(f => `<li>${svgI('check')}${hh(f)}</li>`).join('')}</ul>` : ''}</div></div></div></section>`; },
   css: M => `.site .aw-ph{margin:0 0 3rem;border-radius:calc(var(--radius) * 1.2 + 4px);overflow:hidden;aspect-ratio:21/8;background:var(--soft)}
 .site .aw-ph img{width:100%;height:100%;object-fit:cover}
@@ -3492,7 +3540,7 @@ registerVariant('gallery', 'strip', {
   label: 'Horizontal snap-scroll film strip with arrow buttons', needs: () => ({ gallery: 6 }),
   html: M => { const g = M.ph.gallery.slice(0, 6);
     return `<section id="gallery" class="section"><div class="wrap"><div class="gs-head">${head(M, 'gallery', '', 'left')}<div class="gs-ctrl"><button type="button" class="rv-btn" data-strip-prev aria-label="Previous photos">${svgI('arrow')}</button><button type="button" class="rv-btn" data-strip-next aria-label="More photos">${svgI('arrow')}</button></div></div></div>
-<div class="gstrip" data-strip tabindex="0" aria-label="Photo gallery">${g.map((src, i) => `<figure class="reveal"><img src="${src}" alt="${hh(M.ph.galleryStock ? M.prof.label + ' example ' + (i + 1) : M.name + ' photo ' + (i + 1))}" loading="lazy" width="800" height="600"></figure>`).join('')}</div>
+<div class="gstrip" data-strip tabindex="0" aria-label="Photo gallery">${g.map((src, i) => `<figure class="reveal"><img src="${uattr(src)}" alt="${hh(M.ph.galleryStock ? M.prof.label + ' example ' + (i + 1) : M.name + ' photo ' + (i + 1))}" loading="lazy" width="800" height="600"></figure>`).join('')}</div>
 ${M.ph.galleryStock ? `<div class="wrap"><div class="sample-row"><span class="sample-tag">${SAMPLE_PHOTOS}</span></div></div>` : ''}</section>`; },
   css: M => `.site .gs-head{display:flex;justify-content:space-between;align-items:end;gap:1rem;margin-bottom:2rem}
 .site .gs-ctrl{display:flex;gap:.5rem}.site .gs-ctrl [data-strip-prev] .i{transform:rotate(180deg)}
@@ -3525,7 +3573,7 @@ registerVariant('reviews', 'wall', {
 registerVariant('process', 'steps', { label: 'Three steps in a row (+ offer card)', needs: () => ({ steps: 1 }), html: processHTML });
 registerVariant('process', 'timeline', {
   label: 'Vertical timeline whose line draws in as you scroll', needs: () => ({ steps: 1 }),
-  html: M => `<section id="process" class="section"><div class="wrap">${head(M, 'process')}<ol class="tline">${M.steps.map((s, i) => `<li class="reveal"><span class="tl-dot">${i + 1}</span><div class="tl-c"><h3>${hh(s[0])}</h3><p>${hh(s[1])}</p></div>${M.ph.steps ? `<figure class="tl-ph"><img src="${M.ph.steps[i]}" alt="" loading="lazy" width="640" height="400"></figure>` : ''}</li>`).join('')}</ol></div></section>`,
+  html: M => `<section id="process" class="section"><div class="wrap">${head(M, 'process')}<ol class="tline">${M.steps.map((s, i) => `<li class="reveal"><span class="tl-dot">${i + 1}</span><div class="tl-c"><h3>${hh(s[0])}</h3><p>${hh(s[1])}</p></div>${M.ph.steps ? `<figure class="tl-ph"><img src="${uattr(M.ph.steps[i])}" alt="" loading="lazy" width="640" height="400"></figure>` : ''}</li>`).join('')}</ol></div></section>`,
   css: M => `.site .tline{list-style:none;margin:0 auto;padding:0;max-width:920px;position:relative}
 .site .tline::before{content:"";position:absolute;left:23px;top:8px;bottom:8px;width:2px;background:var(--line)}
 .site .tline li{position:relative;display:grid;grid-template-columns:48px 1fr 260px;gap:1.6rem;align-items:center;padding:1.4rem 0}
@@ -3551,7 +3599,7 @@ registerVariant('faq', 'center', {
 registerVariant('cta', 'band', { label: 'Colour band with button', html: ctaHTML });
 registerVariant('cta', 'photo', {
   label: 'Full-width photo with dark overlay and a big headline', needs: () => ({ cta: 1 }),
-  html: M => `<section class="cta-photo">${M.ph.cta ? `<div class="bgimg" aria-hidden="true"><img src="${M.ph.cta}" alt="" loading="lazy" width="1600" height="800"></div>` : ''}<div class="wrap cta-p-in reveal"><h2>${headHTML(M.C.h2.cta)}</h2><p>${M.fam === 'legal' ? 'Free, confidential and no obligation. ' : 'No obligation. '}${M.d.phone ? 'Call ' + hh(M.d.phone) + ' or use the form below.' : 'Use the form below.'}</p><div class="hero-actions">${btnPrimary(M, 'btn-lg')}${M.d.phone && M.primary.kind !== 'call' ? `<a class="btn btn-ghost btn-lg" href="${telHref(M.d.phone)}">${svgI('phone')} Call ${hh(M.d.phone)}</a>` : ''}</div></div></section>`,
+  html: M => `<section class="cta-photo">${M.ph.cta ? `<div class="bgimg" aria-hidden="true"><img src="${uattr(M.ph.cta)}" alt="" loading="lazy" width="1600" height="800"></div>` : ''}<div class="wrap cta-p-in reveal"><h2>${headHTML(M.C.h2.cta)}</h2><p>${M.fam === 'legal' ? 'Free, confidential and no obligation. ' : 'No obligation. '}${M.d.phone ? 'Call ' + hh(M.d.phone) + ' or use the form below.' : 'Use the form below.'}</p><div class="hero-actions">${btnPrimary(M, 'btn-lg')}${M.d.phone && M.primary.kind !== 'call' ? `<a class="btn btn-ghost btn-lg" href="${telHref(M.d.phone)}">${svgI('phone')} Call ${hh(M.d.phone)}</a>` : ''}</div></div></section>`,
   css: M => `.site .cta-photo{position:relative;isolation:isolate;padding:7rem 0;color:#fff;text-align:center;background:var(--deep);overflow:hidden}
 .site .cta-photo .bgimg{position:absolute;inset:0;z-index:-2}.site .cta-photo .bgimg img{width:100%;height:100%;object-fit:cover}
 .site .cta-photo::before{content:"";position:absolute;inset:0;z-index:-1;background:linear-gradient(180deg,rgba(0,0,0,.55),rgba(0,0,0,.72))}
@@ -3568,7 +3616,7 @@ registerVariant('book', 'split', { label: 'Copy + contact details left, form rig
 registerVariant('book', 'overlay', {
   label: 'Form card floating over a full photo, contact details on a glass panel', needs: () => ({ contact: 1 }),
   html: M => { const b = bookParts(M);
-    return `<section id="book" class="section book-ov">${M.ph.contact ? `<div class="bgimg" aria-hidden="true"><img src="${M.ph.contact}" alt="" loading="lazy" width="1400" height="900"></div>` : ''}<div class="wrap book"><div class="book-copy reveal"><p class="eyebrow">${hh(b.eyebrow)}</p><h2>${headHTML(b.h2)}</h2><p>${hh(b.intro)}</p>${infoList(M)}${b.waBtn}</div>${b.form}</div></section>`; },
+    return `<section id="book" class="section book-ov">${M.ph.contact ? `<div class="bgimg" aria-hidden="true"><img src="${uattr(M.ph.contact)}" alt="" loading="lazy" width="1400" height="900"></div>` : ''}<div class="wrap book"><div class="book-copy reveal"><p class="eyebrow">${hh(b.eyebrow)}</p><h2>${headHTML(b.h2)}</h2><p>${hh(b.intro)}</p>${infoList(M)}${b.waBtn}</div>${b.form}</div></section>`; },
   css: M => `.site .book-ov{position:relative;isolation:isolate;background:var(--deep);color:#fff}
 .site .book-ov .bgimg{position:absolute;inset:0;z-index:-2}.site .book-ov .bgimg img{width:100%;height:100%;object-fit:cover}
 .site .book-ov::before{content:"";position:absolute;inset:0;z-index:-1;background:linear-gradient(90deg,rgba(6,8,12,.88),rgba(6,8,12,.55))}
@@ -3627,7 +3675,7 @@ registerVariant('hero', 'dual', {
     const dest = M.order.includes('menu') ? '#menu' : '#services';
     return `<section class="hero hero-dual" ${p.lbl}><div class="wrap du-grid">
 <div class="hero-copy">${p.eyebrow}${p.h1}${p.lead}${p.actions}${p.proof}<a class="du-orb" href="${dest}">Services</a></div>
-<div class="du-photos">${p.heroImg('', 900, 1100) ? `<figure class="du-a">${p.heroImg('', 900, 1100)}</figure>` : ''}${extra ? `<figure class="du-b"><img src="${extra}" alt="" width="700" height="820"></figure>` : ''}</div>
+<div class="du-photos">${p.heroImg('', 900, 1100) ? `<figure class="du-a">${p.heroImg('', 900, 1100)}</figure>` : ''}${extra ? `<figure class="du-b"><img src="${uattr(extra)}" alt="" width="700" height="820"></figure>` : ''}</div>
 </div></section>`; },
   css: () => `.site .hero-dual{padding:3.2rem 0 3.6rem}
 .site .du-grid{display:grid;grid-template-columns:1fr .92fr;gap:2.4rem;align-items:center}
@@ -3779,7 +3827,7 @@ registerVariant('services', 'fresh', {
   fits: c => c.profK === 'cleaning',
   html: M => `<section id="services" class="section"><div class="wrap">${head(M, 'services', M.C.servicesIntro)}<div class="fr-grid">${M.services.map((s, i) => {
     const tag = svcPlace(s.name);
-    return `<article class="fr reveal">${M.ph.services[i] ? `<img src="${M.ph.services[i]}" alt="${hh(svcName(s.name))}" width="640" height="420">` : ''}<div><${'h3'}>${hh(svcName(s.name))}</h3>${tag ? `<small>${hh(tag)}</small>` : ''}${s.desc ? `<p>${hh(s.desc)}</p>` : ''}<div class="fr-f">${priceExact(s)}${svcLink(M, svcName(s.name))}</div></div></article>`;
+    return `<article class="fr reveal">${M.ph.services[i] ? `<img src="${uattr(M.ph.services[i])}" alt="${hh(svcName(s.name))}" width="640" height="420">` : ''}<div><${'h3'}>${hh(svcName(s.name))}</h3>${tag ? `<small>${hh(tag)}</small>` : ''}${s.desc ? `<p>${hh(s.desc)}</p>` : ''}<div class="fr-f">${priceExact(s)}${svcLink(M, svcName(s.name))}</div></div></article>`;
   }).join('')}</div></div></section>`,
   css: () => `.site .fr-grid{display:grid;grid-template-columns:1fr 1fr;gap:1rem}
 .site .fr{background:var(--surface);border:1px solid var(--line);border-radius:22px;overflow:hidden;display:grid;grid-template-columns:.9fr 1.1fr}
@@ -3794,7 +3842,7 @@ registerVariant('services', 'fresh', {
 registerVariant('services', 'yard', {
   label: 'Exterior job rows with a photo and the exact price',
   fits: c => c.profK === 'pressure',
-  html: M => `<section id="services" class="section alt"><div class="wrap">${head(M, 'services', M.C.servicesIntro)}<div class="yd">${M.services.map((s, i) => `<article class="yd-row reveal"><span class="yd-n">${String(i + 1).padStart(2, '0')}</span>${M.ph.services[i] ? `<img src="${M.ph.services[i]}" alt="${hh(svcName(s.name))}" width="640" height="420">` : ''}<div><h3>${hh(svcName(s.name))}</h3>${s.desc ? `<p>${hh(s.desc)}</p>` : ''}<div class="yd-f">${priceExact(s)}${svcLink(M, svcName(s.name))}</div></div></article>`).join('')}</div></div></section>`,
+  html: M => `<section id="services" class="section alt"><div class="wrap">${head(M, 'services', M.C.servicesIntro)}<div class="yd">${M.services.map((s, i) => `<article class="yd-row reveal"><span class="yd-n">${String(i + 1).padStart(2, '0')}</span>${M.ph.services[i] ? `<img src="${uattr(M.ph.services[i])}" alt="${hh(svcName(s.name))}" width="640" height="420">` : ''}<div><h3>${hh(svcName(s.name))}</h3>${s.desc ? `<p>${hh(s.desc)}</p>` : ''}<div class="yd-f">${priceExact(s)}${svcLink(M, svcName(s.name))}</div></div></article>`).join('')}</div></div></section>`,
   css: () => `.site .yd{display:grid;gap:.8rem}
 .site .yd-row{display:grid;grid-template-columns:auto 180px 1fr;gap:1rem;align-items:center;background:var(--surface);border:1px solid var(--line);border-radius:6px;padding:.7rem;overflow:hidden}
 .site .yd-n{font:800 1.4rem/1 var(--display);color:var(--accent-text);padding-left:.4rem}
@@ -3809,7 +3857,7 @@ registerVariant('gallery', 'masonry', {
   fits: c => c.fam === 'beauty',
   needs: () => ({ gallery: 6 }),
   html: M => { const g = M.ph.gallery.slice(0, 6);
-    return `<section id="gallery" class="section"><div class="wrap">${head(M, 'gallery')}<div class="ms">${g.map((src, i) => `<figure class="reveal"><img src="${src}" alt="${hh(M.ph.galleryStock ? M.prof.label + ' example ' + (i + 1) : M.name + ' photo ' + (i + 1))}" loading="lazy" width="800" height="600"></figure>`).join('')}</div>${M.ph.galleryStock ? `<div class="sample-row"><span class="sample-tag">${SAMPLE_PHOTOS}</span></div>` : ''}</div></section>`; },
+    return `<section id="gallery" class="section"><div class="wrap">${head(M, 'gallery')}<div class="ms">${g.map((src, i) => `<figure class="reveal"><img src="${uattr(src)}" alt="${hh(M.ph.galleryStock ? M.prof.label + ' example ' + (i + 1) : M.name + ' photo ' + (i + 1))}" loading="lazy" width="800" height="600"></figure>`).join('')}</div>${M.ph.galleryStock ? `<div class="sample-row"><span class="sample-tag">${SAMPLE_PHOTOS}</span></div>` : ''}</div></section>`; },
   css: () => `.site .ms{columns:3;column-gap:.8rem}
 .site .ms figure{break-inside:avoid;margin:0 0 .8rem;border-radius:18px;overflow:hidden;background:var(--soft)}
 .site .ms img{width:100%;height:auto}
@@ -3870,13 +3918,13 @@ registerVariant('infobar', 'float', {
 /* ---------- 2. before / after (G1 / G2): client's own photo pairs only ---------- */
 function baSlider(M, p, i, big) {
   const t = p.t ? ': ' + p.t : '';
-  return `<div class="ba${big ? ' ba-big' : ''} ba-frame" data-ba style="--pos:50%"><img class="ba-a" src="${hh(p.a)}" alt="${hh(M.name + ', after' + t)}" loading="lazy" width="1200" height="900">
-<div class="ba-b"><img src="${hh(p.b)}" alt="${hh(M.name + ', before' + t)}" loading="lazy" width="1200" height="900"></div>
+  return `<div class="ba${big ? ' ba-big' : ''} ba-frame" data-ba style="--pos:50%"><img class="ba-a" src="${uattr(p.a)}" alt="${hh(M.name + ', after' + t)}" loading="lazy" width="1200" height="900">
+<div class="ba-b"><img src="${uattr(p.b)}" alt="${hh(M.name + ', before' + t)}" loading="lazy" width="1200" height="900"></div>
 <span class="ba-tag ba-tb">Before</span><span class="ba-tag ba-ta">After</span><span class="ba-h" aria-hidden="true"><i>${svgI('arrow')}</i></span>
 <input class="ba-r" type="range" min="0" max="100" value="50" aria-label="Drag to compare before and after${hh(t)}"></div>`;
 }
 const baNote = M => M.fam === 'dental' || M.fam === 'health' ? `Real results from ${M.name}. Every patient is different, and results vary.` : M.fam === 'beauty' ? `Real results from ${M.name}. Results vary from person to person.` : `Real work by ${M.name}.`;
-const baPicker = M => M.ba.length > 1 ? `<div class="ba-pick" role="group" aria-label="Choose a result">${M.ba.map((p, i) => `<button type="button" class="ba-p${i ? '' : ' is-on'}" aria-pressed="${i ? 'false' : 'true'}" data-b="${hh(p.b)}" data-a="${hh(p.a)}" data-t="${hh(p.t || 'Result ' + (i + 1))}"><img src="${hh(p.a)}" alt="" width="120" height="90" loading="lazy"><span>${hh(p.t || 'Result ' + (i + 1))}</span></button>`).join('')}</div>` : '';
+const baPicker = M => M.ba.length > 1 ? `<div class="ba-pick" role="group" aria-label="Choose a result">${M.ba.map((p, i) => `<button type="button" class="ba-p${i ? '' : ' is-on'}" aria-pressed="${i ? 'false' : 'true'}" data-b="${uattr(p.b)}" data-a="${uattr(p.a)}" data-t="${hh(p.t || 'Result ' + (i + 1))}"><img src="${uattr(p.a)}" alt="" width="120" height="90" loading="lazy"><span>${hh(p.t || 'Result ' + (i + 1))}</span></button>`).join('')}</div>` : '';
 const baCSS = M => `.site .ba{position:relative;overflow:hidden;border-radius:calc(var(--radius) + 6px);aspect-ratio:4/3;background:var(--soft);box-shadow:var(--shadow);user-select:none;touch-action:pan-y}
 .site .ba img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
 .site .ba-b{position:absolute;inset:0;clip-path:inset(0 calc(100% - var(--pos)) 0 0)}
@@ -3947,7 +3995,7 @@ registerVariant('services', 'feature', {
   html: M => { const n = M.services.length;
     const cards = M.services.map((s, i) => { const nm = svcName(s.name);
       const dur = svcDuration(s);
-      return `<article class="ft reveal${M.ph.services[i] ? '' : ' no-img'}">${M.ph.services[i] ? `<img src="${M.ph.services[i]}" alt="${hh(nm)}" loading="lazy" width="640" height="420">` : ''}<span class="ft-wm" aria-hidden="true">${svgI(s.icon)}</span>
+      return `<article class="ft reveal${M.ph.services[i] ? '' : ' no-img'}">${M.ph.services[i] ? `<img src="${uattr(M.ph.services[i])}" alt="${hh(nm)}" loading="lazy" width="640" height="420">` : ''}<span class="ft-wm" aria-hidden="true">${svgI(s.icon)}</span>
 <div class="ft-lab"><h3>${hh(nm)}</h3>${s.desc ? `<p>${hh(s.desc)}</p>` : ''}<div class="ft-f">${s.priceT ? `<span class="price">${hh(s.priceT)}</span>` : ''}${dur ? `<span class="dur">${hh(dur)}</span>` : ''}${svcLink(M, nm)}</div></div></article>`; }).join('');
     const one = M.U.svcLabel.toLowerCase();
     const cta = `<div class="ft ft-cta reveal"><h3>${headHTML(`Not sure which ${one} you *need?*`)}</h3><p>Tell us what's on your mind and we'll help you choose.</p>${btnPrimary(M, 'btn-light').replace('btn btn-primary btn-light', 'btn btn-light')}</div>`;
@@ -3984,7 +4032,7 @@ registerVariant('reviews', 'bento', {
   needs: () => ({ rv: 1 }),
   html: M => { const R = M.reviews.slice(0, 5);
     const card = (r, i) => `<blockquote class="rb rb${i} reveal"><span class="stars" aria-label="5 out of 5">★★★★★</span><p>${hh(r.q)}</p><footer><span class="av" aria-hidden="true">${hh(r.n.trim()[0] || '★')}</span><cite>${hh(r.n)}</cite></footer>${r.sample ? `<span class="sample-tag">${SAMPLE_REVIEW}</span>` : ''}</blockquote>`;
-    const photo = M.ph.rv ? `<div class="rb rb-ph reveal"><img src="${M.ph.rv}" alt="" loading="lazy" width="800" height="1000"><div><b>${hh(M.C.h2.cta.replace(/\*/g, ''))}</b>${btnPrimary(M).replace('btn btn-primary', 'btn btn-light')}</div></div>` : '';
+    const photo = M.ph.rv ? `<div class="rb rb-ph reveal"><img src="${uattr(M.ph.rv)}" alt="" loading="lazy" width="800" height="1000"><div><b>${hh(M.C.h2.cta.replace(/\*/g, ''))}</b>${btnPrimary(M).replace('btn btn-primary', 'btn btn-light')}</div></div>` : '';
     return `<section id="reviews" class="section alt"><div class="wrap">${head(M, 'reviews', R[0].sample ? '' : 'In their own words.')}<div class="rbento n${R.length}">${R.slice(0, 2).map(card).join('')}${photo}${R.slice(2).map((r, i) => card(r, i + 2)).join('')}</div></div></section>`; },
   css: M => `.site .rbento{display:grid;grid-template-columns:repeat(3,1fr);gap:1rem;grid-auto-flow:dense}
 .site .rb{margin:0;border-radius:calc(var(--radius) + 4px);padding:1.6rem;display:flex;flex-direction:column;gap:.9rem;background:var(--bg);border:1px solid var(--line);position:relative}
@@ -4395,6 +4443,7 @@ function fullSiteDoc(M, markup) {
 <meta property="og:type" content="website"><meta property="og:title" content="${hh(title)}"><meta property="og:description" content="${hh(desc)}">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="theme-color" content="${/^#/.test(M.P.bg) ? M.P.bg : '#ffffff'}">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com data:; img-src 'self' data: blob: https://images.pexels.com https://images.unsplash.com https://plus.unsplash.com; connect-src 'self'; frame-src 'none'; object-src 'none'; base-uri 'self'; form-action 'self'">
 <link rel="icon" href="${fav}">
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link rel="preconnect" href="https://images.unsplash.com"><link rel="preconnect" href="https://images.pexels.com">
 <link rel="stylesheet" href="${gfURL(M.S)}">
@@ -4471,7 +4520,7 @@ const slugOf = s => String(s).toLowerCase().replace(/&/g, 'and').replace(/\(.*?\
 
 /* Build the LIVE site (no sample reviews/figures, real enquiry forms) in this browser, then upload it. */
 function buildLive(s, slug) {
-  const d = J(s.data_json), opts = J(s.opts_json) || {};
+  const d = sanitizeSiteData(J(s.data_json) || {}, { allowData: false }), opts = J(s.opts_json) || {};
   const url = `${location.origin}/s/${slug}`;
   const out = buildSite(d, opts, null, { live: true, leadUrl: `${location.origin}/api/lead/${slug}`, url });
   if (/class="sample-tag"/.test(out.doc)) throw new Error('Live build still contains sample content');

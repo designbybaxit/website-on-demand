@@ -303,7 +303,7 @@ function readImage(file, max, type, q) {
 }
 function setLogo(url) {
   logoData = url || '';
-  $('#logoPrev').innerHTML = logoData ? `<img src="${logoData}" alt="logo">` : 'No logo';
+  $('#logoPrev').innerHTML = logoData ? `<img src="${uattr(logoData)}" alt="logo">` : 'No logo';
   $('#logoClear').style.display = logoData ? 'inline-flex' : 'none';
 }
 $('#logoFile').onchange = async e => {
@@ -312,7 +312,7 @@ $('#logoFile').onchange = async e => {
 };
 $('#logoClear').onclick = () => { setLogo(''); $('#logoFile').value = ''; };
 function renderPhotos() {
-  $('#photoList').innerHTML = photos.map((p, i) => `<figure><img src="${p}" alt="Photo ${i + 1}"><button type="button" data-rmp="${i}" aria-label="Remove photo ${i + 1}">✕</button></figure>`).join('');
+  $('#photoList').innerHTML = photos.map((p, i) => `<figure><img src="${uattr(p)}" alt="Photo ${i + 1}"><button type="button" data-rmp="${i}" aria-label="Remove photo ${i + 1}">✕</button></figure>`).join('');
   $('#photoCount').textContent = `${photos.length} / ${MAX_PHOTOS}`;
   $('#photoFile').disabled = photos.length >= MAX_PHOTOS;
 }
@@ -326,7 +326,7 @@ $('#photoList').onclick = e => { const i = e.target.dataset.rmp; if (i !== undef
 /* before / after pairs: the client's own work only; the site shows a slider only when these exist */
 const MAX_BA = 4;
 function renderBA() {
-  $('#baList').innerHTML = baPairs.map((p, i) => `<figure><img src="${p.b}" alt="Before ${i + 1}"><img src="${p.a}" alt="After ${i + 1}">${p.t ? `<figcaption>${esc(p.t)}</figcaption>` : ''}<button type="button" data-rmba="${i}" aria-label="Remove pair ${i + 1}">✕</button></figure>`).join('');
+  $('#baList').innerHTML = baPairs.map((p, i) => `<figure><img src="${uattr(p.b)}" alt="Before ${i + 1}"><img src="${uattr(p.a)}" alt="After ${i + 1}">${p.t ? `<figcaption>${esc(p.t)}</figcaption>` : ''}<button type="button" data-rmba="${i}" aria-label="Remove pair ${i + 1}">✕</button></figure>`).join('');
   $('#baCount').textContent = `${baPairs.length} / ${MAX_BA}`;
   const full = baPairs.length >= MAX_BA;
   ['baBefore', 'baAfter'].forEach(id => $('#' + id).disabled = full);
@@ -453,12 +453,13 @@ showFormStep(1, { noFocus: true });
 
 function readForm() {
   const f = $('#intake').elements, g = k => f[k].value.trim();
-  return { name: g('name'), industry: f.industry.value, industryOther: g('industryOther'), country: f.country.value, city: g('city'), areas: g('areas'), about: g('about'),
+  const raw = { name: g('name'), industry: f.industry.value, industryOther: g('industryOther'), country: f.country.value, city: g('city'), areas: g('areas'), about: g('about'),
     services: services.map(s => ({ name: s.name.trim(), desc: s.desc.trim(), price: s.price.trim() })).filter(s => s.name),
     mainAction: ($('input[name=mainAction]:checked') || {}).value || '', phone: g('phone'), whatsapp: g('whatsapp'), email: g('email'), address: g('address'), hours: f.hours.value.trim(),
     reviews: f.reviews.value.trim(), stats: f.stats.value.trim(), insurance: baShown('#insField') ? f.insurance.value.trim() : '',
     colour: f.colour.value === 'custom' ? $('#colourCustom').value : f.colour.value,
     facebook: g('facebook'), instagram: g('instagram'), other: g('other'), logo: logoData, photos: photos.slice(), ba: baShown('#baField') ? baPairs.map(p => ({ ...p })) : [] };
+  return sanitizeSiteData(raw, { allowData: true });
 }
 function baShown(sel) { return $(sel).style.display !== 'none'; }
 function validate(d) {

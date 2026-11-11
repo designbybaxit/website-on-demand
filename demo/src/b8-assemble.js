@@ -50,6 +50,7 @@ function fullSiteDoc(M, markup) {
 <meta property="og:type" content="website"><meta property="og:title" content="${hh(title)}"><meta property="og:description" content="${hh(desc)}">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="theme-color" content="${/^#/.test(M.P.bg) ? M.P.bg : '#ffffff'}">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com data:; img-src 'self' data: blob: https://images.pexels.com https://images.unsplash.com https://plus.unsplash.com; connect-src 'self'; frame-src 'none'; object-src 'none'; base-uri 'self'; form-action 'self'">
 <link rel="icon" href="${fav}">
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link rel="preconnect" href="https://images.unsplash.com"><link rel="preconnect" href="https://images.pexels.com">
 <link rel="stylesheet" href="${gfURL(M.S)}">

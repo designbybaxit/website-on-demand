@@ -51,6 +51,53 @@ const svgI = (k, cls = '') => `<svg class="i ${cls}" viewBox="0 0 24 24" aria-hi
 const WA_SVG = '<svg class="wa-ic" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M12 2a10 10 0 0 0-8.6 15l-1.4 5 5.2-1.4A10 10 0 1 0 12 2zm0 18.2c-1.5 0-3-.4-4.3-1.2l-.3-.2-3.1.8.8-3-.2-.3A8.2 8.2 0 1 1 12 20.2zm4.5-6.1c-.2-.1-1.5-.7-1.7-.8-.2-.1-.4-.1-.6.1l-.8 1c-.1.2-.3.2-.5.1a6.7 6.7 0 0 1-3.3-2.9c-.3-.4.3-.4.7-1.3.1-.2 0-.3 0-.4l-.8-1.8c-.2-.5-.4-.4-.6-.4h-.5a1 1 0 0 0-.7.3 3 3 0 0 0-.9 2.2 5.2 5.2 0 0 0 1.1 2.8 11.9 11.9 0 0 0 4.6 4c1.7.7 2.3.8 3.2.6.5-.1 1.5-.6 1.7-1.2.2-.6.2-1.1.2-1.2-.1-.1-.3-.2-.5-.3z"/></svg>';
 
 const hh = s => String(s ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+/* URL allowlist (keep in sync with backend/src/security.mjs). Stored/published: https: or /i/<id>/<key>. */
+const SAFE_UPLOAD = /^\/i\/[A-Za-z0-9]+\/[A-Za-z0-9]+$/;
+const SAFE_DATA_IMG = /^data:image\/(jpeg|png|webp);base64,[A-Za-z0-9+/]+=*$/i;
+function isHttpsUrl(s) {
+  try { const u = new URL(String(s)); return u.protocol === 'https:' && !u.username && !u.password; } catch { return false; }
+}
+function isUploadUrl(s) {
+  const t = String(s || '');
+  if (SAFE_UPLOAD.test(t)) return true;
+  try { const u = new URL(t); return u.protocol === 'https:' && !u.username && !u.password && SAFE_UPLOAD.test(u.pathname) && !u.search && !u.hash; } catch { return false; }
+}
+function isSafeDataImg(s) {
+  const t = String(s || '');
+  return t.length <= 2e6 && SAFE_DATA_IMG.test(t);
+}
+function safeUrl(s, kind = 'img') {
+  const t = String(s == null ? '' : s).trim();
+  if (!t) return '';
+  if (kind === 'social') return isHttpsUrl(t) ? t : '';
+  if (isUploadUrl(t) || isHttpsUrl(t)) return t;
+  if (kind === 'preview' && isSafeDataImg(t)) return t;
+  return '';
+}
+const uattr = (s, kind = 'preview') => hh(safeUrl(s, kind) || '');
+const safeHref = (s, kind = 'social') => hh(safeUrl(s, kind) || '');
+function escSrcset(s) {
+  return String(s || '').split(',').map(part => {
+    const bits = part.trim().split(/\s+/);
+    if (!bits[0]) return '';
+    const url = safeUrl(bits[0], 'preview');
+    if (!url) return '';
+    return hh(url) + (bits[1] ? ' ' + bits.slice(1).join(' ') : '');
+  }).filter(Boolean).join(', ');
+}
+function sanitizeSiteData(d, opts = {}) {
+  const kind = opts.allowData ? 'preview' : 'img';
+  if (!d || typeof d !== 'object') return {};
+  const out = { ...d };
+  out.logo = safeUrl(d.logo, kind);
+  out.photos = Array.isArray(d.photos) ? d.photos.map(p => safeUrl(p, kind)).filter(Boolean) : [];
+  if (Array.isArray(d.ba)) out.ba = d.ba.map(p => p && typeof p === 'object' ? { ...p, b: safeUrl(p.b, kind), a: safeUrl(p.a, kind) } : p).filter(p => p && p.b && p.a);
+  out.facebook = safeUrl(d.facebook, 'social');
+  out.instagram = safeUrl(d.instagram, 'social');
+  out.other = safeUrl(d.other, 'social');
+  return out;
+}
+
 const hashStr = s => { let h = 7; for (const c of String(s)) h = (h * 31 + c.charCodeAt(0)) >>> 0; return h; };
 const pick = (arr, seed) => arr[seed % arr.length];
 const cleanName = n => String(n || '').replace(/\s*\((demo|example)\)\s*/ig, ' ').trim();

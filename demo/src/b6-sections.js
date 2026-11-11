@@ -29,7 +29,7 @@ function topbarHTML(M) {
   return `<div class="topbar${emergency ? ' alert' : ''}"><div class="wrap topbar-in">${left}${mid}${right}</div></div>`;
 }
 function logoHTML(M) {
-  const mark = M.d.logo ? `<span class="logo-mark img"><img src="${M.d.logo}" alt="" width="120" height="44"></span>` : `<span class="logo-mark" aria-hidden="true">${hh(M.initials)}</span>`;
+  const mark = M.d.logo ? `<span class="logo-mark img"><img src="${uattr(M.d.logo)}" alt="" width="120" height="44"></span>` : `<span class="logo-mark" aria-hidden="true">${hh(M.initials)}</span>`;
   return `${mark}<span><b>${hh(M.logoBold)}</b>${M.logoRest ? ' ' + hh(M.logoRest) : ''}</span>`;
 }
 function headerHTML(M) {
@@ -80,7 +80,7 @@ function servicesHTML(M) {
       : M.primary.kind === 'call' ? `<a class="link" href="${telHref(M.d.phone)}">Call about ${hh(lowerFirst(nm))} ${svgI('arrow')}</a>`
         : `<a class="link" href="#book" data-pick="${hh(nm)}">${hh(M.C.verb)} ${hh(lowerFirst(nm))} ${svgI('arrow')}</a>`;
     const dur = svcDuration(s);
-    return `<article class="card${M.ph.services[i] ? ' has-img' : ''} reveal">${M.ph.services[i] ? `<figure class="card-img"><img src="${M.ph.services[i]}" alt="${hh(nm)}" loading="lazy" width="640" height="420"></figure>` : ''}<div class="card-body"><div class="ico">${svgI(s.icon)}</div><h3>${hh(nm)}</h3>${s.desc ? `<p>${hh(s.desc)}</p>` : ''}${s.priceT ? `<div class="price">${hh(s.priceT)}</div>` : ''}${dur ? `<div class="dur">${hh(dur)}</div>` : ''}${act}</div></article>`;
+    return `<article class="card${M.ph.services[i] ? ' has-img' : ''} reveal">${M.ph.services[i] ? `<figure class="card-img"><img src="${uattr(M.ph.services[i])}" alt="${hh(nm)}" loading="lazy" width="640" height="420"></figure>` : ''}<div class="card-body"><div class="ico">${svgI(s.icon)}</div><h3>${hh(nm)}</h3>${s.desc ? `<p>${hh(s.desc)}</p>` : ''}${s.priceT ? `<div class="price">${hh(s.priceT)}</div>` : ''}${dur ? `<div class="dur">${hh(dur)}</div>` : ''}${act}</div></article>`;
   }).join('');
   return `<section id="services" class="section alt"><div class="wrap">${head(M, 'services', M.C.servicesIntro)}<div class="cards ${cls}">${cards}</div></div></section>`;
 }
@@ -90,12 +90,12 @@ function whyHTML(M) {
   const badge = fb ? [fb.chip[0], fb.chip[1], fb.chip[2]] : M.hours.length ? ['clock', M.hours[0][0] || 'Open', M.hours[0][1]] : M.place ? ['pin', 'Find us', M.place] : ['phone', 'Talk to us', M.d.phone];
   const story = '';
   return `<section id="why" class="section${M.key === 'law' ? ' alt' : ''}"><div class="wrap split${rev ? ' rev' : ''}">
-<div class="split-media reveal"><div class="frame">${M.ph.split ? `<img src="${M.ph.split}" alt="${hh(M.ph.alts.split || '')}" loading="lazy" width="1000" height="800">` : ''}</div><div class="badge-float"><span class="bi">${svgI(badge[0])}</span><div><b>${hh(badge[1])}</b><span>${hh(badge[2])}</span></div></div></div>
+<div class="split-media reveal"><div class="frame">${M.ph.split ? `<img src="${uattr(M.ph.split)}" alt="${hh(M.ph.alts.split || '')}" loading="lazy" width="1000" height="800">` : ''}</div><div class="badge-float"><span class="bi">${svgI(badge[0])}</span><div><b>${hh(badge[1])}</b><span>${hh(badge[2])}</span></div></div></div>
 <div class="split-copy"><p class="eyebrow reveal">${hh(M.C.eyebrow.why)}</p><h2 class="reveal">${headHTML(M.C.h2.why)}</h2>${story}
 <ul class="checks">${M.why.map(w => `<li class="reveal"><b>${hh(w[0])}</b> ${hh(w[1])}</li>`).join('')}</ul>${btnPrimary(M, 'reveal')}</div></div></section>`;
 }
 function processHTML(M) {
-  const steps = M.steps.map((s, i) => `<li class="reveal">${M.ph.steps ? `<figure class="step-img"><img src="${M.ph.steps[i]}" alt="" loading="lazy" width="640" height="400"></figure>` : ''}<span class="num">0${i + 1}</span><h3>${hh(s[0])}</h3><p>${hh(s[1])}</p></li>`).join('');
+  const steps = M.steps.map((s, i) => `<li class="reveal">${M.ph.steps ? `<figure class="step-img"><img src="${uattr(M.ph.steps[i])}" alt="" loading="lazy" width="640" height="400"></figure>` : ''}<span class="num">0${i + 1}</span><h3>${hh(s[0])}</h3><p>${hh(s[1])}</p></li>`).join('');
   const offerSvc = M.services.find(s => s.priceT && /\d/.test(s.priceT));
   const offer = offerSvc ? `<div class="offer reveal"><div><p class="eyebrow">${hh(M.U.offerEyebrow)}</p><h3>${hh(svcName(offerSvc.name))}, <em>${hh(offerSvc.priceT)}</em></h3>${offerSvc.desc ? `<p>${hh(offerSvc.desc)}</p>` : ''}</div>${btnPrimary(M, 'btn-light btn-lg').replace('btn btn-primary btn-light', 'btn btn-light')}</div>` : '';
   return `<section id="process" class="section${M.key === 'law' ? '' : ' alt'}"><div class="wrap">${head(M, 'process')}<ol class="steps">${steps}</ol>${M.key !== 'restaurant' && M.key !== 'salon' ? offer : ''}</div></section>`;
@@ -107,11 +107,11 @@ function menuHTML(M) {
   const itemImg = s => { const idx = M.services.findIndex(x => svcName(x.name) === s.name); return idx >= 0 ? M.ph.services[idx] || '' : ''; };
   let gi = 0; const gImg = perItem ? groups.map(() => '') : groups.map(g => { const idx = M.services.findIndex(s => svcName(s.name) === g.items[0].name); return M.ph.services[idx >= 0 ? idx : gi++] || ''; });
   const tabs = groups.length > 1 ? `<div class="tabs" role="tablist" aria-label="Menu sections">${groups.map((g, i) => `<button class="tab" type="button" role="tab" id="t-${i}" aria-controls="m-${i}" aria-selected="${i ? 'false' : 'true'}"${i ? ' tabindex="-1"' : ''}>${hh(g.name)}</button>`).join('')}</div>` : '';
-  const panels = groups.map((g, i) => `<ul class="menu-list" id="m-${i}" role="tabpanel"${groups.length > 1 ? ` aria-labelledby="t-${i}"` : ''}${i ? ' hidden' : ''}>${gImg[i] ? `<li class="menu-img" aria-hidden="true"><img src="${gImg[i]}" alt="" loading="lazy" width="640" height="420"></li>` : ''}${g.items.map((s, j) => {
+  const panels = groups.map((g, i) => `<ul class="menu-list" id="m-${i}" role="tabpanel"${groups.length > 1 ? ` aria-labelledby="t-${i}"` : ''}${i ? ' hidden' : ''}>${gImg[i] ? `<li class="menu-img" aria-hidden="true"><img src="${uattr(gImg[i])}" alt="" loading="lazy" width="640" height="420"></li>` : ''}${g.items.map((s, j) => {
     const dur = svcDuration(s);
     const pr = `${dur ? `<span class="dur">${hh(dur)}</span>` : ''}${s.priceT ? `<span class="pr">${hh(s.priceT)}</span>` : ''}`;
     const im = perItem ? itemImg(s) : '';
-    const imgT = im ? `<img class="mi-img" src="${im}" alt="${hh(s.name)}" loading="lazy" width="640" height="420">` : '';
+    const imgT = im ? `<img class="mi-img" src="${uattr(im)}" alt="${hh(s.name)}" loading="lazy" width="640" height="420">` : '';
     const wrap = body => im ? `${imgT}<div class="mi-b">${body}</div>` : body;
     if (!salon) return `<li class="mi${im ? ' has-img' : ''} reveal">${wrap(`<h4>${hh(s.name)}</h4>${pr}${s.desc ? `<p>${hh(s.desc)}</p>` : ''}`)}</li>`;
     const on = i === 0 && j === 0;
@@ -134,7 +134,7 @@ function calcHTML(M) {
 }
 function galleryHTML(M) {
   const g = M.ph.gallery.slice(0, 5);
-  const fig = g.map((src, i) => `<figure class="reveal"><img src="${src}" alt="${hh(M.ph.galleryStock ? M.prof.label + ' example ' + (i + 1) : M.name + ' photo ' + (i + 1))}" loading="lazy" width="800" height="600"></figure>`).join('');
+  const fig = g.map((src, i) => `<figure class="reveal"><img src="${uattr(src)}" alt="${hh(M.ph.galleryStock ? M.prof.label + ' example ' + (i + 1) : M.name + ' photo ' + (i + 1))}" loading="lazy" width="800" height="600"></figure>`).join('');
   return `<section id="gallery" class="section"><div class="wrap">${head(M, 'gallery')}<div class="gallery g${g.length}">${fig}</div>${M.ph.galleryStock ? `<div class="sample-row"><span class="sample-tag">${SAMPLE_PHOTOS}</span></div>` : ''}</div></section>`;
 }
 function reviewsHTML(M) {
@@ -202,7 +202,7 @@ ${U.soon ? `<fieldset><legend>How soon?</legend><div class="slots" data-chips>${
 }
 function bookHTML(M) {
   const b = bookParts(M);
-  return `<section id="book" class="section book-sec">${M.ph.contact ? `<div class="book-bg" aria-hidden="true"><img src="${M.ph.contact}" alt="" loading="lazy" width="1400" height="900"></div>` : ''}<div class="wrap book"><div class="book-copy reveal"><p class="eyebrow">${hh(b.eyebrow)}</p><h2>${headHTML(b.h2)}</h2><p>${hh(b.intro)}</p>${infoList(M)}${b.waBtn}</div>${b.form}</div></section>`;
+  return `<section id="book" class="section book-sec">${M.ph.contact ? `<div class="book-bg" aria-hidden="true"><img src="${uattr(M.ph.contact)}" alt="" loading="lazy" width="1400" height="900"></div>` : ''}<div class="wrap book"><div class="book-copy reveal"><p class="eyebrow">${hh(b.eyebrow)}</p><h2>${headHTML(b.h2)}</h2><p>${hh(b.intro)}</p>${infoList(M)}${b.waBtn}</div>${b.form}</div></section>`;
 }
 
 /* About: the client's own words + two photos */
@@ -214,7 +214,7 @@ function aboutHTML(M) {
   if (M.services.length) facts.push(['sparkle', `${M.services.length} ${M.services.length > 1 ? M.U.nav.toLowerCase() : M.U.nav.toLowerCase().replace(/s$/, '')}`]);
   if (M.hours.length) facts.push(['clock', (M.hours[0][0] ? M.hours[0][0] + ': ' : '') + M.hours[0][1]]);
   return `<section id="about" class="section about-sec"><div class="wrap about">
-<div class="about-media reveal"><figure class="am-a"><img src="${M.ph.about}" alt="${hh(M.ph.alts.about || M.name)}" loading="lazy" width="900" height="1100"></figure>${M.ph.about2 ? `<figure class="am-b"><img src="${M.ph.about2}" alt="" loading="lazy" width="700" height="700"></figure>` : ''}</div>
+<div class="about-media reveal"><figure class="am-a"><img src="${uattr(M.ph.about)}" alt="${hh(M.ph.alts.about || M.name)}" loading="lazy" width="900" height="1100"></figure>${M.ph.about2 ? `<figure class="am-b"><img src="${uattr(M.ph.about2)}" alt="" loading="lazy" width="700" height="700"></figure>` : ''}</div>
 <div class="about-copy"><p class="eyebrow reveal">${hh(M.C.eyebrow.about)}</p><h2 class="reveal">${headHTML(M.C.h2.about)}</h2>${paras.map(p => `<p class="reveal">${hh(p)}</p>`).join('')}
 ${facts.length ? `<ul class="about-facts reveal">${facts.map(f => `<li>${svgI(f[0])}${hh(f[1])}</li>`).join('')}</ul>` : ''}</div></div></section>`;
 }
@@ -251,7 +251,7 @@ function footerHTML(M) {
   const legal = M.U.legal ? `<p class="legal">${hh(M.U.legal)}</p>` : '';
   return `<footer class="footer"><div class="wrap"><div class="footer-in"><div><a href="#top" class="brand">${logoHTML(M)}</a><p>${hh(about.trim())}</p></div>
 <div><h4>Visit</h4><ul>${visit.length ? visit.map(v => `<li>${hh(v)}</li>`).join('') : `<li>${hh(M.place || 'Get in touch')}</li>`}</ul></div>
-<div><h4>Contact</h4><ul>${d.phone ? `<li><a href="${telHref(d.phone)}">${hh(d.phone)}</a></li>` : ''}${d.email ? `<li><a href="mailto:${hh(d.email)}">${hh(d.email)}</a></li>` : ''}${M.wa ? `<li><a href="${hh(M.waLink('Hi ' + M.name))}" target="_blank" rel="noopener">WhatsApp</a></li>` : ''}${socials.map(s => `<li><a href="${hh(s[1])}" target="_blank" rel="noopener">${s[0]}</a></li>`).join('')}</ul></div></div>
+<div><h4>Contact</h4><ul>${d.phone ? `<li><a href="${telHref(d.phone)}">${hh(d.phone)}</a></li>` : ''}${d.email ? `<li><a href="mailto:${hh(d.email)}">${hh(d.email)}</a></li>` : ''}${M.wa ? `<li><a href="${hh(M.waLink('Hi ' + M.name))}" target="_blank" rel="noopener">WhatsApp</a></li>` : ''}${socials.map(s => `<li><a href="${safeHref(s[1])}" target="_blank" rel="noopener">${s[0]}</a></li>`).join('')}</ul></div></div>
 ${legal}<div class="foot-base"><span>© ${yr} ${hh(d.name)} · <a href="#privacy">Privacy</a> · <a href="#terms">Terms</a></span><span>Website by <a href="${STUDIO.url}" target="_blank" rel="noopener">${STUDIO.name}</a></span></div></div></footer>`;
 }
 function fixedUI(M) {
