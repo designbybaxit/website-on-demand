@@ -80,12 +80,69 @@ export function safeUrl(s, kind = 'img') {
   return '';
 }
 
+export const FIELD_LIMITS = {
+  name: 60, about: 900, phone: 30, email: 80, address: 120, hours: 300,
+  reviews: 1500, headline: 90, lead: 400, ctaLabel: 80, bookingUrl: 200,
+  serviceName: 80, serviceDesc: 400, servicePrice: 40, city: 80, areas: 120,
+  industryOther: 60, stats: 400, insurance: 400, whatsapp: 30, country: 10,
+};
+export const MAX_SERVICES = 16;
+export const MAX_SITE_PHOTOS = 12;
+
+/** Strip tags and NUL so stored copy cannot carry HTML into later pages. */
+export function stripHtml(s) {
+  return String(s == null ? '' : s).replace(/<[^>]*>/g, '').replace(/\u0000/g, '');
+}
+
+export function clipText(s, max, keepLines = false) {
+  let t = stripHtml(s);
+  if (keepLines) {
+    t = t.replace(/\r\n/g, '\n').replace(/\r/g, '\n').split('\n').map(l => l.replace(/[ \t]+/g, ' ').trimEnd()).join('\n').trim();
+  } else {
+    t = t.replace(/\s+/g, ' ').trim();
+  }
+  if (typeof max === 'number' && t.length > max) t = t.slice(0, max);
+  return t;
+}
+
+function sanitizePhotoOverrides(raw, kind) {
+  if (!raw || typeof raw !== 'object' || Array.isArray(raw)) return undefined;
+  const out = {};
+  for (const [k, v] of Object.entries(raw)) {
+    if (!/^(hero|about|about2|split|contact|cta|rv|circle|services:\d+|gallery:\d+|heroExtra:\d+|steps:\d+)$/.test(k)) continue;
+    const url = safeUrl(v, kind);
+    if (url) out[k] = url;
+  }
+  return Object.keys(out).length ? out : undefined;
+}
+
 export function sanitizeSiteData(d, opts = {}) {
   const kind = opts.allowData ? 'preview' : 'img';
   if (!d || typeof d !== 'object') return {};
   const out = { ...d };
+  out.name = clipText(d.name, FIELD_LIMITS.name);
+  out.about = clipText(d.about, FIELD_LIMITS.about, true);
+  out.phone = clipText(d.phone, FIELD_LIMITS.phone);
+  out.email = clipText(d.email, FIELD_LIMITS.email);
+  out.address = clipText(d.address, FIELD_LIMITS.address);
+  out.hours = clipText(d.hours, FIELD_LIMITS.hours, true);
+  out.reviews = clipText(d.reviews, FIELD_LIMITS.reviews, true);
+  out.city = clipText(d.city, FIELD_LIMITS.city);
+  out.areas = clipText(d.areas, FIELD_LIMITS.areas);
+  out.industryOther = clipText(d.industryOther, FIELD_LIMITS.industryOther);
+  out.stats = clipText(d.stats, FIELD_LIMITS.stats, true);
+  out.insurance = clipText(d.insurance, FIELD_LIMITS.insurance, true);
+  out.whatsapp = clipText(d.whatsapp, FIELD_LIMITS.whatsapp);
+  out.country = clipText(d.country, FIELD_LIMITS.country);
+  if (Array.isArray(d.services)) {
+    out.services = d.services.slice(0, MAX_SERVICES).map(s => s && typeof s === 'object' ? {
+      name: clipText(s.name, FIELD_LIMITS.serviceName),
+      desc: clipText(s.desc, FIELD_LIMITS.serviceDesc, true),
+      price: clipText(s.price, FIELD_LIMITS.servicePrice),
+    } : null).filter(s => s && s.name);
+  }
   out.logo = safeUrl(d.logo, kind);
-  out.photos = Array.isArray(d.photos) ? d.photos.map(p => safeUrl(p, kind)).filter(Boolean) : [];
+  out.photos = Array.isArray(d.photos) ? d.photos.map(p => safeUrl(p, kind)).filter(Boolean).slice(0, MAX_SITE_PHOTOS) : [];
   if (Array.isArray(d.ba)) {
     out.ba = d.ba.map(p => p && typeof p === 'object' ? { ...p, b: safeUrl(p.b, kind), a: safeUrl(p.a, kind) } : p)
       .filter(p => p && p.b && p.a);
@@ -93,6 +150,26 @@ export function sanitizeSiteData(d, opts = {}) {
   out.facebook = safeUrl(d.facebook, 'social');
   out.instagram = safeUrl(d.instagram, 'social');
   out.other = safeUrl(d.other, 'social');
+  out.bookingUrl = safeUrl(d.bookingUrl, 'social');
+  const ov = sanitizePhotoOverrides(d.photoOverrides, kind);
+  if (ov) out.photoOverrides = ov;
+  else delete out.photoOverrides;
+  return out;
+}
+
+/** Keep only known preview options; clip any client-edited copy. Does not touch WebiMade plan prices. */
+export function sanitizeOpts(o) {
+  if (!o || typeof o !== 'object') return {};
+  const out = {};
+  if (o.style) out.style = clipText(o.style, 40);
+  if (o.accent) out.accent = clipText(o.accent, 20);
+  if (o.minimal) out.minimal = true;
+  if (o.white) out.white = true;
+  if (typeof o.dark === 'boolean') out.dark = o.dark;
+  if (o.headline) out.headline = clipText(o.headline, FIELD_LIMITS.headline);
+  if (o.lead) out.lead = clipText(o.lead, FIELD_LIMITS.lead, true);
+  if (o.ctaLabel) out.ctaLabel = clipText(o.ctaLabel, FIELD_LIMITS.ctaLabel);
+  if (+o.design > 0) out.design = Math.min(99, Math.floor(+o.design));
   return out;
 }
 
@@ -183,4 +260,51 @@ export function leadCorsHeaders(req) {
     };
   }
   return {};
+}
+
+
+/* Owner-only editor access. The raw token is stored in an HttpOnly cookie, never
+   in the public /p/ HTML. Public share-link viewers do not get the edit bar. */
+export const EDIT_ID_RE = /^[A-Za-z0-9]{10,40}$/;
+export const EDIT_TOKEN_RE = /^[A-Za-z0-9]{10,64}$/;
+export function isEditId(id) { return EDIT_ID_RE.test(id || ''); }
+export function editCookieName(id) { return isEditId(id) ? 'wod_ed_' + id : ''; }
+export function tokenFromCookie(req, id) {
+  if (!req || !isEditId(id)) return '';
+  const raw = (req.headers && req.headers.get && req.headers.get('cookie')) || '';
+  const name = editCookieName(id);
+  if (!name) return '';
+  for (const part of String(raw).split(';')) {
+    const i = part.indexOf('=');
+    if (i < 0) continue;
+    const k = part.slice(0, i).trim();
+    const v = part.slice(i + 1).trim();
+    if (k === name && EDIT_TOKEN_RE.test(v)) return v;
+  }
+  return '';
+}
+export function requestEditToken(req, id, bodyToken) {
+  const fromBody = typeof bodyToken === 'string' && EDIT_TOKEN_RE.test(bodyToken) ? bodyToken : '';
+  const fromHeader = (req && req.headers && req.headers.get && req.headers.get('x-token')) || '';
+  const headerTok = EDIT_TOKEN_RE.test(fromHeader) ? fromHeader : '';
+  return tokenFromCookie(req, id) || headerTok || fromBody || '';
+}
+export function ownerCookieHeader(id, token, maxAge) {
+  const name = editCookieName(id);
+  if (!name || !EDIT_TOKEN_RE.test(token || '')) return '';
+  const age = Math.max(0, Math.floor(+maxAge || 0));
+  return `${name}=${token}; Path=/; SameSite=Lax; Secure; HttpOnly; Max-Age=${age}`;
+}
+export function ownerEditBarHtml(id) {
+  if (!isEditId(id)) return '';
+  const href = '/edit/' + id;
+  return `<div id="wod-owner-bar" style="position:sticky;top:0;z-index:2147483000;display:flex;align-items:center;justify-content:center;gap:14px;padding:10px 16px;background:#0A3336;color:#fff;font:600 14px/1.3 system-ui,-apple-system,Segoe UI,Roboto,sans-serif;box-shadow:0 8px 24px rgba(10,51,54,.28)">
+  <span style="opacity:.85">You built this website.</span>
+  <a href="${href}" target="_blank" rel="noopener" style="background:#14A69A;color:#fff;text-decoration:none;font-weight:700;padding:8px 14px;border-radius:10px">Edit your site ↗</a>
+</div>`;
+}
+export function withOwnerEditBar(html, id) {
+  const bar = ownerEditBarHtml(id);
+  if (!bar || !html) return html;
+  return String(html).replace(/<body([^>]*)>/i, `<body$1>${bar}`);
 }

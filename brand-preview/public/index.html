@@ -669,6 +669,105 @@ html.themes-on .theme-bar{display:flex}
  .trust span{text-align:center;padding:8px 10px}
  .card{padding:18px;margin:12px 0}
 }
+
+/* ---- Visual content editor (dedicated page + owner preview shell) ---- */
+#editSiteBtn.edit-site-btn{background:#0F5B59;color:#fff;border:0;box-shadow:0 8px 20px -10px rgba(15,91,89,.55);transition:background .2s var(--ease),transform .2s var(--ease),box-shadow .2s var(--ease)}
+#editSiteBtn.edit-site-btn:hover,#editSiteBtn.edit-site-btn:focus-visible{background:#0A3336;color:#fff;transform:translateY(-1px);box-shadow:0 12px 24px -10px rgba(15,91,89,.5)}
+#editSiteBtn.edit-site-btn:active{transform:none;background:#0A3336}
+.pv-edit-launch{display:flex;flex-direction:column;align-items:center;gap:6px;margin-top:8px}
+
+body.ed-mode{overflow:hidden;background:#d7e4e2}
+body.ed-mode .top,body.ed-mode .foot,body.ed-mode .theme-bar,body.ed-mode .atmos,body.ed-mode .grain{display:none !important}
+body.ed-mode .wrap{max-width:none;margin:0;padding:0;width:100%;z-index:2}
+body.ed-mode::after{display:none}
+#screen-editor{display:none}
+#screen-editor.on{display:flex;flex-direction:column;position:fixed;inset:0;z-index:80;background:#d7e4e2;animation:veIn .35s var(--ease)}
+@keyframes veIn{from{opacity:0}to{opacity:1}}
+.ve-top{display:flex;align-items:center;gap:10px;padding:8px 12px;min-height:56px;background:#0A3336;color:#fff;flex:none;box-shadow:0 8px 24px rgba(10,51,54,.28);z-index:3}
+.ve-top .ve-brand{font-weight:800;letter-spacing:-.02em;font-size:15px;margin-right:6px;color:#A6F3E1}
+.ve-top .ve-sep{width:1px;height:28px;background:rgba(255,255,255,.16);flex:none}
+.ve-top .sp{flex:1}
+.ve-btn{appearance:none;border:0;background:transparent;color:#fff;font:inherit;font-weight:700;font-size:13.5px;min-height:40px;padding:8px 12px;border-radius:10px;cursor:pointer;transition:background .15s var(--ease),transform .15s var(--ease),opacity .15s var(--ease)}
+.ve-btn:hover,.ve-btn:focus-visible{background:rgba(255,255,255,.12);transform:translateY(-1px)}
+.ve-btn:active{transform:none;background:rgba(255,255,255,.18)}
+.ve-btn:disabled{opacity:.4;cursor:default;transform:none;background:transparent}
+.ve-btn.primary{background:#14A69A}
+.ve-btn.primary:hover,.ve-btn.primary:focus-visible{background:#55C7B0;color:#0A3336}
+.ve-btn.ghost{background:rgba(255,255,255,.08)}
+.ve-devices{display:flex;background:rgba(255,255,255,.08);border-radius:12px;padding:3px;gap:2px}
+.ve-devices button{appearance:none;border:0;background:transparent;color:#CDE7E2;font:inherit;font-weight:700;font-size:12.5px;min-height:32px;padding:4px 10px;border-radius:9px;cursor:pointer;transition:background .15s var(--ease),color .15s var(--ease)}
+.ve-devices button:hover{color:#fff}
+.ve-devices button.on{background:#fff;color:#0A3336}
+#edStatus.ed-status{margin:0;min-width:6.5rem;font-size:12.5px;font-weight:600;color:#A6F3E1;text-align:right}
+#edStatus.ed-status.is-err{color:#ffb4b4}
+#edStatus.ed-status.is-muted{color:rgba(255,255,255,.65);font-weight:500}
+.ve-body{flex:1;display:flex;min-height:0;position:relative}
+.ve-panel{width:min(380px,92vw);flex:none;background:#fff;color:var(--ink);border-right:1px solid #CDE7E2;box-shadow:8px 0 32px -16px rgba(10,51,54,.28);display:flex;flex-direction:column;z-index:2;transform:translateX(0);transition:transform .35s var(--ease);outline:none}
+#screen-editor.is-collapsed .ve-panel{transform:translateX(-104%)}
+.ve-canvas{flex:1;min-width:0;display:flex;align-items:stretch;justify-content:center;padding:18px;background:
+  linear-gradient(180deg,rgba(15,91,89,.06),transparent 40%),
+  repeating-conic-gradient(from 0deg, #e7eef0 0% 25%, #dce7e6 0% 50%) 0 0 / 20px 20px;}
+.ve-stage{width:100%;height:100%;display:flex;align-items:stretch;justify-content:center;position:relative}
+.ve-stage iframe{border:0;background:#fff;border-radius:10px;box-shadow:0 24px 50px -20px rgba(10,51,54,.4);transform-origin:top center}
+#edFloatBtn{display:none;position:fixed;left:18px;bottom:18px;z-index:90;width:56px;height:56px;border:0;border-radius:18px;background:#0F5B59;color:#fff;box-shadow:0 12px 28px -8px rgba(15,91,89,.6);cursor:pointer;align-items:center;justify-content:center;flex-direction:column;gap:1px;font:700 10px/1 system-ui;letter-spacing:.04em;text-transform:uppercase;transition:transform .2s var(--ease),background .2s var(--ease),box-shadow .2s var(--ease)}
+#edFloatBtn svg{display:block}
+#edFloatBtn:hover,#edFloatBtn:focus-visible{background:#0A3336;transform:translateY(-2px) scale(1.04);box-shadow:0 16px 32px -8px rgba(15,91,89,.7)}
+#edFloatBtn:active{transform:none}
+#screen-editor.is-collapsed #edFloatBtn,#screen-editor.is-shell.is-collapsed #edFloatBtn{display:flex}
+#screen-editor.is-shell.is-collapsed .ve-top{display:none}
+#screen-editor.is-shell.is-collapsed .ve-canvas{padding:0}
+#screen-editor.is-shell.is-collapsed .ve-stage iframe{border-radius:0;box-shadow:none;width:100% !important;height:100% !important;transform:none}
+#edDenied{display:none;position:absolute;inset:0;z-index:5;background:#F3FBF9;align-items:center;justify-content:center;padding:24px;text-align:center}
+#screen-editor.is-denied #edDenied{display:flex}
+#screen-editor.is-denied .ve-body,#screen-editor.is-denied .ve-top,#screen-editor.is-denied #edFloatBtn{display:none !important}
+.ed-head{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;padding:16px 16px 8px}
+.ed-kicker{margin:0;font-size:11px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:#0F5B59}
+.ed-head h2{margin:2px 0 0;font-family:var(--display);font-size:1.35rem;letter-spacing:-.03em}
+.ed-close,.ed-collapse{width:40px;height:40px;border:0;border-radius:12px;background:var(--brand-soft);color:var(--ink);font-size:22px;line-height:1;cursor:pointer;flex:none;transition:background .2s var(--ease),transform .2s var(--ease)}
+.ed-close:hover,.ed-close:focus-visible,.ed-collapse:hover,.ed-collapse:focus-visible{background:#CDE7E2;transform:scale(1.04)}
+.ed-intro{margin:0 16px 8px;font-size:13.5px;color:var(--mut);line-height:1.45}
+.ed-body{flex:1;overflow:auto;padding:4px 16px 28px;overscroll-behavior:contain}
+.ed-acc{border:1px solid var(--line);border-radius:14px;margin:0 0 10px;background:#fff;overflow:hidden;transition:border-color .2s var(--ease),box-shadow .2s var(--ease)}
+.ed-acc[open]{border-color:#9AD5CC;box-shadow:0 8px 24px -18px rgba(15,91,89,.55)}
+.ed-acc summary{list-style:none;cursor:pointer;padding:12px 14px;font-weight:700;font-size:14.5px;display:flex;align-items:center;justify-content:space-between;gap:8px;min-height:44px}
+.ed-acc summary::-webkit-details-marker{display:none}
+.ed-acc summary::after{content:'';width:8px;height:8px;border-right:2px solid #0F5B59;border-bottom:2px solid #0F5B59;transform:rotate(45deg);transition:transform .2s var(--ease);margin-right:4px}
+.ed-acc[open] summary::after{transform:rotate(225deg)}
+.ed-acc .ed-fields{padding:0 14px 14px;display:grid;gap:10px}
+.ed-fields label{display:flex;flex-direction:column;gap:4px;font-size:12.5px;font-weight:600;color:var(--mut)}
+.ed-fields input,.ed-fields textarea{font:inherit;font-weight:500;color:var(--ink);border:1px solid var(--line);border-radius:10px;padding:10px 12px;min-height:44px;background:#F3FBF9;transition:border-color .15s var(--ease),box-shadow .15s var(--ease),background .15s var(--ease)}
+.ed-fields textarea{min-height:88px;resize:vertical}
+.ed-fields input:hover,.ed-fields textarea:hover{border-color:#9AD5CC}
+.ed-fields input:focus,.ed-fields textarea:focus{outline:none;border-color:#0F5B59;background:#fff;box-shadow:0 0 0 3px rgba(20,166,154,.22)}
+.ed-svc,.ed-rv,.ed-photo{border:1px dashed #CDE7E2;border-radius:12px;padding:10px;display:grid;gap:8px;background:#F3FBF9;transition:box-shadow .2s var(--ease),border-color .2s var(--ease)}
+.ed-svc.is-pick,.ed-rv.is-pick,.ed-photo.is-pick,.ed-fields label.is-pick{border-color:#14A69A;box-shadow:0 0 0 3px rgba(20,166,154,.22)}
+.ed-svc-top,.ed-photo-top{display:flex;align-items:center;justify-content:space-between;gap:8px}
+.ed-svc-top span,.ed-photo-top span{font-size:12px;font-weight:700;color:#0F5B59}
+.ed-mini{appearance:none;border:0;background:transparent;color:#0F5B59;font:inherit;font-size:13px;font-weight:700;cursor:pointer;min-height:36px;padding:6px 8px;border-radius:8px}
+.ed-mini:hover,.ed-mini:focus-visible{background:#DFF6F1}
+.ed-mini.danger{color:var(--bad)}
+.ed-mini.danger:hover{background:var(--bad-soft)}
+.ed-add{width:100%;min-height:44px;border:1px dashed #9AD5CC;background:#fff;border-radius:12px;color:#0F5B59;font:inherit;font-weight:700;cursor:pointer;transition:background .15s var(--ease),transform .15s var(--ease)}
+.ed-add:hover,.ed-add:focus-visible{background:#DFF6F1;transform:translateY(-1px)}
+.ed-photo img{width:100%;height:88px;object-fit:cover;border-radius:8px;background:#CDE7E2}
+.ed-photo .ed-photo-actions{display:flex;gap:8px;flex-wrap:wrap}
+.ed-file{position:absolute;width:1px;height:1px;opacity:0;overflow:hidden}
+.ed-hint{margin:0;font-size:12px;color:var(--mut);font-weight:500;line-height:1.4}
+.ed-sheet-handle{display:none}
+@media (max-width: 899px){
+  .ve-body{flex-direction:column}
+  .ve-panel{position:absolute;left:0;right:0;bottom:0;width:100%;max-height:min(72vh,680px);border-right:0;border-top:1px solid #CDE7E2;border-radius:20px 20px 0 0;transform:translateY(0);box-shadow:0 -16px 50px -20px rgba(10,51,54,.35)}
+  #screen-editor.is-collapsed .ve-panel{transform:translateY(104%)}
+  .ed-sheet-handle{display:block;width:44px;height:5px;border-radius:99px;background:#CDE7E2;margin:10px auto 0}
+  .ve-canvas{padding:10px}
+  .ve-top{flex-wrap:wrap;gap:8px}
+  #edFloatBtn{left:14px;bottom:14px}
+}
+@media (prefers-reduced-motion:reduce){
+  #screen-editor.on,.ve-panel,#edFloatBtn,.ed-close,.ed-add,.ed-acc summary::after,#editSiteBtn.edit-site-btn{transition:none;animation:none;transform:none}
+  #editSiteBtn.edit-site-btn:hover,#edFloatBtn:hover{transform:none}
+}
+
 @media (prefers-reduced-motion:reduce){
   .screen.on,#screen-form.on .hero-a,#screen-form.on .card,#screen-form.on .form-step.on .card,.changes.on{animation:none}
   .orb,.hero-a h1 em,.mark,.btn::after{animation:none}
@@ -991,7 +1090,11 @@ html.themes-on .theme-bar{display:flex}
       <span class="pill b" id="dPos" aria-live="polite">Design 1 of 1</span>
       <button type="button" class="btn ghost sm" id="dNext">Show me another design →</button>
     </div>
-    <p class="note" id="dNote">Step back and forth through designs. The one showing when you press Apply is the one we keep.</p>
+    <p class="note" id="dNote">Step back and forth through designs. Your words, photos and prices stay. The one showing when you press Apply is the one we keep.</p>
+    <div class="pv-edit-launch">
+      <button type="button" class="btn edit-site-btn" id="editSiteBtn" aria-controls="screen-editor">Edit your site</button>
+      <p class="note">Opens a full editor with a live preview. Change words, photos and prices — the layout stays as it is.</p>
+    </div>
   </div>
   <div class="stage" id="stage"></div>
   <p class="note pv-hint" id="pvHint">This is your real website. Scroll and click inside the frame, or open it in a new tab. Forms send nothing in a preview.</p>
@@ -1023,6 +1126,51 @@ html.themes-on .theme-bar{display:flex}
     <p class="note" style="margin-top:10px">Style, colour and headline changes apply automatically, and words like "dark", "light", a colour name or a style name (clinic, restaurant, salon…) in your note are picked up. Other notes are saved for our team.</p>
   </div>
   <p class="note" style="text-align:center;margin:16px auto 0;max-width:760px">Your website goes live on your own address once you approve.</p>
+</section>
+
+<!-- ========== SITE EDITOR (full-page workspace) ========== -->
+<section class="screen" id="screen-editor" aria-label="Edit your website">
+  <header class="ve-top">
+    <button type="button" class="ve-btn ghost" id="edBack">← Back to preview</button>
+    <span class="ve-brand">Editor</span>
+    <span class="ve-sep" aria-hidden="true"></span>
+    <div class="ve-devices" role="tablist" aria-label="Device preview">
+      <button type="button" class="on" data-ed-dev="desktop" role="tab" aria-selected="true">Desktop</button>
+      <button type="button" data-ed-dev="tablet" role="tab" aria-selected="false">Tablet</button>
+      <button type="button" data-ed-dev="mobile" role="tab" aria-selected="false">Mobile</button>
+    </div>
+    <span class="ve-sep" aria-hidden="true"></span>
+    <button type="button" class="ve-btn" id="edUndo" title="Undo" aria-label="Undo" disabled>Undo</button>
+    <button type="button" class="ve-btn" id="edRedo" title="Redo" aria-label="Redo" disabled>Redo</button>
+    <button type="button" class="ve-btn" id="edReset" title="Reset changes made in this session">Reset</button>
+    <span class="sp"></span>
+    <p class="ed-status is-muted" id="edStatus" aria-live="polite"></p>
+    <button type="button" class="ve-btn ghost" id="edSave">Save</button>
+    <button type="button" class="ve-btn" id="edDone">Done</button>
+    <button type="button" class="ve-btn primary" id="edApprove">Approve &amp; go live →</button>
+  </header>
+  <div class="ve-body">
+    <aside id="siteEditor" class="ve-panel" aria-labelledby="edTitle">
+      <div class="ed-sheet-handle" aria-hidden="true"></div>
+      <header class="ed-head">
+        <div>
+          <p class="ed-kicker">Customize</p>
+          <h2 id="edTitle">Edit your site</h2>
+        </div>
+        <button type="button" class="ed-collapse" id="edCollapse" aria-label="Hide editor panel">‹</button>
+      </header>
+      <p class="ed-intro">Click anything on the site to edit it. Words, photos and prices can change; the layout stays locked.</p>
+      <div class="ed-body" id="edBody"></div>
+    </aside>
+    <div class="ve-canvas">
+      <div class="ve-stage" id="editStage"><iframe id="editFrame" title="Live website" sandbox="allow-scripts allow-popups allow-forms allow-popups-to-escape-sandbox"></iframe></div>
+    </div>
+  </div>
+  <button type="button" id="edFloatBtn" aria-label="Edit site">
+    <svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4 12.5-12.5z"/></svg>
+    Edit site
+  </button>
+  <div id="edDenied"><div><h1>Only you can edit this site</h1><p>This editor is for the person who built the website.</p><p><a class="btn" href="/">Back to WebiMade</a></p></div></div>
 </section>
 
 <!-- ========== STEP 4: APPROVE ========== -->
@@ -1695,7 +1843,7 @@ const svgI = (k, cls = '') => `<svg class="i ${cls}" viewBox="0 0 24 24" aria-hi
 const WA_SVG = '<svg class="wa-ic" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M12 2a10 10 0 0 0-8.6 15l-1.4 5 5.2-1.4A10 10 0 1 0 12 2zm0 18.2c-1.5 0-3-.4-4.3-1.2l-.3-.2-3.1.8.8-3-.2-.3A8.2 8.2 0 1 1 12 20.2zm4.5-6.1c-.2-.1-1.5-.7-1.7-.8-.2-.1-.4-.1-.6.1l-.8 1c-.1.2-.3.2-.5.1a6.7 6.7 0 0 1-3.3-2.9c-.3-.4.3-.4.7-1.3.1-.2 0-.3 0-.4l-.8-1.8c-.2-.5-.4-.4-.6-.4h-.5a1 1 0 0 0-.7.3 3 3 0 0 0-.9 2.2 5.2 5.2 0 0 0 1.1 2.8 11.9 11.9 0 0 0 4.6 4c1.7.7 2.3.8 3.2.6.5-.1 1.5-.6 1.7-1.2.2-.6.2-1.1.2-1.2-.1-.1-.3-.2-.5-.3z"/></svg>';
 
 const hh = s => String(s ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
-/* URL allowlist (keep in sync with backend/src/security.js). Stored/published: https: or /i/<id>/<key>. */
+/* URL allowlist (keep in sync with backend/src/security.mjs). Stored/published: https: or /i/<id>/<key>. */
 const SAFE_UPLOAD = /^\/i\/[A-Za-z0-9]+\/[A-Za-z0-9]+$/;
 const SAFE_DATA_IMG = /^data:image\/(jpeg|png|webp);base64,[A-Za-z0-9+/]+=*$/i;
 function isHttpsUrl(s) {
@@ -1729,17 +1877,102 @@ function escSrcset(s) {
     return hh(url) + (bits[1] ? ' ' + bits.slice(1).join(' ') : '');
   }).filter(Boolean).join(', ');
 }
+const FIELD_LIMITS = {
+  name: 60, about: 900, phone: 30, email: 80, address: 120, hours: 300,
+  reviews: 1500, headline: 90, lead: 400, ctaLabel: 80, bookingUrl: 200,
+  serviceName: 80, serviceDesc: 400, servicePrice: 40, city: 80, areas: 120,
+  industryOther: 60, stats: 400, insurance: 400, whatsapp: 30, country: 10,
+};
+const MAX_SERVICES = 16;
+const MAX_SITE_PHOTOS = 12;
+function stripHtml(s) {
+  return String(s == null ? '' : s).replace(/<[^>]*>/g, '').replace(/\u0000/g, '');
+}
+function clipText(s, max, keepLines = false) {
+  let t = stripHtml(s);
+  if (keepLines) t = t.replace(/\r\n/g, '\n').replace(/\r/g, '\n').split('\n').map(l => l.replace(/[ \t]+/g, ' ').trimEnd()).join('\n').trim();
+  else t = t.replace(/\s+/g, ' ').trim();
+  if (typeof max === 'number' && t.length > max) t = t.slice(0, max);
+  return t;
+}
+function sanitizePhotoOverrides(raw, kind) {
+  if (!raw || typeof raw !== 'object' || Array.isArray(raw)) return undefined;
+  const out = {};
+  for (const [k, v] of Object.entries(raw)) {
+    if (!/^(hero|about|about2|split|contact|cta|rv|circle|services:\d+|gallery:\d+|heroExtra:\d+|steps:\d+)$/.test(k)) continue;
+    const url = safeUrl(v, kind);
+    if (url) out[k] = url;
+  }
+  return Object.keys(out).length ? out : undefined;
+}
 function sanitizeSiteData(d, opts = {}) {
   const kind = opts.allowData ? 'preview' : 'img';
   if (!d || typeof d !== 'object') return {};
   const out = { ...d };
+  out.name = clipText(d.name, FIELD_LIMITS.name);
+  out.about = clipText(d.about, FIELD_LIMITS.about, true);
+  out.phone = clipText(d.phone, FIELD_LIMITS.phone);
+  out.email = clipText(d.email, FIELD_LIMITS.email);
+  out.address = clipText(d.address, FIELD_LIMITS.address);
+  out.hours = clipText(d.hours, FIELD_LIMITS.hours, true);
+  out.reviews = clipText(d.reviews, FIELD_LIMITS.reviews, true);
+  out.city = clipText(d.city, FIELD_LIMITS.city);
+  out.areas = clipText(d.areas, FIELD_LIMITS.areas);
+  out.industryOther = clipText(d.industryOther, FIELD_LIMITS.industryOther);
+  out.stats = clipText(d.stats, FIELD_LIMITS.stats, true);
+  out.insurance = clipText(d.insurance, FIELD_LIMITS.insurance, true);
+  out.whatsapp = clipText(d.whatsapp, FIELD_LIMITS.whatsapp);
+  out.country = clipText(d.country, FIELD_LIMITS.country);
+  if (Array.isArray(d.services)) {
+    out.services = d.services.slice(0, MAX_SERVICES).map(s => s && typeof s === 'object' ? {
+      name: clipText(s.name, FIELD_LIMITS.serviceName),
+      desc: clipText(s.desc, FIELD_LIMITS.serviceDesc, true),
+      price: clipText(s.price, FIELD_LIMITS.servicePrice),
+    } : null).filter(s => s && s.name);
+  }
   out.logo = safeUrl(d.logo, kind);
-  out.photos = Array.isArray(d.photos) ? d.photos.map(p => safeUrl(p, kind)).filter(Boolean) : [];
+  out.photos = Array.isArray(d.photos) ? d.photos.map(p => safeUrl(p, kind)).filter(Boolean).slice(0, MAX_SITE_PHOTOS) : [];
   if (Array.isArray(d.ba)) out.ba = d.ba.map(p => p && typeof p === 'object' ? { ...p, b: safeUrl(p.b, kind), a: safeUrl(p.a, kind) } : p).filter(p => p && p.b && p.a);
   out.facebook = safeUrl(d.facebook, 'social');
   out.instagram = safeUrl(d.instagram, 'social');
   out.other = safeUrl(d.other, 'social');
+  out.bookingUrl = safeUrl(d.bookingUrl, 'social');
+  const ov = sanitizePhotoOverrides(d.photoOverrides, kind);
+  if (ov) out.photoOverrides = ov;
+  else delete out.photoOverrides;
   return out;
+}
+function sanitizeOpts(o) {
+  if (!o || typeof o !== 'object') return {};
+  const out = {};
+  if (o.style) out.style = clipText(o.style, 40);
+  if (o.accent) out.accent = clipText(o.accent, 20);
+  if (o.minimal) out.minimal = true;
+  if (o.white) out.white = true;
+  if (typeof o.dark === 'boolean') out.dark = o.dark;
+  if (o.headline) out.headline = clipText(o.headline, FIELD_LIMITS.headline);
+  if (o.lead) out.lead = clipText(o.lead, FIELD_LIMITS.lead, true);
+  if (o.ctaLabel) out.ctaLabel = clipText(o.ctaLabel, FIELD_LIMITS.ctaLabel);
+  if (+o.design > 0) out.design = Math.min(99, Math.floor(+o.design));
+  return out;
+}
+function applyPhotoOverrides(ph, ov) {
+  if (!ph || !ov || typeof ov !== 'object') return ph;
+  for (const [k, v] of Object.entries(ov)) {
+    const url = safeUrl(v, 'preview');
+    if (!url) continue;
+    const m = k.match(/^(services|gallery|heroExtra|steps):(\d+)$/);
+    if (m) {
+      const arr = Array.isArray(ph[m[1]]) ? ph[m[1]].slice() : [];
+      arr[+m[2]] = url;
+      ph[m[1]] = arr;
+      if (m[1] === 'gallery') ph.galleryStock = false;
+    } else if (['hero', 'about', 'about2', 'split', 'contact', 'cta', 'rv', 'circle'].includes(k)) {
+      ph[k] = url;
+      if (k === 'hero') ph.heroSet = '';
+    }
+  }
+  return ph;
 }
 
 const hashStr = s => { let h = 7; for (const c of String(s)) h = (h * 31 + c.charCodeAt(0)) >>> 0; return h; };
@@ -1956,6 +2189,10 @@ function siteModel(d, opts = {}, ai = null) {
   if (act === 'call' && d.phone) primary = { label: 'Call ' + d.phone, short: 'Call us', href: telHref(d.phone), kind: 'call' };
   else if (act === 'whatsapp' && wa) primary = { label: 'Message us on WhatsApp', short: 'WhatsApp us', href: waLink(`Hi ${name}, I found your website and I'd like to ask about…`), kind: 'wa' };
   else primary = { label: C.cta[ctaKey], short: C.cta[ctaKey], href: '#book', kind: 'form' };
+  if (opts.ctaLabel && String(opts.ctaLabel).trim()) {
+    const lab = String(opts.ctaLabel).trim();
+    primary = { ...primary, label: lab, short: lab };
+  }
   const place = d.city || '';
   const hasDental = /dent|teeth|tooth|smile|orthod|hygien/i.test(name + ' ' + plainNames.join(' '));
   const hours = parseHours(d.hours);
@@ -1984,7 +2221,8 @@ function siteModel(d, opts = {}, ai = null) {
   const pricesClear = fam !== 'food' && services.length > 0 && pricedN / services.length >= 0.6;
   const actLine = primary.kind === 'wa' ? 'Message us on WhatsApp any time.' : primary.kind === 'call' ? `Call ${d.phone} to talk it through.` :
     ({ book: 'Book online in under a minute.', reserve: 'Reserve your table online in seconds.', quote: U.actQuote })[ctaKey];
-  const lead = (ai && ai.lead) || [own.lead || (own.h1Pool.length ? '' : C.leadOpen), svcList ? `${svcList}${place ? ' in ' + place : ''}${pricesClear ? ', with clear prices up front' : ''}.` : '', actLine].filter(Boolean).join(' ');
+  let lead = (ai && ai.lead) || [own.lead || (own.h1Pool.length ? '' : C.leadOpen), svcList ? `${svcList}${place ? ' in ' + place : ''}${pricesClear ? ', with clear prices up front' : ''}.` : '', actLine].filter(Boolean).join(' ');
+  if (opts.lead && String(opts.lead).trim()) lead = String(opts.lead).trim();
 
   // Photos: client's own first, then the curated set for the REAL industry
   // section order: the recipe's rhythm, gated by what fits the real business
@@ -2025,6 +2263,7 @@ function siteModel(d, opts = {}, ai = null) {
   else if (!order.includes('services')) need.svcShown = services.map(() => false);
   if (!d.about) { need.about = 0; need.about2 = 0; }
   const ph = allocPhotos(prof, up, services, name, need, design.seed, [d.name, d.industryOther, d.about].join(' '), { designIx: +opts.design || 0, biz: `${String(name).toLowerCase()}|${prof.k}` });
+  applyPhotoOverrides(ph, d.photoOverrides);
   // Reviews and stats: real ones if given; otherwise visibly-tagged samples (preview only)
   const realReviews = parseReviews(d.reviews);
   const reviews = realReviews.length ? realReviews.map(r => ({ q: r[0], n: r[1], sample: false })) :
@@ -2659,9 +2898,9 @@ function heroCSS(M) {
 
 function heroParts(M) {
   const { ph } = M;
-  const h1 = `<h1 class="hero-h1" id="hero-title">${headHTML(M.h1, true)}</h1>`;
+  const h1 = `<h1 class="hero-h1" id="hero-title" data-edit="headline">${headHTML(M.h1, true)}</h1>`;
   const eyebrow = `<p class="eyebrow">${hh(M.eyebrow)}</p>`;
-  const lead = `<p class="lead">${hh(M.lead)}</p>`;
+  const lead = `<p class="lead" data-edit="lead">${hh(M.lead)}</p>`;
   const prim = btnPrimary(M, 'btn-lg');
   const sec = secondaryBtn(M, 'btn-lg');
   const actions = `<div class="hero-actions">${prim}${sec}</div>`;
@@ -2898,6 +3137,7 @@ function infoList(M) {
   if (M.d.address) rows.push(`<li><span>Address</span><b>${hh(M.d.address)}</b></li>`);
   if (M.d.phone) rows.push(`<li><span>Phone</span><b><a href="${telHref(M.d.phone)}">${hh(M.d.phone)}</a></b></li>`);
   if (M.d.email) rows.push(`<li><span>Email</span><b><a href="mailto:${hh(M.d.email)}">${hh(M.d.email)}</a></b></li>`);
+  if (M.d.bookingUrl) rows.push(`<li><span>Book online</span><b><a href="${safeHref(M.d.bookingUrl)}" target="_blank" rel="noopener">Open booking</a></b></li>`);
   return rows.length ? `<ul class="hours">${rows.join('')}</ul>` : '';
 }
 function bookParts(M) {
@@ -5538,6 +5778,7 @@ const footerVariant = M => (variantDef('footer', M.V.footer) || variantDef('foot
 const SCHEMA_TYPE = { clinic: 'MedicalClinic', restaurant: 'Restaurant', home: 'HomeAndConstructionBusiness', realestate: 'RealEstateAgent', salon: 'BeautySalon', law: 'LegalService' };
 function buildSite(d, opts = {}, ai = null, mode = {}) {
   const M = siteModel(d, opts, ai);
+  if (mode.edit) M.edit = true;
   if (mode.live) {
     // LIVE MODE (published sites): sample reviews / sample figures are never published, stock-photo tags hidden,
     // forms post real enquiries to mode.leadUrl, page is indexable.
@@ -5586,9 +5827,122 @@ function fullSiteDoc(M, markup) {
 <body>
 <\!-- BRAND SWAP: business "${hh(M.name)}". Design: kit ${hh(M.kit.id)}, hero ${hh(M.heroV)}, recipe ${hh(M.design.industry)} #${M.design.orderIx + 1}${M.opts.design ? ', reshuffle ' + (+M.opts.design) : ''}. Colours live in the .site token block at the top of the <style>. Built by ${STUDIO.name} (website-on-demand builder v2). -->
 ${markup}
-<script>(${siteRuntime.toString()})();<\/script>
+<script>(${siteRuntime.toString()})();<\/script>${M.edit ? editHookScript() : ''}
 </body>
 </html>`;
+}
+
+function editHookScript() {
+  const src = function () {
+    const LABELS = { headline: 'Headline', lead: 'Subtext', name: 'Business name', about: 'About', ctaLabel: 'Button', phone: 'Phone', email: 'Email', address: 'Address', hours: 'Hours', bookingUrl: 'Booking link' };
+    function labelFor(key) {
+      if (!key) return 'Edit';
+      if (key.indexOf('photo:') === 0) return 'Photo';
+      if (key.indexOf('svc-name-') === 0) return 'Service';
+      if (key.indexOf('svc-desc-') === 0) return 'Description';
+      if (key.indexOf('svc-price-') === 0) return 'Price';
+      if (key.indexOf('rv-q-') === 0) return 'Review';
+      if (key.indexOf('rv-n-') === 0) return 'Name';
+      return LABELS[key] || 'Edit';
+    }
+    function mark(el, key) {
+      if (!el || el.getAttribute('data-edit')) return;
+      el.setAttribute('data-edit', key);
+    }
+    function annotate() {
+      mark(document.querySelector('#hero-title, h1.hero-h1, .hero h1'), 'headline');
+      mark(document.querySelector('.hero p.lead, p.lead'), 'lead');
+      mark(document.querySelector('header.hdr a.brand, a.brand'), 'name');
+      const ctas = document.querySelectorAll('.hero-actions .btn-primary, .hdr-cta .btn-primary, .cta .btn-primary');
+      if (ctas[0]) mark(ctas[0], 'ctaLabel');
+      const aboutPs = document.querySelectorAll('#about .about-copy > p:not(.eyebrow)');
+      if (aboutPs[0]) mark(aboutPs[0], 'about');
+      document.querySelectorAll('#services h3').forEach((h, i) => {
+        mark(h, 'svc-name-' + i);
+        const block = h.closest('article, .yd-row, li, .srow') || h.parentElement;
+        if (block) {
+          mark(block.querySelector('p'), 'svc-desc-' + i);
+          mark(block.querySelector('.price, span.pr'), 'svc-price-' + i);
+          mark(block.querySelector('img'), 'photo:services:' + i);
+        }
+      });
+      document.querySelectorAll('#menu li.mi h4').forEach((h, i) => {
+        mark(h, 'svc-name-' + i);
+        const block = h.closest('li') || h.parentElement;
+        if (block) {
+          mark(block.querySelector('p'), 'svc-desc-' + i);
+          mark(block.querySelector('.pr, .price'), 'svc-price-' + i);
+          mark(block.querySelector('img'), 'photo:services:' + i);
+        }
+      });
+      document.querySelectorAll('#reviews .rv-card, #reviews article, #reviews blockquote').forEach((c, i) => {
+        mark(c.querySelector('p, q, .q'), 'rv-q-' + i);
+        mark(c.querySelector('cite, .n, footer, .who, .rv-n'), 'rv-n-' + i);
+      });
+      mark(document.querySelector('.hero img, .hero .bgimg img, .hero-img img, .arch img'), 'photo:hero');
+      mark(document.querySelector('#about .am-a img, #about figure:first-child img'), 'photo:about');
+      mark(document.querySelector('#about .am-b img'), 'photo:about2');
+      mark(document.querySelector('#why .split-media img, #why .frame img'), 'photo:split');
+      mark(document.querySelector('#book .book-bg img'), 'photo:contact');
+      document.querySelectorAll('#gallery img').forEach((img, i) => mark(img, 'photo:gallery:' + i));
+      document.querySelectorAll('ul.hours li').forEach(li => {
+        const lab = ((li.querySelector('span') || {}).textContent || '');
+        if (/phone/i.test(lab)) mark(li, 'phone');
+        else if (/email/i.test(lab)) mark(li, 'email');
+        else if (/address/i.test(lab)) mark(li, 'address');
+        else if (/book/i.test(lab)) mark(li, 'bookingUrl');
+        else if (/hours|mon|tue|wed|thu|fri|sat|sun|open/i.test(lab)) mark(li, 'hours');
+      });
+    }
+    const css = document.createElement('style');
+    css.textContent = '[data-edit]{cursor:pointer;outline:2px solid transparent;outline-offset:3px;transition:outline-color .15s ease,box-shadow .15s ease}'
+      + '[data-edit]:hover,[data-edit].is-ed-on{outline-color:#14A69A;box-shadow:0 0 0 4px rgba(20,166,154,.22);position:relative;z-index:2}'
+      + '#wod-ed-tip{position:absolute;z-index:2147483646;background:#0F5B59;color:#fff;font:700 11px/1.2 system-ui,sans-serif;letter-spacing:.06em;text-transform:uppercase;padding:5px 8px;border-radius:6px;pointer-events:none;transform:translateY(-100%);margin-top:-6px;box-shadow:0 6px 16px rgba(10,51,54,.28);white-space:nowrap}';
+    document.head.appendChild(css);
+    const tip = document.createElement('div');
+    tip.id = 'wod-ed-tip';
+    tip.hidden = true;
+    document.body.appendChild(tip);
+    let selected = null;
+    function setTip(el) {
+      const key = el && el.getAttribute('data-edit');
+      if (!el || !key) { tip.hidden = true; return; }
+      tip.textContent = labelFor(key);
+      tip.hidden = false;
+      const r = el.getBoundingClientRect();
+      tip.style.top = Math.max(0, r.top + window.scrollY) + 'px';
+      tip.style.left = (r.left + window.scrollX) + 'px';
+    }
+    function select(el) {
+      if (selected) selected.classList.remove('is-ed-on');
+      selected = el;
+      if (selected) { selected.classList.add('is-ed-on'); setTip(selected); }
+    }
+    annotate();
+    document.addEventListener('mouseover', function (e) {
+      const t = e.target && e.target.closest && e.target.closest('[data-edit]');
+      if (t) setTip(t);
+    });
+    document.addEventListener('mouseout', function (e) {
+      const t = e.target && e.target.closest && e.target.closest('[data-edit]');
+      if (t && (!e.relatedTarget || !t.contains(e.relatedTarget))) setTip(selected);
+    });
+    document.addEventListener('click', function (e) {
+      const t = e.target && e.target.closest && e.target.closest('[data-edit]');
+      if (!t) return;
+      e.preventDefault();
+      e.stopPropagation();
+      select(t);
+      try { parent.postMessage({ wodEdit: t.getAttribute('data-edit') }, '*'); } catch (err) {}
+    }, true);
+  };
+  return '<script>(' + src.toString() + ')();<\/script>';
+}
+/* Hook is only attached to the in-app iframe, never to the stored /p/ or share document. */
+function withEditHook(doc) {
+  const hook = editHookScript();
+  if (!doc || String(doc).indexOf('wodEdit') !== -1) return doc;
+  return String(doc).includes('</body>') ? String(doc).replace('</body>', hook + '\n</body>') : String(doc) + hook;
 }
 /* =====================================================================
    APP (client side of the demo): intake form -> 3 bots -> preview -> go live
@@ -5668,11 +6022,12 @@ async function apiSavePreview(opts) {
   if (/^data:/.test(d.logo || '')) d.logo = await apiImage(d.logo);
   for (let i = 0; i < (d.photos || []).length; i++) if (/^data:/.test(d.photos[i])) d.photos[i] = await apiImage(d.photos[i]);
   for (const p of (d.ba || [])) { if (/^data:/.test(p.b)) p.b = await apiImage(p.b); if (/^data:/.test(p.a)) p.a = await apiImage(p.a); }
-  const built = buildSite(d, opts, null, {});
+  const saved = buildSite(d, opts, null, {});
+  current.previewM = saved.M;
   const r = await apiJSON(`/api/save/${current.server.id}`, { token: current.server.token, data: d, opts, version: current.version, revisions: current.revisions,
-    styleKey: built.M.key, placeholders: built.M.placeholders, html: built.doc });
+    styleKey: saved.M.key, placeholders: saved.M.placeholders, html: saved.doc });
   current.shareUrl = r.url; current.shareExpires = r.expiresAt; current.savedVersion = current.version;
-  return built.doc;
+  return saved.doc;
 }
 let shareSavePromise = null, shareSaveState = 'idle', shareSaveError = '';
 function startShareSave(opts) {
@@ -6051,6 +6406,10 @@ function readForm() {
     reviews: f.reviews.value.trim(), stats: f.stats.value.trim(), insurance: baShown('#insField') ? f.insurance.value.trim() : '',
     colour: f.colour.value === 'custom' ? $('#colourCustom').value : f.colour.value,
     facebook: g('facebook'), instagram: g('instagram'), other: g('other'), logo: logoData, photos: photos.slice(), ba: baShown('#baField') ? baPairs.map(p => ({ ...p })) : [] };
+  if (current && current.data) {
+    if (current.data.photoOverrides) raw.photoOverrides = current.data.photoOverrides;
+    if (current.data.bookingUrl) raw.bookingUrl = current.data.bookingUrl;
+  }
   return sanitizeSiteData(raw, { allowData: true });
 }
 function baShown(sel) { return $(sel).style.display !== 'none'; }
@@ -6188,7 +6547,7 @@ function buildAnim(d, change) {
     }
   };
 }
-const cleanOpts = o => { const r = {}; if (o.style) r.style = o.style; if (o.accent) r.accent = o.accent; if (o.minimal) r.minimal = true; if (o.white) r.white = true; if (typeof o.dark === 'boolean') r.dark = o.dark; if (o.headline) r.headline = o.headline; if (+o.design > 0) r.design = +o.design; return r; };
+const cleanOpts = o => sanitizeOpts(o || {});
 let running = false, lastChange = null;
 async function runPipeline(change) {
   if (running) return; running = true; lastChange = change || null;
@@ -6212,6 +6571,7 @@ async function runPipeline(change) {
     const desk = buildSite(d, opts, ai, {});
     anim.setDoc(desk.doc);   // show the real website inside the build animation straight away
     const M = desk.M;
+    current.previewM = M;
     current.styleKey = M.key; current.placeholders = M.placeholders.slice();
     const words = desk.markup.replace(/<script[\s\S]*?<\/script>/g, '').replace(/<style>[\s\S]*?<\/style>/g, '').replace(/<[^>]+>/g, ' ').split(/\s+/).filter(Boolean).length;
     log.push(`Business type: ${M.prof.label}; design: ${M.kit.label.replace(/ \(.*$/, "")} kit, ${M.heroV} hero${opts.accent ? ', main colour ' + opts.accent : ''}${M.P.dark ? ', dark' : ''}`,
@@ -6267,6 +6627,7 @@ function renderDesignNav() {
 let designBusy = false;
 async function switchDesign(to) {
   if (designBusy || running || to < 0) return;
+  if (typeof flushSiteEditor === 'function') await flushSiteEditor();
   designBusy = true; renderDesignNav();
   const from = +current.opts.design || 0;
   try {
@@ -6276,11 +6637,11 @@ async function switchDesign(to) {
     current.revisions.push({ at: new Date().toISOString(), design: to, designSwitch: true, notes: `Switched to design ${to + 1}` });
     const opts = cleanOpts(current.opts), ai = await generateWithAI(current.data);
     const built = buildSite(current.data, opts, ai, {});
-    current.styleKey = built.M.key; current.placeholders = built.M.placeholders.slice();
+    current.styleKey = built.M.key; current.placeholders = built.M.placeholders.slice(); current.previewM = built.M;
     let doc = built.doc;
     if (API) { try { doc = await startShareSave(opts); } catch (err) { console.warn(err); current.shareUrl = null; } }
     setPreviewDoc(doc); upsert(current);
-    $('#dNote').textContent = API && !current.shareUrl ? 'Showing design ' + (to + 1) + '. We could not save it just now; we will retry when you press Apply.' : 'Step back and forth through designs. The one showing when you press Apply is the one we keep.';
+    $('#dNote').textContent = API && !current.shareUrl ? 'Showing design ' + (to + 1) + '. We could not save it just now; we will retry when you press Apply.' : 'Step back and forth through designs. Your words, photos and prices stay. The one showing when you press Apply is the one we keep.';
     designBusy = false; renderPreview();
   } catch (err) {
     console.error(err); current.opts.design = from; $('#dNote').textContent = 'Sorry, that design could not be built.';
@@ -6289,7 +6650,10 @@ async function switchDesign(to) {
 }
 $('#dPrev').onclick = () => switchDesign((+current.opts.design || 0) - 1);
 $('#dNext').onclick = () => switchDesign((+current.opts.design || 0) + 1);
-function renderPreview() {
+function liveFrameDoc() {
+  return (typeof withEditHook === 'function' && previews && previews.doc) ? withEditHook(previews.doc) : (previews && previews.doc) || '';
+}
+function renderPreview(mode) {
   renderDesignNav();
   $$('.toggle button').forEach(b => { b.classList.toggle('on', b.dataset.dev === device); b.setAttribute('aria-selected', b.dataset.dev === device); });
   $('#pvRev').textContent = 'Version ' + current.version;
@@ -6306,9 +6670,19 @@ function renderPreview() {
   // Round 1 item 13: no white flash. Same device: the old page stays on screen while the new one loads
   // underneath, then the new one fades in. Device change: a loader shows until the new page is ready.
   const stage = $('#stage'), old = $('#liveFrame'), sameDev = old && stage.dataset.dev === device;
+  const liveHtml = liveFrameDoc();
   if (sameDev) {
     if (old.dataset.doc === previews.doc) { stage.querySelectorAll('.url').forEach(u => u.textContent = `🔒 ${host} · preview`); fitFrame(); return; }
-    const box = $('#liveBox'), nf = document.createElement('iframe');
+    const box = $('#liveBox');
+    if (mode && mode.instant) {
+      box.querySelectorAll('iframe:not(#liveFrame)').forEach(f => f.remove());
+      stage.querySelectorAll('.url').forEach(u => u.textContent = `🔒 ${host} · preview`);
+      old.dataset.doc = previews.doc;
+      old.srcdoc = liveHtml;
+      fitFrame();
+      return;
+    }
+    const nf = document.createElement('iframe');
     nf.title = old.title; nf.setAttribute('sandbox', old.getAttribute('sandbox'));
     box.querySelectorAll('iframe:not(#liveFrame)').forEach(f => f.remove());
     box.appendChild(nf); nf.style.opacity = '0'; fitFrame(); nf.style.opacity = '0';
@@ -6319,7 +6693,7 @@ function renderPreview() {
       setTimeout(() => { if (old.isConnected) old.remove(); nf.id = 'liveFrame'; nf.classList.remove('pv-in'); nf.style.opacity = ''; }, 260);
     };
     nf.onload = swap; setTimeout(swap, 2500);
-    nf.dataset.doc = previews.doc; nf.srcdoc = previews.doc;
+    nf.dataset.doc = previews.doc; nf.srcdoc = liveHtml;
     return;
   }
   stage.dataset.dev = device;
@@ -6332,7 +6706,7 @@ function renderPreview() {
   const shown = () => { lb.classList.remove('pv-loading'); fr.classList.add('pv-in'); fr.style.opacity = '1'; setTimeout(() => { fr.classList.remove('pv-in'); fr.style.opacity = ''; }, 260); };
   let once = false; const show1 = () => { if (!once) { once = true; requestAnimationFrame(shown); } };
   fr.onload = show1; setTimeout(show1, 2500);
-  fr.dataset.doc = previews.doc; fr.srcdoc = previews.doc;
+  fr.dataset.doc = previews.doc; fr.srcdoc = liveHtml;
 }
 addEventListener('resize', () => { if ($('#screen-preview').classList.contains('on')) fitFrame(); });
 $$('.toggle button').forEach(b => b.onclick = () => { device = b.dataset.dev; renderPreview(); });
@@ -6381,7 +6755,8 @@ function priceRows() {
 }
 $('#domFee').textContent = '+' + money(BRAND.domainConnect);
 $$('input[name=dom]').forEach(r => r.onchange = priceRows);
-$('#approveBtn').onclick = () => {
+$('#approveBtn').onclick = async () => {
+  if (typeof flushSiteEditor === 'function') await flushSiteEditor();
   $('#apOpen').href = (API && current.shareUrl) || previews.url;
   $('#apName').textContent = current.data.name; $('#apRev').textContent = current.version;
   $('#freeSub').textContent = API ? `${location.host}/s/${slug(current.data.name)}` : `${slug(current.data.name)}.${BRAND.domain}`;
@@ -6599,12 +6974,16 @@ function celebratePreview() {
 }
 
 function show(name) {
+  const leavingEditor = name !== 'editor' && document.body.classList.contains('ed-mode');
+  if (leavingEditor && typeof flushSiteEditor === 'function') flushSiteEditor();
   $$('.screen').forEach(s => s.classList.toggle('on', s.id === 'screen-' + name));
+  document.body.classList.toggle('ed-mode', name === 'editor');
   const idx = name === 'thanks' ? 3 : STEP_NAMES.indexOf(name);
   if (idx >= 0) updateSteps(name);
-  $('#stepsNav').style.visibility = name === 'admin' ? 'hidden' : 'visible';
+  $('#stepsNav').style.visibility = (name === 'admin' || name === 'editor') ? 'hidden' : 'visible';
   window.scrollTo(0, 0);
   if (name === 'preview') celebratePreview();
+  else if (leavingEditor && typeof closeSiteEditor === 'function') closeSiteEditor({ silent: true });
 }
 
 const brandHome = $('#brandHome');
@@ -6624,6 +7003,7 @@ $('#stepsNav').addEventListener('keydown', ev => {
 });
 
 function route() {
+  if (typeof window.WOD_EDIT_ID !== 'undefined' && window.WOD_EDIT_ID) return; // editor boot takes over
   if (location.hash === '#admin' && API) { location.href = '/admin'; return; }
   if (location.hash === '#admin') { renderAdmin(); show('admin'); }
   else if (!$('.screen.on') || $('#screen-admin').classList.contains('on')) { show(current && previews ? 'preview' : 'form'); if (current && previews) renderPreview(); }
@@ -6631,6 +7011,635 @@ function route() {
 window.addEventListener('hashchange', route);
 services = [{ name: '', desc: '', price: '' }]; renderSvcs(); renderPhotos(); renderBA(); syncExtras();
 route();
+/* Full-page visual editor: left panel + live canvas (Elementor-style).
+   Layout stays locked; words, photos and the client's own prices can be changed.
+   Autosaves through /api/save (server sanitizes). Owner-only on hosted /p/ links. */
+(function () {
+  const PREVIEW_MS = 420;
+  const SAVE_MS = 1600;
+  const UNDO_MS = 700;
+  const UNDO_MAX = 30;
+  const ED_VIEW = { desktop: [1280, 860], tablet: [768, 1024], mobile: [390, 844] };
+  const PHOTO_KEYS = [
+    ['hero', 'Top of the page'],
+    ['about', 'About'],
+    ['about2', 'About (second photo)'],
+    ['split', 'Story / why-us photo'],
+    ['contact', 'Contact section'],
+    ['cta', 'Bottom call-to-action'],
+    ['rv', 'Reviews photo'],
+  ];
+
+  let previewTimer = 0, saveTimer = 0, open = false, filling = false, dirty = false, saving = false;
+  let statusTimer = 0, undoTimer = 0, pendingUndo = null;
+  let past = [], future = [], resetSnap = '', edDevice = 'desktop', shellMode = false, standalone = false;
+
+  const editorEl = () => $('#siteEditor');
+  const screen = () => $('#screen-editor');
+  const btn = () => $('#editSiteBtn');
+  const frame = () => $('#editFrame');
+
+  function setStatus(msg, kind) {
+    const el = $('#edStatus'); if (!el) return;
+    el.textContent = msg || '';
+    el.className = 'ed-status' + (kind === 'err' ? ' is-err' : kind === 'muted' ? ' is-muted' : '');
+    if (statusTimer) clearTimeout(statusTimer);
+    if (msg && kind !== 'err') statusTimer = setTimeout(() => { if (el.textContent === msg) { el.textContent = ''; el.className = 'ed-status is-muted'; } }, 3500);
+  }
+  function updateUndoBtns() {
+    const u = $('#edUndo'), r = $('#edRedo');
+    if (u) u.disabled = !past.length;
+    if (r) r.disabled = !future.length;
+  }
+  function stateSnap() { return JSON.stringify({ d: current && current.data, o: current && current.opts }); }
+  function applySnap(s) {
+    if (!s || !current) return;
+    const rec = JSON.parse(s);
+    current.data = rec.d;
+    current.opts = rec.o || {};
+    filling = true; renderBody(); filling = false;
+    rebuildPreview();
+    updateUndoBtns();
+  }
+  function markUndoPoint() {
+    if (!pendingUndo) pendingUndo = stateSnap();
+    if (undoTimer) clearTimeout(undoTimer);
+    undoTimer = setTimeout(commitUndoPoint, UNDO_MS);
+  }
+  function commitUndoPoint() {
+    if (undoTimer) { clearTimeout(undoTimer); undoTimer = 0; }
+    if (!pendingUndo) return;
+    const now = stateSnap();
+    if (pendingUndo !== now) {
+      past.push(pendingUndo);
+      if (past.length > UNDO_MAX) past.shift();
+      future = [];
+      updateUndoBtns();
+    }
+    pendingUndo = null;
+  }
+  function undo() {
+    commitUndoPoint();
+    if (!past.length) return;
+    future.push(stateSnap());
+    applySnap(past.pop());
+    dirty = true; scheduleSave();
+  }
+  function redo() {
+    if (!future.length) return;
+    past.push(stateSnap());
+    applySnap(future.pop());
+    dirty = true; scheduleSave();
+  }
+  function resetSession() {
+    if (!resetSnap) return;
+    if (!confirm('Reset the words, photos and prices to how they were when you opened the editor?')) return;
+    commitUndoPoint();
+    past.push(stateSnap());
+    if (past.length > UNDO_MAX) past.shift();
+    future = [];
+    applySnap(resetSnap);
+    dirty = true; scheduleSave();
+    setStatus('Changes reset', 'muted');
+  }
+
+  function reviewsToText(d, M) {
+    if (d.reviews && String(d.reviews).trim()) return String(d.reviews);
+    if (M && M.reviews && M.reviews.length) return M.reviews.map(r => `${r.q} — ${r.n}`).join('\n');
+    return '';
+  }
+  function parseReviewLines(txt) {
+    return String(txt || '').split('\n').map(s => s.trim()).filter(Boolean).slice(0, 8).map(l => {
+      const m = l.match(/^["“]?(.+?)["”]?\s*(?:—|–|\s-\s|\|)\s*([^—–|]{1,40})$/);
+      return m ? { q: m[1].trim(), n: m[2].trim() } : { q: l.replace(/^["“]|["”]$/g, ''), n: '' };
+    });
+  }
+  function photoSlots(M) {
+    const ph = (M && M.ph) || {}, ov = (current.data && current.data.photoOverrides) || {}, slots = [];
+    PHOTO_KEYS.forEach(([k, label]) => {
+      if (ph[k] || ov[k]) slots.push({ key: k, label, url: ov[k] || ph[k] || '', overridden: !!ov[k] });
+    });
+    (M && M.services || []).forEach((s, i) => {
+      const key = 'services:' + i;
+      const url = ov[key] || (ph.services && ph.services[i]) || '';
+      if (url || s) slots.push({ key, label: 'Photo: ' + (s && s.name ? svcName(s.name) : 'service ' + (i + 1)), url, overridden: !!ov[key] });
+    });
+    (ph.gallery || []).forEach((url, i) => {
+      const key = 'gallery:' + i;
+      slots.push({ key, label: 'Gallery photo ' + (i + 1), url: ov[key] || url, overridden: !!ov[key] });
+    });
+    return slots;
+  }
+  function field(name, label, value, opts) {
+    const id = 'ed-' + name.replace(/[^a-z0-9]+/gi, '-');
+    const ta = opts && opts.area;
+    const max = (opts && opts.max) || '';
+    const ph = (opts && opts.placeholder) || '';
+    const typ = (opts && opts.type) || 'text';
+    if (ta) return `<label for="${id}">${hh(label)}<textarea id="${id}" data-ed="${hh(name)}" maxlength="${max || ''}" placeholder="${hh(ph)}">${hh(value || '')}</textarea></label>`;
+    return `<label for="${id}">${hh(label)}<input id="${id}" type="${hh(typ)}" data-ed="${hh(name)}" maxlength="${max || ''}" placeholder="${hh(ph)}" value="${hh(value || '')}"></label>`;
+  }
+  function openAccordions() {
+    return $$('#edBody details.ed-acc').filter(el => el.open).map(el => ((el.querySelector('summary') || {}).textContent || '').trim());
+  }
+  function restoreAccordions(names) {
+    if (!names || !names.length) return;
+    $$('#edBody details.ed-acc').forEach(el => {
+      const n = ((el.querySelector('summary') || {}).textContent || '').trim();
+      if (names.includes(n)) el.open = true;
+    });
+  }
+  function renderBody() {
+    if (!current || !current.data) return;
+    const keepOpen = openAccordions();
+    const d = current.data, o = current.opts || {}, M = current.previewM;
+    const svcs = (d.services && d.services.length ? d.services : (M && M.services) || []).map(s => ({ name: s.name || '', desc: s.desc || '', price: s.price || '' }));
+    const revs = parseReviewLines(reviewsToText(d, M));
+    const slots = photoSlots(M);
+    const sampleNote = M && M.reviews && M.reviews[0] && M.reviews[0].sample && !String(d.reviews || '').trim();
+    const svcHtml = svcs.map((s, i) => `<div class="ed-svc" data-svc="${i}">
+      <div class="ed-svc-top"><span>Service ${i + 1}</span>${svcs.length > 1 ? `<button type="button" class="ed-mini danger" data-act="rm-svc" data-i="${i}">Remove</button>` : ''}</div>
+      ${field('svc-name-' + i, 'Name', s.name, { max: 80 })}
+      ${field('svc-desc-' + i, 'Description', s.desc, { area: true, max: 400 })}
+      ${field('svc-price-' + i, 'Price (as you want it shown)', s.price, { max: 40, placeholder: 'e.g. £80 or from £40' })}
+    </div>`).join('') + (svcs.length < MAX_SERVICES ? `<button type="button" class="ed-add" data-act="add-svc">+ Add a service</button>` : '');
+    const rvHtml = revs.map((r, i) => `<div class="ed-rv" data-rv="${i}">
+      <div class="ed-svc-top"><span>Review ${i + 1}</span><button type="button" class="ed-mini danger" data-act="rm-rv" data-i="${i}">Remove</button></div>
+      ${field('rv-q-' + i, 'Quote', r.q, { area: true, max: 280 })}
+      ${field('rv-n-' + i, 'Customer name', r.n, { max: 40, placeholder: 'e.g. Helen R.' })}
+    </div>`).join('') + (revs.length < 8 ? `<button type="button" class="ed-add" data-act="add-rv">+ Add a review</button>` : '');
+    const photoHtml = slots.length ? slots.map(s => `<div class="ed-photo" data-photo="${hh(s.key)}">
+      <div class="ed-photo-top"><span>${hh(s.label)}</span></div>
+      ${s.url ? `<img src="${uattr(s.url)}" alt="">` : '<p class="ed-hint">No photo in this section yet.</p>'}
+      <div class="ed-photo-actions">
+        <button type="button" class="ed-mini" data-act="up-photo" data-key="${hh(s.key)}">Use my photo</button>
+        ${s.overridden ? `<button type="button" class="ed-mini" data-act="rv-photo" data-key="${hh(s.key)}">Revert</button>` : ''}
+      </div>
+    </div>`).join('') : '<p class="ed-hint">Photos will appear here once the preview is ready.</p>';
+    $('#edBody').innerHTML = `
+      <details class="ed-acc" open><summary>Business</summary><div class="ed-fields">
+        ${field('name', 'Business name', d.name, { max: 60 })}
+      </div></details>
+      <details class="ed-acc" open><summary>Headline</summary><div class="ed-fields">
+        ${field('headline', 'Headline', o.headline || (M && M.h1 ? String(M.h1).replace(/\*/g, '') : ''), { max: 90 })}
+        ${field('lead', 'Subtext under the headline', o.lead || (M && M.lead) || '', { area: true, max: 400 })}
+        ${field('ctaLabel', 'Main button label', o.ctaLabel || (M && M.primary && M.primary.label) || '', { max: 80 })}
+      </div></details>
+      <details class="ed-acc"><summary>About</summary><div class="ed-fields">
+        ${field('about', 'About your business', d.about, { area: true, max: 900 })}
+      </div></details>
+      <details class="ed-acc" open><summary>Services and prices</summary><div class="ed-fields" id="edServices">${svcHtml}</div></details>
+      <details class="ed-acc"><summary>Reviews</summary><div class="ed-fields" id="edReviews">
+        ${sampleNote ? '<p class="ed-hint">These start as sample reviews. Your own words replace them on the site.</p>' : ''}
+        ${rvHtml}
+      </div></details>
+      <details class="ed-acc"><summary>Photos</summary><div class="ed-fields" id="edPhotos">
+        <p class="ed-hint">Swap a section photo for one of your own. JPG, PNG or WebP, up to 1.5 MB. Revert goes back to the original.</p>
+        ${photoHtml}
+      </div></details>
+      <details class="ed-acc"><summary>Contact</summary><div class="ed-fields">
+        ${field('phone', 'Phone', d.phone, { max: 30, type: 'tel' })}
+        ${field('email', 'Email', d.email, { max: 80, type: 'email' })}
+        ${field('address', 'Address', d.address, { max: 120 })}
+        ${field('hours', 'Opening hours (one per line)', d.hours, { area: true, max: 300, placeholder: 'Mon–Fri: 8am–6pm' })}
+        ${field('bookingUrl', 'Booking link', d.bookingUrl, { max: 200, type: 'url', placeholder: 'https://…' })}
+      </div></details>`;
+    restoreAccordions(keepOpen);
+  }
+
+  function readEditor() {
+    const val = name => { const el = $(`#edBody [data-ed="${name}"]`); return el ? el.value : ''; };
+    const d = { ...(current.data || {}) };
+    d.name = val('name'); d.about = val('about'); d.phone = val('phone'); d.email = val('email');
+    d.address = val('address'); d.hours = val('hours'); d.bookingUrl = val('bookingUrl');
+    const svcs = [];
+    $$('#edServices .ed-svc').forEach((row, i) => {
+      svcs.push({
+        name: ($('#ed-svc-name-' + i) || {}).value || '',
+        desc: ($('#ed-svc-desc-' + i) || {}).value || '',
+        price: ($('#ed-svc-price-' + i) || {}).value || '',
+      });
+    });
+    d.services = svcs.filter(s => s.name.trim());
+    const lines = [];
+    $$('#edReviews .ed-rv').forEach((row, i) => {
+      const q = (($('#ed-rv-q-' + i) || {}).value || '').trim();
+      const n = (($('#ed-rv-n-' + i) || {}).value || '').trim();
+      if (q) lines.push(n ? `${q} — ${n}` : q);
+    });
+    d.reviews = lines.join('\n');
+    const o = { ...(current.opts || {}) };
+    o.headline = val('headline'); o.lead = val('lead'); o.ctaLabel = val('ctaLabel');
+    return { data: sanitizeSiteData(d, { allowData: true }), opts: sanitizeOpts(o) };
+  }
+  function applyEditor() {
+    if (!current) return;
+    const next = readEditor();
+    current.data = next.data;
+    current.opts = { ...(current.opts || {}), ...next.opts };
+    if (!current._editorTouched) {
+      current._editorTouched = true;
+      current.version = (current.version || 1) + 1;
+    }
+    dirty = true;
+  }
+
+  function fitEditFrame() {
+    const box = $('#editStage'), fr = frame();
+    if (!box || !fr || !screen()) return;
+    const collapsedShell = shellMode && screen().classList.contains('is-collapsed');
+    if (collapsedShell) {
+      fr.style.width = '100%'; fr.style.height = '100%'; fr.style.transform = 'none';
+      box.style.height = '100%';
+      return;
+    }
+    const [vw, vh] = ED_VIEW[edDevice] || ED_VIEW.desktop;
+    const pad = 8;
+    const w = Math.max(120, box.clientWidth - pad), h = Math.max(120, box.clientHeight - pad);
+    const k = Math.min(1, w / vw, h / vh);
+    fr.style.width = vw + 'px';
+    fr.style.height = vh + 'px';
+    fr.style.transform = 'scale(' + k + ')';
+    box.style.height = '100%';
+  }
+  function renderEditCanvas() {
+    if (!previews || !previews.doc) return;
+    const fr = frame(); if (!fr) return;
+    const html = (typeof withEditHook === 'function') ? withEditHook(previews.doc) : previews.doc;
+    if (fr.dataset.doc === previews.doc && fr.srcdoc) { fitEditFrame(); return; }
+    fr.dataset.doc = previews.doc;
+    fr.srcdoc = html;
+    fitEditFrame();
+  }
+  function rebuildPreview() {
+    if (!current) return;
+    try {
+      const opts = cleanOpts(current.opts);
+      const built = buildSite(current.data, opts, null, {});
+      current.previewM = built.M;
+      current.styleKey = built.M.key;
+      current.placeholders = built.M.placeholders.slice();
+      setPreviewDoc(built.doc);
+      upsert(current);
+      renderEditCanvas();
+      if ($('#screen-preview') && $('#screen-preview').classList.contains('on')) renderPreview({ instant: true });
+    } catch (err) {
+      console.warn(err);
+      setStatus('Could not refresh the preview just now.', 'err');
+    }
+  }
+  async function autosave() {
+    if (!current || !API) { dirty = false; if (!API) setStatus('Saved on this device', 'muted'); return; }
+    if (saving) { scheduleSave(); return; }
+    saving = true;
+    setStatus('Saving…', 'muted');
+    try {
+      const opts = cleanOpts(current.opts);
+      await startShareSave(opts);
+      dirty = false;
+      upsert(current);
+      setStatus('Saved', '');
+    } catch (err) {
+      console.warn(err);
+      setStatus('Could not save just now. We will retry.', 'err');
+    } finally { saving = false; }
+  }
+  function schedulePreview() {
+    if (previewTimer) clearTimeout(previewTimer);
+    previewTimer = setTimeout(() => { previewTimer = 0; rebuildPreview(); }, PREVIEW_MS);
+  }
+  function scheduleSave() {
+    if (saveTimer) clearTimeout(saveTimer);
+    saveTimer = setTimeout(() => { saveTimer = 0; autosave(); }, SAVE_MS);
+  }
+  function onChange() {
+    if (filling || !open) return;
+    markUndoPoint();
+    applyEditor();
+    schedulePreview();
+    scheduleSave();
+  }
+
+  function addService() {
+    markUndoPoint(); applyEditor();
+    current.data.services = (current.data.services || []).concat([{ name: 'New service', desc: '', price: '' }]);
+    filling = true; renderBody(); filling = false;
+    commitUndoPoint(); onChange();
+    const last = $$('#edServices [data-ed^="svc-name-"]').pop();
+    if (last) last.focus();
+  }
+  function addReview() {
+    markUndoPoint(); applyEditor();
+    const cur = String(current.data.reviews || '').trim();
+    current.data.reviews = cur ? cur + '\nA lovely comment — Your customer' : 'A lovely comment — Your customer';
+    filling = true; renderBody(); filling = false;
+    commitUndoPoint(); onChange();
+  }
+  function fileFromButton() {
+    return new Promise(resolve => {
+      let inp = $('#edFile');
+      if (!inp) {
+        inp = document.createElement('input');
+        inp.type = 'file'; inp.id = 'edFile'; inp.className = 'ed-file';
+        inp.accept = 'image/jpeg,image/png,image/webp';
+        document.body.appendChild(inp);
+      }
+      inp.value = '';
+      inp.onchange = () => { const f = inp.files && inp.files[0]; resolve(f || null); };
+      inp.click();
+    });
+  }
+  function readFileAsDataUrl(file) {
+    return new Promise((resolve, reject) => {
+      if (!file) return resolve('');
+      if (file.size > 1.5 * 1024 * 1024) return reject(new Error('Please choose a photo under 1.5 MB.'));
+      if (!/^image\/(jpeg|png|webp)$/.test(file.type)) return reject(new Error('Please use a JPG, PNG or WebP photo.'));
+      const r = new FileReader();
+      r.onload = () => resolve(r.result);
+      r.onerror = () => reject(new Error('Could not read that photo.'));
+      r.readAsDataURL(file);
+    });
+  }
+  async function uploadPhoto(key) {
+    try {
+      const file = await fileFromButton();
+      if (!file) return;
+      setStatus('Uploading photo…', 'muted');
+      const dataUrl = await readFileAsDataUrl(file);
+      let url = dataUrl;
+      if (API) {
+        if (!current.server) current.server = await apiJSON('/api/new', { name: current.data.name, email: current.data.email });
+        url = await apiImage(dataUrl);
+      }
+      markUndoPoint();
+      current.data.photoOverrides = { ...(current.data.photoOverrides || {}), [key]: url };
+      applyEditor();
+      filling = true; renderBody(); filling = false;
+      commitUndoPoint();
+      rebuildPreview();
+      scheduleSave();
+      setStatus('Photo updated', '');
+    } catch (err) {
+      console.warn(err);
+      setStatus((err && err.message) || 'Photo upload failed.', 'err');
+    }
+  }
+  function revertPhoto(key) {
+    markUndoPoint();
+    if (current.data.photoOverrides) {
+      const ov = { ...current.data.photoOverrides };
+      delete ov[key];
+      current.data.photoOverrides = Object.keys(ov).length ? ov : undefined;
+    }
+    applyEditor();
+    filling = true; renderBody(); filling = false;
+    commitUndoPoint();
+    rebuildPreview();
+    scheduleSave();
+    setStatus('Photo reverted', 'muted');
+  }
+
+  function bindBody() {
+    const body = $('#edBody'); if (!body || body._edBound) return;
+    body._edBound = true;
+    body.addEventListener('input', onChange);
+    body.addEventListener('change', onChange);
+    body.addEventListener('click', ev => {
+      const b = ev.target.closest('[data-act]'); if (!b) return;
+      const act = b.dataset.act;
+      if (act === 'add-svc') { ev.preventDefault(); addService(); }
+      else if (act === 'rm-svc') {
+        ev.preventDefault(); markUndoPoint(); applyEditor();
+        const i = +b.dataset.i;
+        current.data.services = (current.data.services || []).filter((_, j) => j !== i);
+        if (!current.data.services.length) current.data.services = [{ name: 'Service', desc: '', price: '' }];
+        filling = true; renderBody(); filling = false; commitUndoPoint(); onChange();
+      }
+      else if (act === 'add-rv') { ev.preventDefault(); addReview(); }
+      else if (act === 'rm-rv') {
+        ev.preventDefault(); markUndoPoint(); applyEditor();
+        const i = +b.dataset.i;
+        const recs = parseReviewLines(current.data.reviews).filter((_, j) => j !== i);
+        current.data.reviews = recs.map(r => r.n ? `${r.q} — ${r.n}` : r.q).join('\n');
+        filling = true; renderBody(); filling = false; commitUndoPoint(); onChange();
+      }
+      else if (act === 'up-photo') { ev.preventDefault(); uploadPhoto(b.dataset.key); }
+      else if (act === 'rv-photo') { ev.preventDefault(); revertPhoto(b.dataset.key); }
+    });
+  }
+
+  function highlight(el) {
+    $$('#edBody .is-pick').forEach(n => n.classList.remove('is-pick'));
+    if (el) {
+      const box = el.closest('.ed-svc, .ed-rv, .ed-photo, label') || el;
+      box.classList.add('is-pick');
+      setTimeout(() => box.classList.remove('is-pick'), 1600);
+    }
+  }
+  function focusField(name) {
+    const map = { headline: 'headline', lead: 'lead', about: 'about', name: 'name', cta: 'ctaLabel' };
+    let key = map[name] || name;
+    if (String(name).indexOf('photo:') === 0) {
+      const slot = String(name).slice(6);
+      const acc = $('#edPhotos'); if (acc) { const d = acc.closest('details'); if (d) d.open = true; }
+      const row = $(`#edBody [data-photo="${slot}"]`);
+      if (row) { row.scrollIntoView({ block: 'center', behavior: 'smooth' }); highlight(row); const b = row.querySelector('[data-act="up-photo"]'); if (b) b.focus(); setPanel(true); }
+      return;
+    }
+    const acc = $(`#edBody [data-ed="${key}"]`);
+    if (!acc) return;
+    const box = acc.closest('details'); if (box) box.open = true;
+    acc.focus(); acc.scrollIntoView({ block: 'center', behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth' });
+    highlight(acc);
+    setPanel(true);
+  }
+
+  function setPanel(openPanel) {
+    const sc = screen(); if (!sc) return;
+    sc.classList.toggle('is-collapsed', !openPanel);
+    fitEditFrame();
+    const fl = $('#edFloatBtn'); if (fl) fl.setAttribute('aria-expanded', openPanel ? 'true' : 'false');
+  }
+  function isPanelOpen() { return screen() && !screen().classList.contains('is-collapsed'); }
+
+  function setDevice(dev) {
+    if (!ED_VIEW[dev]) return;
+    edDevice = dev;
+    $$('#screen-editor .ve-devices button').forEach(b => {
+      const on = b.dataset.edDev === dev;
+      b.classList.toggle('on', on);
+      b.setAttribute('aria-selected', on ? 'true' : 'false');
+    });
+    fitEditFrame();
+  }
+
+  function pushEditorRoute() {
+    if (!API || !current || !current.server || !current.server.id) return;
+    const path = shellMode ? '/p/' + current.server.id : '/edit/' + current.server.id;
+    if (location.pathname !== path) {
+      try { history.pushState({ wodEditor: true }, '', path); } catch (_) {}
+    }
+  }
+
+  function openSiteEditor(opts) {
+    if (!current || !current.data || !screen()) return;
+    open = true;
+    shellMode = !!(opts && opts.shell);
+    const sc = screen();
+    sc.classList.toggle('is-shell', shellMode);
+    sc.classList.remove('is-denied');
+    const startOpen = opts && 'panel' in opts ? !!opts.panel : !shellMode;
+    setPanel(startOpen);
+    if (typeof show === 'function') show('editor');
+    const b = btn(); if (b) b.setAttribute('aria-expanded', 'true');
+    const back = $('#edBack');
+    if (back) back.textContent = (shellMode || standalone) ? 'Hide editor' : '← Back to preview';
+    const ap = $('#edApprove');
+    if (ap) ap.hidden = !!(standalone && !(current && current.data && !shellMode === false));
+    if (ap) ap.hidden = !!(standalone && !current._fromBuilder);
+    filling = true; renderBody(); filling = false;
+    bindBody();
+    renderEditCanvas();
+    setStatus('', 'muted');
+    past = []; future = []; pendingUndo = null; resetSnap = stateSnap();
+    updateUndoBtns();
+    if (!standalone) pushEditorRoute();
+    requestAnimationFrame(() => { fitEditFrame(); try { (startOpen ? $('#edBody') : $('#edFloatBtn') || $('#edBack')).focus(); } catch (_) {} });
+  }
+
+  function leaveEditor() {
+    if (typeof show === 'function') show('preview');
+    if (typeof renderPreview === 'function') renderPreview({ instant: true });
+    if (API && location.pathname.indexOf('/edit/') === 0) {
+      try { history.pushState({ wodEditor: false }, '', '/'); } catch (_) {}
+    }
+  }
+
+  function closeSiteEditor(opts) {
+    if (!open && !(screen() && screen().classList.contains('on'))) return;
+    if (open && !(opts && opts.silent)) { applyEditor(); scheduleSave(); }
+    open = false;
+    const b = btn(); if (b) { b.setAttribute('aria-expanded', 'false'); if (!opts || !opts.silent) try { b.focus(); } catch (_) {} }
+    if (opts && opts.silent) return;
+    if (shellMode || standalone) { setPanel(false); open = true; return; }
+    leaveEditor();
+  }
+
+  async function flushSiteEditor() {
+    if (previewTimer) { clearTimeout(previewTimer); previewTimer = 0; }
+    if (open) applyEditor();
+    commitUndoPoint();
+    if (dirty) rebuildPreview();
+    if (saveTimer) { clearTimeout(saveTimer); saveTimer = 0; }
+    if (dirty || saving) await autosave();
+  }
+
+  async function saveNow() {
+    applyEditor();
+    commitUndoPoint();
+    rebuildPreview();
+    await autosave();
+  }
+
+  window.closeSiteEditor = closeSiteEditor;
+  window.flushSiteEditor = flushSiteEditor;
+  window.openSiteEditor = openSiteEditor;
+
+  function initChrome() {
+    const b = btn(); if (b) b.addEventListener('click', () => openSiteEditor({ shell: false, panel: true }));
+    const back = $('#edBack'); if (back) back.addEventListener('click', () => { flushSiteEditor(); closeSiteEditor(); });
+    const done = $('#edDone'); if (done) done.addEventListener('click', async () => { await flushSiteEditor(); closeSiteEditor(); });
+    const save = $('#edSave'); if (save) save.addEventListener('click', () => saveNow());
+    const col = $('#edCollapse'); if (col) col.addEventListener('click', () => setPanel(false));
+    const fl = $('#edFloatBtn'); if (fl) fl.addEventListener('click', () => setPanel(true));
+    const un = $('#edUndo'); if (un) un.addEventListener('click', undo);
+    const re = $('#edRedo'); if (re) re.addEventListener('click', redo);
+    const rs = $('#edReset'); if (rs) rs.addEventListener('click', resetSession);
+    const ap = $('#edApprove');
+    if (ap) ap.addEventListener('click', async () => {
+      await flushSiteEditor();
+      if (shellMode || standalone) setPanel(false);
+      if (typeof $('#approveBtn').onclick === 'function') $('#approveBtn').onclick();
+      else if (typeof show === 'function') show('approve');
+    });
+    $$('#screen-editor .ve-devices button').forEach(btnEl => {
+      btnEl.addEventListener('click', () => setDevice(btnEl.dataset.edDev));
+    });
+    document.addEventListener('keydown', ev => {
+      if (!open || !screen() || !screen().classList.contains('on')) return;
+      const meta = ev.metaKey || ev.ctrlKey;
+      if (meta && ev.key.toLowerCase() === 'z') { ev.preventDefault(); ev.shiftKey ? redo() : undo(); }
+      else if (meta && ev.key.toLowerCase() === 'y') { ev.preventDefault(); redo(); }
+      else if (meta && ev.key.toLowerCase() === 's') { ev.preventDefault(); saveNow(); }
+      else if (ev.key === 'Escape') { ev.preventDefault(); if (isPanelOpen()) setPanel(false); }
+    });
+    addEventListener('resize', () => { if (open) fitEditFrame(); });
+    addEventListener('message', ev => {
+      const data = ev.data;
+      if (!data || !data.wodEdit) return;
+      if (!open) openSiteEditor({ shell: shellMode, panel: true });
+      else setPanel(true);
+      setTimeout(() => focusField(data.wodEdit), 50);
+    });
+    addEventListener('popstate', ev => {
+      if (!API) return;
+      if (/^\/edit\//.test(location.pathname) && current) openSiteEditor({ panel: true, shell: false });
+      else if (open && !shellMode && typeof show === 'function' && screen().classList.contains('on')) closeSiteEditor({ silent: false });
+    });
+  }
+
+  async function bootStandalone() {
+    const id = (typeof window.WOD_EDIT_ID !== 'undefined' && window.WOD_EDIT_ID) || ((location.pathname.match(/^\/(?:edit|p)\/([A-Za-z0-9]{10,40})\/?$/) || [])[1]);
+    const forceShell = typeof window.WOD_EDIT_SHELL !== 'undefined' ? !!window.WOD_EDIT_SHELL : /^\/p\//.test(location.pathname);
+    if (!id || typeof API === 'undefined' || !API) return false;
+    try {
+      const r = await fetch('/api/edit/' + encodeURIComponent(id), { credentials: 'same-origin', headers: { accept: 'application/json' } });
+      if (r.status === 401 || r.status === 403 || r.status === 404) { showDenied(); return true; }
+      if (!r.ok) throw new Error('load failed');
+      const rec = await r.json();
+      let fromStore = null;
+      try {
+        const all = (typeof load === 'function') ? load() : JSON.parse(localStorage.getItem('sitespark_demo_v2') || '[]');
+        fromStore = (all || []).find(s => s && s.server && s.server.id === id);
+      } catch (_) {}
+      current = fromStore ? { ...fromStore } : { id, server: { id }, revisions: [], status: 'preview sent, awaiting approval' };
+      current.data = rec.data || current.data || {};
+      current.opts = rec.opts || current.opts || {};
+      current.version = rec.version || current.version || 1;
+      current.server = current.server || { id };
+      current._fromBuilder = !!fromStore;
+      const built = buildSite(current.data, cleanOpts(current.opts), null, {});
+      current.previewM = built.M;
+      current.styleKey = built.M.key;
+      current.placeholders = built.M.placeholders.slice();
+      setPreviewDoc(built.doc);
+      upsert(current);
+      standalone = !fromStore || forceShell;
+      openSiteEditor({ shell: forceShell, panel: !forceShell });
+      return true;
+    } catch (err) {
+      console.warn(err);
+      showDenied();
+      return true;
+    }
+  }
+  function showDenied() {
+    const sc = screen();
+    if (!sc) return;
+    if (typeof show === 'function') show('editor');
+    sc.classList.add('is-denied');
+    open = false;
+  }
+
+  function init() {
+    if (!screen()) return;
+    initChrome();
+    bootStandalone();
+  }
+
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init);
+  else init();
+})();
 
 </script>
 <script>

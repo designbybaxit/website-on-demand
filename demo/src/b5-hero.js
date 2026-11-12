@@ -85,9 +85,9 @@ function heroCSS(M) {
 
 function heroParts(M) {
   const { ph } = M;
-  const h1 = `<h1 class="hero-h1" id="hero-title">${headHTML(M.h1, true)}</h1>`;
+  const h1 = `<h1 class="hero-h1" id="hero-title" data-edit="headline">${headHTML(M.h1, true)}</h1>`;
   const eyebrow = `<p class="eyebrow">${hh(M.eyebrow)}</p>`;
-  const lead = `<p class="lead">${hh(M.lead)}</p>`;
+  const lead = `<p class="lead" data-edit="lead">${hh(M.lead)}</p>`;
   const prim = btnPrimary(M, 'btn-lg');
   const sec = secondaryBtn(M, 'btn-lg');
   const actions = `<div class="hero-actions">${prim}${sec}</div>`;

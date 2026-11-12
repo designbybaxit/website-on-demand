@@ -669,6 +669,105 @@ html.themes-on .theme-bar{display:flex}
  .trust span{text-align:center;padding:8px 10px}
  .card{padding:18px;margin:12px 0}
 }
+
+/* ---- Visual content editor (dedicated page + owner preview shell) ---- */
+#editSiteBtn.edit-site-btn{background:#0F5B59;color:#fff;border:0;box-shadow:0 8px 20px -10px rgba(15,91,89,.55);transition:background .2s var(--ease),transform .2s var(--ease),box-shadow .2s var(--ease)}
+#editSiteBtn.edit-site-btn:hover,#editSiteBtn.edit-site-btn:focus-visible{background:#0A3336;color:#fff;transform:translateY(-1px);box-shadow:0 12px 24px -10px rgba(15,91,89,.5)}
+#editSiteBtn.edit-site-btn:active{transform:none;background:#0A3336}
+.pv-edit-launch{display:flex;flex-direction:column;align-items:center;gap:6px;margin-top:8px}
+
+body.ed-mode{overflow:hidden;background:#d7e4e2}
+body.ed-mode .top,body.ed-mode .foot,body.ed-mode .theme-bar,body.ed-mode .atmos,body.ed-mode .grain{display:none !important}
+body.ed-mode .wrap{max-width:none;margin:0;padding:0;width:100%;z-index:2}
+body.ed-mode::after{display:none}
+#screen-editor{display:none}
+#screen-editor.on{display:flex;flex-direction:column;position:fixed;inset:0;z-index:80;background:#d7e4e2;animation:veIn .35s var(--ease)}
+@keyframes veIn{from{opacity:0}to{opacity:1}}
+.ve-top{display:flex;align-items:center;gap:10px;padding:8px 12px;min-height:56px;background:#0A3336;color:#fff;flex:none;box-shadow:0 8px 24px rgba(10,51,54,.28);z-index:3}
+.ve-top .ve-brand{font-weight:800;letter-spacing:-.02em;font-size:15px;margin-right:6px;color:#A6F3E1}
+.ve-top .ve-sep{width:1px;height:28px;background:rgba(255,255,255,.16);flex:none}
+.ve-top .sp{flex:1}
+.ve-btn{appearance:none;border:0;background:transparent;color:#fff;font:inherit;font-weight:700;font-size:13.5px;min-height:40px;padding:8px 12px;border-radius:10px;cursor:pointer;transition:background .15s var(--ease),transform .15s var(--ease),opacity .15s var(--ease)}
+.ve-btn:hover,.ve-btn:focus-visible{background:rgba(255,255,255,.12);transform:translateY(-1px)}
+.ve-btn:active{transform:none;background:rgba(255,255,255,.18)}
+.ve-btn:disabled{opacity:.4;cursor:default;transform:none;background:transparent}
+.ve-btn.primary{background:#14A69A}
+.ve-btn.primary:hover,.ve-btn.primary:focus-visible{background:#55C7B0;color:#0A3336}
+.ve-btn.ghost{background:rgba(255,255,255,.08)}
+.ve-devices{display:flex;background:rgba(255,255,255,.08);border-radius:12px;padding:3px;gap:2px}
+.ve-devices button{appearance:none;border:0;background:transparent;color:#CDE7E2;font:inherit;font-weight:700;font-size:12.5px;min-height:32px;padding:4px 10px;border-radius:9px;cursor:pointer;transition:background .15s var(--ease),color .15s var(--ease)}
+.ve-devices button:hover{color:#fff}
+.ve-devices button.on{background:#fff;color:#0A3336}
+#edStatus.ed-status{margin:0;min-width:6.5rem;font-size:12.5px;font-weight:600;color:#A6F3E1;text-align:right}
+#edStatus.ed-status.is-err{color:#ffb4b4}
+#edStatus.ed-status.is-muted{color:rgba(255,255,255,.65);font-weight:500}
+.ve-body{flex:1;display:flex;min-height:0;position:relative}
+.ve-panel{width:min(380px,92vw);flex:none;background:#fff;color:var(--ink);border-right:1px solid #CDE7E2;box-shadow:8px 0 32px -16px rgba(10,51,54,.28);display:flex;flex-direction:column;z-index:2;transform:translateX(0);transition:transform .35s var(--ease);outline:none}
+#screen-editor.is-collapsed .ve-panel{transform:translateX(-104%)}
+.ve-canvas{flex:1;min-width:0;display:flex;align-items:stretch;justify-content:center;padding:18px;background:
+  linear-gradient(180deg,rgba(15,91,89,.06),transparent 40%),
+  repeating-conic-gradient(from 0deg, #e7eef0 0% 25%, #dce7e6 0% 50%) 0 0 / 20px 20px;}
+.ve-stage{width:100%;height:100%;display:flex;align-items:stretch;justify-content:center;position:relative}
+.ve-stage iframe{border:0;background:#fff;border-radius:10px;box-shadow:0 24px 50px -20px rgba(10,51,54,.4);transform-origin:top center}
+#edFloatBtn{display:none;position:fixed;left:18px;bottom:18px;z-index:90;width:56px;height:56px;border:0;border-radius:18px;background:#0F5B59;color:#fff;box-shadow:0 12px 28px -8px rgba(15,91,89,.6);cursor:pointer;align-items:center;justify-content:center;flex-direction:column;gap:1px;font:700 10px/1 system-ui;letter-spacing:.04em;text-transform:uppercase;transition:transform .2s var(--ease),background .2s var(--ease),box-shadow .2s var(--ease)}
+#edFloatBtn svg{display:block}
+#edFloatBtn:hover,#edFloatBtn:focus-visible{background:#0A3336;transform:translateY(-2px) scale(1.04);box-shadow:0 16px 32px -8px rgba(15,91,89,.7)}
+#edFloatBtn:active{transform:none}
+#screen-editor.is-collapsed #edFloatBtn,#screen-editor.is-shell.is-collapsed #edFloatBtn{display:flex}
+#screen-editor.is-shell.is-collapsed .ve-top{display:none}
+#screen-editor.is-shell.is-collapsed .ve-canvas{padding:0}
+#screen-editor.is-shell.is-collapsed .ve-stage iframe{border-radius:0;box-shadow:none;width:100% !important;height:100% !important;transform:none}
+#edDenied{display:none;position:absolute;inset:0;z-index:5;background:#F3FBF9;align-items:center;justify-content:center;padding:24px;text-align:center}
+#screen-editor.is-denied #edDenied{display:flex}
+#screen-editor.is-denied .ve-body,#screen-editor.is-denied .ve-top,#screen-editor.is-denied #edFloatBtn{display:none !important}
+.ed-head{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;padding:16px 16px 8px}
+.ed-kicker{margin:0;font-size:11px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:#0F5B59}
+.ed-head h2{margin:2px 0 0;font-family:var(--display);font-size:1.35rem;letter-spacing:-.03em}
+.ed-close,.ed-collapse{width:40px;height:40px;border:0;border-radius:12px;background:var(--brand-soft);color:var(--ink);font-size:22px;line-height:1;cursor:pointer;flex:none;transition:background .2s var(--ease),transform .2s var(--ease)}
+.ed-close:hover,.ed-close:focus-visible,.ed-collapse:hover,.ed-collapse:focus-visible{background:#CDE7E2;transform:scale(1.04)}
+.ed-intro{margin:0 16px 8px;font-size:13.5px;color:var(--mut);line-height:1.45}
+.ed-body{flex:1;overflow:auto;padding:4px 16px 28px;overscroll-behavior:contain}
+.ed-acc{border:1px solid var(--line);border-radius:14px;margin:0 0 10px;background:#fff;overflow:hidden;transition:border-color .2s var(--ease),box-shadow .2s var(--ease)}
+.ed-acc[open]{border-color:#9AD5CC;box-shadow:0 8px 24px -18px rgba(15,91,89,.55)}
+.ed-acc summary{list-style:none;cursor:pointer;padding:12px 14px;font-weight:700;font-size:14.5px;display:flex;align-items:center;justify-content:space-between;gap:8px;min-height:44px}
+.ed-acc summary::-webkit-details-marker{display:none}
+.ed-acc summary::after{content:'';width:8px;height:8px;border-right:2px solid #0F5B59;border-bottom:2px solid #0F5B59;transform:rotate(45deg);transition:transform .2s var(--ease);margin-right:4px}
+.ed-acc[open] summary::after{transform:rotate(225deg)}
+.ed-acc .ed-fields{padding:0 14px 14px;display:grid;gap:10px}
+.ed-fields label{display:flex;flex-direction:column;gap:4px;font-size:12.5px;font-weight:600;color:var(--mut)}
+.ed-fields input,.ed-fields textarea{font:inherit;font-weight:500;color:var(--ink);border:1px solid var(--line);border-radius:10px;padding:10px 12px;min-height:44px;background:#F3FBF9;transition:border-color .15s var(--ease),box-shadow .15s var(--ease),background .15s var(--ease)}
+.ed-fields textarea{min-height:88px;resize:vertical}
+.ed-fields input:hover,.ed-fields textarea:hover{border-color:#9AD5CC}
+.ed-fields input:focus,.ed-fields textarea:focus{outline:none;border-color:#0F5B59;background:#fff;box-shadow:0 0 0 3px rgba(20,166,154,.22)}
+.ed-svc,.ed-rv,.ed-photo{border:1px dashed #CDE7E2;border-radius:12px;padding:10px;display:grid;gap:8px;background:#F3FBF9;transition:box-shadow .2s var(--ease),border-color .2s var(--ease)}
+.ed-svc.is-pick,.ed-rv.is-pick,.ed-photo.is-pick,.ed-fields label.is-pick{border-color:#14A69A;box-shadow:0 0 0 3px rgba(20,166,154,.22)}
+.ed-svc-top,.ed-photo-top{display:flex;align-items:center;justify-content:space-between;gap:8px}
+.ed-svc-top span,.ed-photo-top span{font-size:12px;font-weight:700;color:#0F5B59}
+.ed-mini{appearance:none;border:0;background:transparent;color:#0F5B59;font:inherit;font-size:13px;font-weight:700;cursor:pointer;min-height:36px;padding:6px 8px;border-radius:8px}
+.ed-mini:hover,.ed-mini:focus-visible{background:#DFF6F1}
+.ed-mini.danger{color:var(--bad)}
+.ed-mini.danger:hover{background:var(--bad-soft)}
+.ed-add{width:100%;min-height:44px;border:1px dashed #9AD5CC;background:#fff;border-radius:12px;color:#0F5B59;font:inherit;font-weight:700;cursor:pointer;transition:background .15s var(--ease),transform .15s var(--ease)}
+.ed-add:hover,.ed-add:focus-visible{background:#DFF6F1;transform:translateY(-1px)}
+.ed-photo img{width:100%;height:88px;object-fit:cover;border-radius:8px;background:#CDE7E2}
+.ed-photo .ed-photo-actions{display:flex;gap:8px;flex-wrap:wrap}
+.ed-file{position:absolute;width:1px;height:1px;opacity:0;overflow:hidden}
+.ed-hint{margin:0;font-size:12px;color:var(--mut);font-weight:500;line-height:1.4}
+.ed-sheet-handle{display:none}
+@media (max-width: 899px){
+  .ve-body{flex-direction:column}
+  .ve-panel{position:absolute;left:0;right:0;bottom:0;width:100%;max-height:min(72vh,680px);border-right:0;border-top:1px solid #CDE7E2;border-radius:20px 20px 0 0;transform:translateY(0);box-shadow:0 -16px 50px -20px rgba(10,51,54,.35)}
+  #screen-editor.is-collapsed .ve-panel{transform:translateY(104%)}
+  .ed-sheet-handle{display:block;width:44px;height:5px;border-radius:99px;background:#CDE7E2;margin:10px auto 0}
+  .ve-canvas{padding:10px}
+  .ve-top{flex-wrap:wrap;gap:8px}
+  #edFloatBtn{left:14px;bottom:14px}
+}
+@media (prefers-reduced-motion:reduce){
+  #screen-editor.on,.ve-panel,#edFloatBtn,.ed-close,.ed-add,.ed-acc summary::after,#editSiteBtn.edit-site-btn{transition:none;animation:none;transform:none}
+  #editSiteBtn.edit-site-btn:hover,#edFloatBtn:hover{transform:none}
+}
+
 @media (prefers-reduced-motion:reduce){
   .screen.on,#screen-form.on .hero-a,#screen-form.on .card,#screen-form.on .form-step.on .card,.changes.on{animation:none}
   .orb,.hero-a h1 em,.mark,.btn::after{animation:none}
@@ -991,7 +1090,11 @@ html.themes-on .theme-bar{display:flex}
       <span class="pill b" id="dPos" aria-live="polite">Design 1 of 1</span>
       <button type="button" class="btn ghost sm" id="dNext">Show me another design →</button>
     </div>
-    <p class="note" id="dNote">Step back and forth through designs. The one showing when you press Apply is the one we keep.</p>
+    <p class="note" id="dNote">Step back and forth through designs. Your words, photos and prices stay. The one showing when you press Apply is the one we keep.</p>
+    <div class="pv-edit-launch">
+      <button type="button" class="btn edit-site-btn" id="editSiteBtn" aria-controls="screen-editor">Edit your site</button>
+      <p class="note">Opens a full editor with a live preview. Change words, photos and prices — the layout stays as it is.</p>
+    </div>
   </div>
   <div class="stage" id="stage"></div>
   <p class="note pv-hint" id="pvHint">This is your real website. Scroll and click inside the frame, or open it in a new tab. Forms send nothing in a preview.</p>
@@ -1023,6 +1126,51 @@ html.themes-on .theme-bar{display:flex}
     <p class="note" style="margin-top:10px">Style, colour and headline changes apply automatically, and words like "dark", "light", a colour name or a style name (clinic, restaurant, salon…) in your note are picked up. Other notes are saved for our team.</p>
   </div>
   <p class="note" style="text-align:center;margin:16px auto 0;max-width:760px">Your website goes live on your own address once you approve.</p>
+</section>
+
+<!-- ========== SITE EDITOR (full-page workspace) ========== -->
+<section class="screen" id="screen-editor" aria-label="Edit your website">
+  <header class="ve-top">
+    <button type="button" class="ve-btn ghost" id="edBack">← Back to preview</button>
+    <span class="ve-brand">Editor</span>
+    <span class="ve-sep" aria-hidden="true"></span>
+    <div class="ve-devices" role="tablist" aria-label="Device preview">
+      <button type="button" class="on" data-ed-dev="desktop" role="tab" aria-selected="true">Desktop</button>
+      <button type="button" data-ed-dev="tablet" role="tab" aria-selected="false">Tablet</button>
+      <button type="button" data-ed-dev="mobile" role="tab" aria-selected="false">Mobile</button>
+    </div>
+    <span class="ve-sep" aria-hidden="true"></span>
+    <button type="button" class="ve-btn" id="edUndo" title="Undo" aria-label="Undo" disabled>Undo</button>
+    <button type="button" class="ve-btn" id="edRedo" title="Redo" aria-label="Redo" disabled>Redo</button>
+    <button type="button" class="ve-btn" id="edReset" title="Reset changes made in this session">Reset</button>
+    <span class="sp"></span>
+    <p class="ed-status is-muted" id="edStatus" aria-live="polite"></p>
+    <button type="button" class="ve-btn ghost" id="edSave">Save</button>
+    <button type="button" class="ve-btn" id="edDone">Done</button>
+    <button type="button" class="ve-btn primary" id="edApprove">Approve &amp; go live →</button>
+  </header>
+  <div class="ve-body">
+    <aside id="siteEditor" class="ve-panel" aria-labelledby="edTitle">
+      <div class="ed-sheet-handle" aria-hidden="true"></div>
+      <header class="ed-head">
+        <div>
+          <p class="ed-kicker">Customize</p>
+          <h2 id="edTitle">Edit your site</h2>
+        </div>
+        <button type="button" class="ed-collapse" id="edCollapse" aria-label="Hide editor panel">‹</button>
+      </header>
+      <p class="ed-intro">Click anything on the site to edit it. Words, photos and prices can change; the layout stays locked.</p>
+      <div class="ed-body" id="edBody"></div>
+    </aside>
+    <div class="ve-canvas">
+      <div class="ve-stage" id="editStage"><iframe id="editFrame" title="Live website" sandbox="allow-scripts allow-popups allow-forms allow-popups-to-escape-sandbox"></iframe></div>
+    </div>
+  </div>
+  <button type="button" id="edFloatBtn" aria-label="Edit site">
+    <svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4 12.5-12.5z"/></svg>
+    Edit site
+  </button>
+  <div id="edDenied"><div><h1>Only you can edit this site</h1><p>This editor is for the person who built the website.</p><p><a class="btn" href="/">Back to WebiMade</a></p></div></div>
 </section>
 
 <!-- ========== STEP 4: APPROVE ========== -->

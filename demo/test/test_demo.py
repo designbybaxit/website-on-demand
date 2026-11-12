@@ -413,6 +413,87 @@ async def site_checks(b):
         check(nj['hidden'] == 0 and nj['h1'] > 5, f'{k}: readable without JavaScript ({nj})')
         await ctx.close()
 
+
+async def editor_checks(b):
+    print('\n== content editor ==')
+    pg = await b.new_page()
+    await pg.goto(f'http://127.0.0.1:{PORT}/demo.html?nopreload=1')
+    await pg.evaluate('localStorage.clear()')
+    # JS-level sanitization used by the editor
+    r = await pg.evaluate("""() => {
+      const d = sanitizeSiteData({ name: '<b>Oak</b> Studio', about: 'Hi <img src=x>', bookingUrl: 'javascript:alert(1)', services: [{ name: '<i>Brand</i>', desc: 'x', price: '$10' }], photoOverrides: { hero: 'https://images.pexels.com/p.jpg', about: 'javascript:x' } }, { allowData: true });
+      const o = sanitizeOpts({ headline: '<em>Fresh</em> start', setup: 1, monthly: 1 });
+      const p = { setup: BRAND.setup, monthly: BRAND.monthly, domain: BRAND.domainConnect };
+      return { name: d.name, about: d.about, booking: d.bookingUrl, svc: d.services[0].name, hero: d.photoOverrides.hero, bad: d.photoOverrides.about, headline: o.headline, setup: o.setup, brand: p };
+    }""")
+    check(r['name'] == 'Oak Studio' and '<' not in r['about'] and r['booking'] == '' and r['svc'] == 'Brand', 'editor sanitizeSiteData strips HTML and bad booking links')
+    check(r['hero'] and not r['bad'], 'editor photo overrides keep https and drop javascript')
+    check(r['headline'] == 'Fresh start' and r['setup'] is None, 'editor opts keep the headline and do not carry plan prices')
+    check(r['brand']['setup'] == 50 and r['brand']['monthly'] == 29 and r['brand']['domain'] == 10, 'WebiMade plan prices stay $50 / $29 / +$10')
+    await pg.click('#exChips [data-ex=graphic]')
+    await form_build(pg)
+    await pg.wait_for_selector('#screen-preview.on', timeout=120000)
+    check(await pg.is_visible('#editSiteBtn'), 'Edit your site button is on the preview screen')
+    await pg.click('#editSiteBtn')
+    await pg.wait_for_selector('#screen-editor.on', timeout=8000)
+    check(await pg.locator('#screen-preview').evaluate("e => !e.classList.contains('on')"), 'editor opens on its own page, not the squeezed preview')
+    check(await pg.is_visible('#editFrame') and await pg.is_visible('#edSave') and await pg.is_visible('#edDone'), 'editor has a live canvas, Save and Done')
+    check(await pg.locator('[data-ed-dev="tablet"]').count() == 1 and await pg.locator('#edUndo').count() == 1, 'editor has a tablet view and undo')
+    await pg.fill('#ed-name', 'Oak & Pine Studio')
+    await pg.wait_for_timeout(900)
+    src = await pg.locator('#editFrame').evaluate('el => el.srcdoc || ""')
+    check('Oak & Pine Studio' in src or 'Oak &amp; Pine Studio' in src, 'preview updates the business name as you type')
+    # HTML typed in the about field is escaped in the preview document
+    about = pg.locator('#ed-about')
+    if await about.count():
+        box = about.locator('xpath=ancestor::details')
+        if await box.count(): await box.evaluate('e => e.open = true')
+        await about.fill('Friendly studio. <img src=x onerror=alert(1)>')
+        await pg.wait_for_timeout(900)
+        src = await pg.locator('#editFrame').evaluate('el => el.srcdoc || ""')
+        check('<img src=x onerror=alert(1)>' not in src, 'typed HTML is not injected into the preview')
+    n0 = await pg.locator('#edServices .ed-svc').count()
+    await pg.click('[data-act="add-svc"]')
+    n1 = await pg.locator('#edServices .ed-svc').count()
+    check(n1 == n0 + 1, f'can add a service row ({n0} -> {n1})')
+    await pg.fill(f'#ed-svc-name-{n0}', 'Poster pack')
+    await pg.fill(f'#ed-svc-price-{n0}', '$75')
+    await pg.wait_for_timeout(900)
+    src = await pg.locator('#editFrame').evaluate('el => el.srcdoc || ""')
+    check(('Poster pack' in src or 'Poster Pack' in src) and ('$75' in src or '75' in src), 'new service and price show in the preview')
+    # image swap + revert (static demo uses a data URL)
+    photos = pg.locator('#edPhotos')
+    if await photos.count():
+        box = photos.locator('xpath=ancestor::details')
+        if await box.count():
+            await box.evaluate('e => e.open = true')
+    up = pg.locator('[data-act="up-photo"]').first
+    if await up.count():
+        await up.scroll_into_view_if_needed()
+        async with pg.expect_file_chooser() as fc:
+            await up.click()
+        chooser = await fc.value
+        await chooser.set_files(os.path.join(HERE, 'photo1.jpg'))
+        await pg.wait_for_function("document.querySelectorAll('[data-act=\\'rv-photo\\']').length > 0", timeout=8000)
+        check(await pg.locator('[data-act="rv-photo"]').count() > 0, 'uploaded section photo can be reverted')
+        if await box.count():
+            await box.evaluate('e => e.open = true')
+        rv = pg.locator('[data-act="rv-photo"]').first
+        await rv.scroll_into_view_if_needed()
+        await rv.click()
+        await pg.wait_for_function("document.querySelectorAll('[data-act=\\'rv-photo\\']').length === 0", timeout=8000)
+        check(await pg.locator('[data-act="rv-photo"]').count() == 0, 'revert removes the photo override')
+    # leave the editor, then switch design on the preview screen
+    await pg.click('#edDone')
+    await pg.wait_for_selector('#screen-preview.on', timeout=8000)
+    check(await pg.locator('#screen-editor').evaluate("e => !e.classList.contains('on')"), 'Done returns to the preview screen')
+    await pg.click('#dNext')
+    await pg.wait_for_timeout(2500)
+    src = await pg.locator('#liveFrame').evaluate('el => el.srcdoc || ""')
+    check('Oak & Pine Studio' in src or 'Oak &amp; Pine Studio' in src, 'edits survive Next design')
+    check('Poster pack' in src or 'Poster Pack' in src, 'added service survives Next design')
+    await pg.close()
+
 async def main():
     # two small test photos
     from PIL import Image
@@ -429,6 +510,7 @@ async def main():
         await research_checks(b)
         await research_flow(b)
         await design_nav_share_row_regression(b)
+        await editor_checks(b)
         if os.environ.get('FAST'): await b.close(); srv.shutdown(); print('\n' + ('ALL PASSED' if not fails else f'{len(fails)} FAILED:\n - ' + '\n - '.join(fails))); sys.exit(1 if fails else 0)
         for k in ['graphic', 'salon', 'restaurant', 'law']: await flow(b, k, mobile=False)
         for k in ['gym', 'clinic', 'home', 'realestate']: await flow(b, k, mobile=True, upload=(k == 'clinic'))

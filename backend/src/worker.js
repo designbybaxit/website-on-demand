@@ -4,15 +4,16 @@
 
 import {
   APP_CSP, SITE_CSP, PREVIEW_CSP,
-  sanitizeSiteData, applyPrices, sniffImage, leadHasHoneypot,
+  sanitizeSiteData, sanitizeOpts, applyPrices, sniffImage, leadHasHoneypot,
   adminHostAllowed, isAdminPath, withSecHeaders,
-  applyAssetHeaders, leadCorsHeaders
+  applyAssetHeaders, leadCorsHeaders,
+  isEditId, requestEditToken, ownerCookieHeader
 } from './security.mjs';
 
 const DAY = 86400;
 const LIMITS = {
   newPerIpDay: 20,          // new requests per IP per day
-  savesPerSubDay: 60,       // preview saves per request per day
+  savesPerSubDay: 240,      // preview saves per request per day (autosave from the content editor)
   imgPerSub: 30,            // photo uploads per request (lifetime)
   imgBytes: 1.5 * 1024 * 1024,
   saveBytes: 1.5 * 1024 * 1024,
@@ -29,6 +30,10 @@ const IMG_TYPES = new Set(['image/jpeg', 'image/png', 'image/webp']);
 const now = () => new Date().toISOString();
 const json = (obj, status = 200, extra = {}) => new Response(JSON.stringify(obj), { status, headers: withSecHeaders({ 'content-type': 'application/json; charset=utf-8', 'cache-control': 'no-store' }, extra) });
 const bad = (msg, status = 400) => json({ error: msg }, status);
+function cookieExtra(id, token, days) {
+  const c = ownerCookieHeader(id, token, (days || 14) * DAY);
+  return c ? { 'set-cookie': c } : {};
+}
 const esc = s => String(s == null ? '' : s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
 function rid(n) {
   const a = 'abcdefghijkmnopqrstuvwxyzABCDEFGHJKLMNPQRSTUVWXYZ23456789', b = new Uint8Array(n); crypto.getRandomValues(b);
@@ -121,7 +126,7 @@ async function apiNew(req, env) {
   await event(env, id, 'created', { name: b.name, email: b.email });
   // occasional cleanup of old rate-limit rows
   if (Math.random() < 0.1) await env.DB.prepare('DELETE FROM rate WHERE exp < ?').bind(Math.floor(Date.now() / 1000)).run();
-  return json({ id, token });
+  return json({ id, token }, 200, cookieExtra(id, token, +env.PREVIEW_DAYS || 14));
 }
 async function subWithToken(env, id, token) {
   if (!/^[A-Za-z0-9]{10,40}$/.test(id || '') || typeof token !== 'string') throw new HttpErr('Not found', 404);
@@ -130,7 +135,7 @@ async function subWithToken(env, id, token) {
   return s;
 }
 async function apiImg(req, env, id) {
-  const s = await subWithToken(env, id, req.headers.get('x-token'));
+  const s = await subWithToken(env, id, requestEditToken(req, id));
   const type = (req.headers.get('content-type') || '').split(';')[0].trim();
   if (!IMG_TYPES.has(type)) return bad('Only JPG, PNG or WebP photos');
   if (s.img_count >= LIMITS.imgPerSub) return bad('Too many photos for this request', 429);
@@ -151,9 +156,9 @@ async function getImg(env, id, k) {
 }
 async function apiSave(req, env, id) {
   const b = await readJSON(req, LIMITS.saveBytes);
-  const s = await subWithToken(env, id, b.token);
+  const s = await subWithToken(env, id, requestEditToken(req, id, b.token));
   if (!await allow(env, 'save:' + id, LIMITS.savesPerSubDay, DAY)) return bad('Too many updates today for this website. Please try again tomorrow.', 429);
-  const d = sanitizeSiteData(b.data || {}, { allowData: false }), html = String(b.html || '');
+  const d = sanitizeSiteData(b.data || {}, { allowData: false }), opts = sanitizeOpts(b.opts || {}), html = String(b.html || '');
   if (!html.startsWith('<!DOCTYPE html>') || html.length > LIMITS.htmlBytes) return bad('Preview is missing or too large');
   if (/data:image\//.test(JSON.stringify(d))) return bad('Photos must be uploaded first');
   const days = +env.PREVIEW_DAYS || 14, applied = s.status !== 'previewing';
@@ -162,7 +167,7 @@ async function apiSave(req, env, id) {
   await env.DB.prepare(`UPDATE submissions SET updated_at=?, name=?, slug=?, email=?, phone=?, country=?, industry=?, data_json=?, opts_json=?, version=?, revisions_json=?, placeholders_json=?, style_key=?, preview_expires_at=? WHERE id=?`)
     .bind(t, String(d.name || '').slice(0, 120), slugify(d.name), String(d.email || '').slice(0, 200), String(d.phone || '').slice(0, 60), String(d.country || '').slice(0, 10),
       d.industry === 'other' ? 'other: ' + String(d.industryOther || '').slice(0, 60) : String(d.industry || '').slice(0, 60),
-      JSON.stringify(d), JSON.stringify(b.opts || {}), +b.version || 1, JSON.stringify(b.revisions || []), JSON.stringify(b.placeholders || []), String(b.styleKey || '').slice(0, 30), exp, id).run();
+      JSON.stringify(d), JSON.stringify(opts), +b.version || 1, JSON.stringify(b.revisions || []), JSON.stringify(b.placeholders || []), String(b.styleKey || '').slice(0, 30), exp, id).run();
   const origin = new URL(req.url).origin, url = `${origin}/p/${id}`;
   const first = !s.data_json;
   await event(env, id, first ? 'preview_saved' : 'preview_updated', { version: +b.version || 1, notes: (b.revisions || []).slice(-1)[0] || null });
@@ -172,7 +177,7 @@ async function apiSave(req, env, id) {
     await sendEmail(env, id, { kind: 'admin_new', to: env.NOTIFY_EMAIL, subject: `New preview: ${d.name} (${d.country || '?'})`,
       text: `New website preview\nBusiness: ${d.name}\nEmail: ${d.email}\nPhone: ${d.phone}\nCountry: ${d.country}\nIndustry: ${d.industry}${d.industryOther ? ' / ' + d.industryOther : ''}\nPreview: ${url}\nAdmin: ${origin}/admin` });
   }
-  return json({ ok: true, url, expiresAt: exp });
+  return json({ ok: true, url, expiresAt: exp }, 200, cookieExtra(id, requestEditToken(req, id, b.token), days));
 }
 async function apiApply(req, env, id) {
   const b = await readJSON(req, 8192);
@@ -195,11 +200,43 @@ async function apiApply(req, env, id) {
     text: `Hi,\n\nThanks for applying! We've saved your website (${origin}/p/${id}).\nWe'll send you a secure payment link shortly; your website goes live as soon as it's paid.\n\nQuestions? Just reply to this email.\n\n${env.BRAND_NAME}` });
   return json({ ok: true });
 }
-async function getPreview(env, id) {
+function deniedEditor() {
+  return plainPage('Editor unavailable', `<h1>Only you can edit this site</h1><p>This editor is for the person who built the website. If that's you, open it from your preview after you've built it in this browser.</p><a class="b" href="/">Back to WebiMade</a>`, 403);
+}
+async function serveEditorApp(req, env, id, shell) {
+  const asset = await env.ASSETS.fetch(new Request(new URL('/', req.url), { method: 'GET', headers: { accept: 'text/html' } }));
+  let html = await asset.text();
+  const boot = `<script>window.WOD_API=1;window.WOD_EDIT_ID=${JSON.stringify(id)};window.WOD_EDIT_SHELL=${shell ? 1 : 0};</script>`;
+  html = html.replace(/<head[^>]*>/i, m => m + boot);
+  return new Response(html, { status: 200, headers: withSecHeaders({
+    'content-type': 'text/html; charset=utf-8', 'x-robots-tag': 'noindex, nofollow', 'cache-control': 'no-store',
+    'content-security-policy': APP_CSP + "; frame-ancestors 'none'", 'x-frame-options': 'DENY'
+  }) });
+}
+async function apiEdit(req, env, id) {
+  const token = requestEditToken(req, id);
+  const s = await subWithToken(env, id, token);
+  let data = {}, opts = {};
+  try { data = JSON.parse(s.data_json || '{}') || {}; } catch { data = {}; }
+  try { opts = JSON.parse(s.opts_json || '{}') || {}; } catch { opts = {}; }
+  return json({ data, opts, version: s.version || 1, name: s.name || '' });
+}
+async function getPreview(req, env, id) {
   if (!/^[A-Za-z0-9]{10,40}$/.test(id)) return expiredPage();
   const html = await env.KV.get(`pv:${id}`, { cacheTtl: 60 });
   if (!html) return expiredPage();
   env.DB.prepare('UPDATE submissions SET preview_opens=preview_opens+1 WHERE id=?').bind(id).run().catch(() => {});
+  const url = new URL(req.url);
+  const wantRaw = url.searchParams.get('raw') === '1';
+  if (!wantRaw) {
+    const token = requestEditToken(req, id);
+    if (token) {
+      try {
+        await subWithToken(env, id, token);
+        return serveEditorApp(req, env, id, true);
+      } catch (_) { /* public viewer: fall through to the raw preview */ }
+    }
+  }
   return new Response(html, { headers: withSecHeaders({
     'content-type': 'text/html; charset=utf-8', 'cache-control': 'private, max-age=30', 'x-robots-tag': 'noindex, nofollow',
     'referrer-policy': 'no-referrer',
@@ -313,9 +350,15 @@ export default {
           if (m === 'POST' && (r = p.match(/^\/api\/admin\/publish\/([A-Za-z0-9]+)$/))) return await adminPublish(req, env, r[1], url.origin);
           if (m === 'POST' && (r = p.match(/^\/api\/admin\/unpublish\/([A-Za-z0-9]+)$/))) return await adminUnpublish(env, r[1]);
         }
+        if (m === 'GET' && (r = p.match(/^\/api\/edit\/([A-Za-z0-9]+)$/))) return await apiEdit(req, env, r[1]);
         return bad('Not found', 404);
       }
-      if ((m === 'GET' || m === 'HEAD') && (r = p.match(/^\/p\/([A-Za-z0-9]+)\/?$/))) return await getPreview(env, r[1]);
+      if ((m === 'GET' || m === 'HEAD') && (r = p.match(/^\/edit\/([A-Za-z0-9]+)\/?$/))) {
+        const token = requestEditToken(req, r[1]);
+        try { await subWithToken(env, r[1], token); return await serveEditorApp(req, env, r[1], false); }
+        catch (_) { return deniedEditor(); }
+      }
+      if ((m === 'GET' || m === 'HEAD') && (r = p.match(/^\/p\/([A-Za-z0-9]+)\/?$/))) return await getPreview(req, env, r[1]);
       if ((m === 'GET' || m === 'HEAD') && (r = p.match(/^\/s\/([a-z0-9-]+)\/?$/))) return await getSite(env, r[1]);
       if ((m === 'GET' || m === 'HEAD') && (r = p.match(/^\/i\/([A-Za-z0-9]+)\/([A-Za-z0-9]+)$/))) return await getImg(env, r[1], r[2]);
       if (p.startsWith('/s/')) return offlinePage();
