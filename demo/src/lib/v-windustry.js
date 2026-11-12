@@ -32,7 +32,7 @@ registerVariant('hero', 'dual', {
     const dest = M.order.includes('menu') ? '#menu' : '#services';
     return `<section class="hero hero-dual" ${p.lbl}><div class="wrap du-grid">
 <div class="hero-copy">${p.eyebrow}${p.h1}${p.lead}${p.actions}${p.proof}<a class="du-orb" href="${dest}">Services</a></div>
-<div class="du-photos">${p.heroImg('', 900, 1100) ? `<figure class="du-a">${p.heroImg('', 900, 1100)}</figure>` : ''}${extra ? `<figure class="du-b"><img src="${extra}" alt="" width="700" height="820"></figure>` : ''}</div>
+<div class="du-photos">${p.heroImg('', 900, 1100) ? `<figure class="du-a">${p.heroImg('', 900, 1100)}</figure>` : ''}${extra ? `<figure class="du-b"><img src="${uattr(extra)}" alt="" width="700" height="820"></figure>` : ''}</div>
 </div></section>`; },
   css: () => `.site .hero-dual{padding:3.2rem 0 3.6rem}
 .site .du-grid{display:grid;grid-template-columns:1fr .92fr;gap:2.4rem;align-items:center}
@@ -184,7 +184,7 @@ registerVariant('services', 'fresh', {
   fits: c => c.profK === 'cleaning',
   html: M => `<section id="services" class="section"><div class="wrap">${head(M, 'services', M.C.servicesIntro)}<div class="fr-grid">${M.services.map((s, i) => {
     const tag = svcPlace(s.name);
-    return `<article class="fr reveal">${M.ph.services[i] ? `<img src="${M.ph.services[i]}" alt="${hh(svcName(s.name))}" width="640" height="420">` : ''}<div><${'h3'}>${hh(svcName(s.name))}</h3>${tag ? `<small>${hh(tag)}</small>` : ''}${s.desc ? `<p>${hh(s.desc)}</p>` : ''}<div class="fr-f">${priceExact(s)}${svcLink(M, svcName(s.name))}</div></div></article>`;
+    return `<article class="fr reveal">${M.ph.services[i] ? `<img src="${uattr(M.ph.services[i])}" alt="${hh(svcName(s.name))}" width="640" height="420">` : ''}<div><${'h3'}>${hh(svcName(s.name))}</h3>${tag ? `<small>${hh(tag)}</small>` : ''}${s.desc ? `<p>${hh(s.desc)}</p>` : ''}<div class="fr-f">${priceExact(s)}${svcLink(M, svcName(s.name))}</div></div></article>`;
   }).join('')}</div></div></section>`,
   css: () => `.site .fr-grid{display:grid;grid-template-columns:1fr 1fr;gap:1rem}
 .site .fr{background:var(--surface);border:1px solid var(--line);border-radius:22px;overflow:hidden;display:grid;grid-template-columns:.9fr 1.1fr}
@@ -199,7 +199,7 @@ registerVariant('services', 'fresh', {
 registerVariant('services', 'yard', {
   label: 'Exterior job rows with a photo and the exact price',
   fits: c => c.profK === 'pressure',
-  html: M => `<section id="services" class="section alt"><div class="wrap">${head(M, 'services', M.C.servicesIntro)}<div class="yd">${M.services.map((s, i) => `<article class="yd-row reveal"><span class="yd-n">${String(i + 1).padStart(2, '0')}</span>${M.ph.services[i] ? `<img src="${M.ph.services[i]}" alt="${hh(svcName(s.name))}" width="640" height="420">` : ''}<div><h3>${hh(svcName(s.name))}</h3>${s.desc ? `<p>${hh(s.desc)}</p>` : ''}<div class="yd-f">${priceExact(s)}${svcLink(M, svcName(s.name))}</div></div></article>`).join('')}</div></div></section>`,
+  html: M => `<section id="services" class="section alt"><div class="wrap">${head(M, 'services', M.C.servicesIntro)}<div class="yd">${M.services.map((s, i) => `<article class="yd-row reveal"><span class="yd-n">${String(i + 1).padStart(2, '0')}</span>${M.ph.services[i] ? `<img src="${uattr(M.ph.services[i])}" alt="${hh(svcName(s.name))}" width="640" height="420">` : ''}<div><h3>${hh(svcName(s.name))}</h3>${s.desc ? `<p>${hh(s.desc)}</p>` : ''}<div class="yd-f">${priceExact(s)}${svcLink(M, svcName(s.name))}</div></div></article>`).join('')}</div></div></section>`,
   css: () => `.site .yd{display:grid;gap:.8rem}
 .site .yd-row{display:grid;grid-template-columns:auto 180px 1fr;gap:1rem;align-items:center;background:var(--surface);border:1px solid var(--line);border-radius:6px;padding:.7rem;overflow:hidden}
 .site .yd-n{font:800 1.4rem/1 var(--display);color:var(--accent-text);padding-left:.4rem}
@@ -214,7 +214,7 @@ registerVariant('gallery', 'masonry', {
   fits: c => c.fam === 'beauty',
   needs: () => ({ gallery: 6 }),
   html: M => { const g = M.ph.gallery.slice(0, 6);
-    return `<section id="gallery" class="section"><div class="wrap">${head(M, 'gallery')}<div class="ms">${g.map((src, i) => `<figure class="reveal"><img src="${src}" alt="${hh(M.ph.galleryStock ? M.prof.label + ' example ' + (i + 1) : M.name + ' photo ' + (i + 1))}" loading="lazy" width="800" height="600"></figure>`).join('')}</div>${M.ph.galleryStock ? `<div class="sample-row"><span class="sample-tag">${SAMPLE_PHOTOS}</span></div>` : ''}</div></section>`; },
+    return `<section id="gallery" class="section"><div class="wrap">${head(M, 'gallery')}<div class="ms">${g.map((src, i) => `<figure class="reveal"><img src="${uattr(src)}" alt="${hh(M.ph.galleryStock ? M.prof.label + ' example ' + (i + 1) : M.name + ' photo ' + (i + 1))}" loading="lazy" width="800" height="600"></figure>`).join('')}</div>${M.ph.galleryStock ? `<div class="sample-row"><span class="sample-tag">${SAMPLE_PHOTOS}</span></div>` : ''}</div></section>`; },
   css: () => `.site .ms{columns:3;column-gap:.8rem}
 .site .ms figure{break-inside:avoid;margin:0 0 .8rem;border-radius:18px;overflow:hidden;background:var(--soft)}
 .site .ms img{width:100%;height:auto}

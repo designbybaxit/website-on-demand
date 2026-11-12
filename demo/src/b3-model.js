@@ -50,6 +50,7 @@ function offersFreeQuote(d) {
   return /\bfree\s+(?:quotes?|estimates?)\b|\bquotes?\s+(?:are|is)\s+free\b|\bno[- ](?:charge|fee)\s+(?:for\s+)?quotes?\b/i.test(text);
 }
 function siteModel(d, opts = {}, ai = null) {
+  d = sanitizeSiteData(d, { allowData: true });
   // content + imagery follow the real business; the look is the nearest of the six styles
   const prof = detectProfile(d);
   const key = opts.style && STYLES[opts.style] ? opts.style : (d.industry && d.industry !== 'other' && STYLES[d.industry] ? d.industry : prof.style);

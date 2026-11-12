@@ -61,7 +61,7 @@ const slugOf = s => String(s).toLowerCase().replace(/&/g, 'and').replace(/\(.*?\
 
 /* Build the LIVE site (no sample reviews/figures, real enquiry forms) in this browser, then upload it. */
 function buildLive(s, slug) {
-  const d = J(s.data_json), opts = J(s.opts_json) || {};
+  const d = sanitizeSiteData(J(s.data_json) || {}, { allowData: false }), opts = J(s.opts_json) || {};
   const url = `${location.origin}/s/${slug}`;
   const out = buildSite(d, opts, null, { live: true, leadUrl: `${location.origin}/api/lead/${slug}`, url });
   if (/class="sample-tag"/.test(out.doc)) throw new Error('Live build still contains sample content');

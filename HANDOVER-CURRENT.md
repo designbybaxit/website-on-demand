@@ -2,6 +2,6 @@
 
 This file used to be the Nov 9, 2026 handover. The live handover is now:
 
-**[HANDOVER.md](./HANDOVER.md)** (updated 11 November 2026)
+**[HANDOVER.md](./HANDOVER.md)** (updated 12 November 2026)
 
-Please read that file first. It covers the WebiMade rebrand, production versions, SEO, preview Workers, and how Abdul likes to work.
+Please read that file first. It covers the WebiMade rebrand, the Nov 12 security go-live, production versions, SEO, preview Workers, and how Abdul likes to work.

@@ -16,7 +16,7 @@ registerVariant('services', 'rows', {
   label: 'Wide rows: photo left, details right, two per line', fits: notFood,
   html: M => `<section id="services" class="section alt"><div class="wrap">${head(M, 'services', M.C.servicesIntro)}<div class="srows">${M.services.map((s, i) => { const nm = svcName(s.name);
     const dur = svcDuration(s);
-    return `<article class="srow reveal">${M.ph.services[i] ? `<figure><img src="${M.ph.services[i]}" alt="${hh(nm)}" loading="lazy" width="640" height="420"></figure>` : ''}<div class="srow-b"><span class="srow-n">${String(i + 1).padStart(2, '0')}</span><h3>${hh(nm)}</h3>${s.desc ? `<p>${hh(s.desc)}</p>` : ''}<div class="srow-f">${s.priceT ? `<span class="price">${hh(s.priceT)}</span>` : ''}${dur ? `<span class="dur">${hh(dur)}</span>` : ''}${svcLink(M, nm)}</div></div></article>`; }).join('')}</div></div></section>`,
+    return `<article class="srow reveal">${M.ph.services[i] ? `<figure><img src="${uattr(M.ph.services[i])}" alt="${hh(nm)}" loading="lazy" width="640" height="420"></figure>` : ''}<div class="srow-b"><span class="srow-n">${String(i + 1).padStart(2, '0')}</span><h3>${hh(nm)}</h3>${s.desc ? `<p>${hh(s.desc)}</p>` : ''}<div class="srow-f">${s.priceT ? `<span class="price">${hh(s.priceT)}</span>` : ''}${dur ? `<span class="dur">${hh(dur)}</span>` : ''}${svcLink(M, nm)}</div></div></article>`; }).join('')}</div></div></section>`,
   css: M => `.site .srows{display:grid;grid-template-columns:1fr 1fr;gap:1.2rem}
 .site .srow{display:grid;grid-template-columns:42% 1fr;background:var(--bg);border:1px solid var(--line);border-radius:var(--radius);overflow:hidden;transition:transform .5s var(--ease),box-shadow .5s,border-color .5s}
 .site .srow figure{margin:0;overflow:hidden;background:var(--soft);min-height:220px}
@@ -35,7 +35,7 @@ registerVariant('services', 'bento', {
   label: 'Bento grid: one big feature tile, the rest as photo tiles with text over a gradient', fits: notFood,
   html: M => `<section id="services" class="section"><div class="wrap">${head(M, 'services', M.C.servicesIntro)}<div class="bento n${Math.min(M.services.length, 7)}">${M.services.map((s, i) => { const nm = svcName(s.name);
     const dur = svcDuration(s);
-    return `<article class="bt reveal${i === 0 ? ' big' : ''}">${M.ph.services[i] ? `<img src="${M.ph.services[i]}" alt="${hh(nm)}" loading="lazy" width="640" height="420">` : ''}<div class="bt-b"><div class="bt-top"><span class="bt-ico">${svgI(s.icon)}</span>${s.priceT ? `<span class="bt-pr">${hh(s.priceT)}</span>` : ''}${dur ? `<span class="dur">${hh(dur)}</span>` : ''}</div><h3>${hh(nm)}</h3>${s.desc ? `<p>${hh(s.desc)}</p>` : ''}${svcLink(M, nm)}</div></article>`; }).join('')}</div></div></section>`,
+    return `<article class="bt reveal${i === 0 ? ' big' : ''}">${M.ph.services[i] ? `<img src="${uattr(M.ph.services[i])}" alt="${hh(nm)}" loading="lazy" width="640" height="420">` : ''}<div class="bt-b"><div class="bt-top"><span class="bt-ico">${svgI(s.icon)}</span>${s.priceT ? `<span class="bt-pr">${hh(s.priceT)}</span>` : ''}${dur ? `<span class="dur">${hh(dur)}</span>` : ''}</div><h3>${hh(nm)}</h3>${s.desc ? `<p>${hh(s.desc)}</p>` : ''}${svcLink(M, nm)}</div></article>`; }).join('')}</div></div></section>`,
   css: M => `.site .bento{display:grid;grid-template-columns:repeat(3,1fr);grid-auto-rows:260px;gap:1rem}
 .site .bt{position:relative;border-radius:var(--radius);overflow:hidden;background:var(--deep);color:#fff;display:flex;isolation:isolate}
 .site .bt.big{grid-column:span 2;grid-row:span 2}
@@ -59,7 +59,7 @@ registerVariant('menu', 'tabs', { label: 'Tabbed menu / service list (salon gets
 registerVariant('why', 'split', { label: 'Photo with fact badge + tick list', needs: () => ({ split: 1 }), html: whyHTML });
 registerVariant('why', 'tiles', {
   label: 'Heading + tall photo tile + one tile per real reason', needs: () => ({ split: 1 }),
-  html: M => `<section id="why" class="section"><div class="wrap">${head(M, 'why')}<div class="wtiles n${M.why.length}">${M.ph.split ? `<figure class="wt-ph reveal"><img src="${M.ph.split}" alt="${hh(M.ph.alts.split || '')}" loading="lazy" width="1000" height="800"></figure>` : ''}${M.why.map((w, i) => `<div class="wt reveal"><span class="wt-n">${String(i + 1).padStart(2, '0')}</span><h3>${hh(w[0])}</h3><p>${hh(w[1])}</p></div>`).join('')}</div><div class="wt-cta reveal">${btnPrimary(M, 'btn-lg')}</div></div></section>`,
+  html: M => `<section id="why" class="section"><div class="wrap">${head(M, 'why')}<div class="wtiles n${M.why.length}">${M.ph.split ? `<figure class="wt-ph reveal"><img src="${uattr(M.ph.split)}" alt="${hh(M.ph.alts.split || '')}" loading="lazy" width="1000" height="800"></figure>` : ''}${M.why.map((w, i) => `<div class="wt reveal"><span class="wt-n">${String(i + 1).padStart(2, '0')}</span><h3>${hh(w[0])}</h3><p>${hh(w[1])}</p></div>`).join('')}</div><div class="wt-cta reveal">${btnPrimary(M, 'btn-lg')}</div></div></section>`,
   css: M => `.site .wtiles{display:grid;grid-template-columns:1.1fr 1fr 1fr;gap:1rem}
 .site .wt-ph{grid-row:span 2;border-radius:var(--radius);overflow:hidden;margin:0;min-height:380px;background:var(--soft)}
 .site .wt-ph img{width:100%;height:100%;object-fit:cover}
@@ -74,7 +74,7 @@ registerVariant('why', 'tiles', {
 });
 registerVariant('why', 'sticky', {
   label: 'Sticky heading + photo on the left, large numbered reasons scrolling on the right', needs: () => ({ split: 1 }),
-  html: M => `<section id="why" class="section alt"><div class="wrap wsticky"><div class="ws-l"><p class="eyebrow reveal">${hh(M.C.eyebrow.why)}</p><h2 class="reveal">${headHTML(M.C.h2.why)}</h2>${M.ph.split ? `<figure class="ws-ph reveal"><img src="${M.ph.split}" alt="${hh(M.ph.alts.split || '')}" loading="lazy" width="1000" height="800"></figure>` : ''}</div>
+  html: M => `<section id="why" class="section alt"><div class="wrap wsticky"><div class="ws-l"><p class="eyebrow reveal">${hh(M.C.eyebrow.why)}</p><h2 class="reveal">${headHTML(M.C.h2.why)}</h2>${M.ph.split ? `<figure class="ws-ph reveal"><img src="${uattr(M.ph.split)}" alt="${hh(M.ph.alts.split || '')}" loading="lazy" width="1000" height="800"></figure>` : ''}</div>
 <ol class="ws-list">${M.why.map((w, i) => `<li class="reveal"><span>${String(i + 1).padStart(2, '0')}</span><div><h3>${hh(w[0])}</h3><p>${hh(w[1])}</p></div></li>`).join('')}<li class="ws-cta reveal">${btnPrimary(M, 'btn-lg')}</li></ol></div></section>`,
   css: M => `.site .wsticky{display:grid;grid-template-columns:1fr 1.1fr;gap:4rem;align-items:start}
 .site .ws-l{position:sticky;top:110px}
@@ -101,7 +101,7 @@ registerVariant('about', 'wide', {
   html: M => { const sents = splitSentences(M.d.about); const paras = [sents.slice(0, 2).join(' '), sents.slice(2, 5).join(' ')].map(t => t.trim()).filter(Boolean);
     const facts = M.facts.filter(f => f.proof).slice(0, 4).map(f => f.proof);
     if (M.place) facts.push(M.place);
-    return `<section id="about" class="section about-sec"><div class="wrap">${M.ph.about ? `<figure class="aw-ph reveal"><img src="${M.ph.about}" alt="${hh(M.ph.alts.about || M.name)}" loading="lazy" width="1600" height="700"></figure>` : ''}
+    return `<section id="about" class="section about-sec"><div class="wrap">${M.ph.about ? `<figure class="aw-ph reveal"><img src="${uattr(M.ph.about)}" alt="${hh(M.ph.alts.about || M.name)}" loading="lazy" width="1600" height="700"></figure>` : ''}
 <div class="aw"><div><p class="eyebrow reveal">${hh(M.C.eyebrow.about)}</p><h2 class="reveal">${headHTML(M.C.h2.about)}</h2></div><div class="aw-copy">${paras.map(p => `<p class="reveal">${hh(p)}</p>`).join('')}${facts.length ? `<ul class="about-facts reveal">${facts.map(f => `<li>${svgI('check')}${hh(f)}</li>`).join('')}</ul>` : ''}</div></div></div></section>`; },
   css: M => `.site .aw-ph{margin:0 0 3rem;border-radius:calc(var(--radius) * 1.2 + 4px);overflow:hidden;aspect-ratio:21/8;background:var(--soft)}
 .site .aw-ph img{width:100%;height:100%;object-fit:cover}
@@ -118,7 +118,7 @@ registerVariant('gallery', 'strip', {
   label: 'Horizontal snap-scroll film strip with arrow buttons', needs: () => ({ gallery: 6 }),
   html: M => { const g = M.ph.gallery.slice(0, 6);
     return `<section id="gallery" class="section"><div class="wrap"><div class="gs-head">${head(M, 'gallery', '', 'left')}<div class="gs-ctrl"><button type="button" class="rv-btn" data-strip-prev aria-label="Previous photos">${svgI('arrow')}</button><button type="button" class="rv-btn" data-strip-next aria-label="More photos">${svgI('arrow')}</button></div></div></div>
-<div class="gstrip" data-strip tabindex="0" aria-label="Photo gallery">${g.map((src, i) => `<figure class="reveal"><img src="${src}" alt="${hh(M.ph.galleryStock ? M.prof.label + ' example ' + (i + 1) : M.name + ' photo ' + (i + 1))}" loading="lazy" width="800" height="600"></figure>`).join('')}</div>
+<div class="gstrip" data-strip tabindex="0" aria-label="Photo gallery">${g.map((src, i) => `<figure class="reveal"><img src="${uattr(src)}" alt="${hh(M.ph.galleryStock ? M.prof.label + ' example ' + (i + 1) : M.name + ' photo ' + (i + 1))}" loading="lazy" width="800" height="600"></figure>`).join('')}</div>
 ${M.ph.galleryStock ? `<div class="wrap"><div class="sample-row"><span class="sample-tag">${SAMPLE_PHOTOS}</span></div></div>` : ''}</section>`; },
   css: M => `.site .gs-head{display:flex;justify-content:space-between;align-items:end;gap:1rem;margin-bottom:2rem}
 .site .gs-ctrl{display:flex;gap:.5rem}.site .gs-ctrl [data-strip-prev] .i{transform:rotate(180deg)}
@@ -151,7 +151,7 @@ registerVariant('reviews', 'wall', {
 registerVariant('process', 'steps', { label: 'Three steps in a row (+ offer card)', needs: () => ({ steps: 1 }), html: processHTML });
 registerVariant('process', 'timeline', {
   label: 'Vertical timeline whose line draws in as you scroll', needs: () => ({ steps: 1 }),
-  html: M => `<section id="process" class="section"><div class="wrap">${head(M, 'process')}<ol class="tline">${M.steps.map((s, i) => `<li class="reveal"><span class="tl-dot">${i + 1}</span><div class="tl-c"><h3>${hh(s[0])}</h3><p>${hh(s[1])}</p></div>${M.ph.steps ? `<figure class="tl-ph"><img src="${M.ph.steps[i]}" alt="" loading="lazy" width="640" height="400"></figure>` : ''}</li>`).join('')}</ol></div></section>`,
+  html: M => `<section id="process" class="section"><div class="wrap">${head(M, 'process')}<ol class="tline">${M.steps.map((s, i) => `<li class="reveal"><span class="tl-dot">${i + 1}</span><div class="tl-c"><h3>${hh(s[0])}</h3><p>${hh(s[1])}</p></div>${M.ph.steps ? `<figure class="tl-ph"><img src="${uattr(M.ph.steps[i])}" alt="" loading="lazy" width="640" height="400"></figure>` : ''}</li>`).join('')}</ol></div></section>`,
   css: M => `.site .tline{list-style:none;margin:0 auto;padding:0;max-width:920px;position:relative}
 .site .tline::before{content:"";position:absolute;left:23px;top:8px;bottom:8px;width:2px;background:var(--line)}
 .site .tline li{position:relative;display:grid;grid-template-columns:48px 1fr 260px;gap:1.6rem;align-items:center;padding:1.4rem 0}
@@ -177,7 +177,7 @@ registerVariant('faq', 'center', {
 registerVariant('cta', 'band', { label: 'Colour band with button', html: ctaHTML });
 registerVariant('cta', 'photo', {
   label: 'Full-width photo with dark overlay and a big headline', needs: () => ({ cta: 1 }),
-  html: M => `<section class="cta-photo">${M.ph.cta ? `<div class="bgimg" aria-hidden="true"><img src="${M.ph.cta}" alt="" loading="lazy" width="1600" height="800"></div>` : ''}<div class="wrap cta-p-in reveal"><h2>${headHTML(M.C.h2.cta)}</h2><p>${M.fam === 'legal' ? 'Free, confidential and no obligation. ' : 'No obligation. '}${M.d.phone ? 'Call ' + hh(M.d.phone) + ' or use the form below.' : 'Use the form below.'}</p><div class="hero-actions">${btnPrimary(M, 'btn-lg')}${M.d.phone && M.primary.kind !== 'call' ? `<a class="btn btn-ghost btn-lg" href="${telHref(M.d.phone)}">${svgI('phone')} Call ${hh(M.d.phone)}</a>` : ''}</div></div></section>`,
+  html: M => `<section class="cta-photo">${M.ph.cta ? `<div class="bgimg" aria-hidden="true"><img src="${uattr(M.ph.cta)}" alt="" loading="lazy" width="1600" height="800"></div>` : ''}<div class="wrap cta-p-in reveal"><h2>${headHTML(M.C.h2.cta)}</h2><p>${M.fam === 'legal' ? 'Free, confidential and no obligation. ' : 'No obligation. '}${M.d.phone ? 'Call ' + hh(M.d.phone) + ' or use the form below.' : 'Use the form below.'}</p><div class="hero-actions">${btnPrimary(M, 'btn-lg')}${M.d.phone && M.primary.kind !== 'call' ? `<a class="btn btn-ghost btn-lg" href="${telHref(M.d.phone)}">${svgI('phone')} Call ${hh(M.d.phone)}</a>` : ''}</div></div></section>`,
   css: M => `.site .cta-photo{position:relative;isolation:isolate;padding:7rem 0;color:#fff;text-align:center;background:var(--deep);overflow:hidden}
 .site .cta-photo .bgimg{position:absolute;inset:0;z-index:-2}.site .cta-photo .bgimg img{width:100%;height:100%;object-fit:cover}
 .site .cta-photo::before{content:"";position:absolute;inset:0;z-index:-1;background:linear-gradient(180deg,rgba(0,0,0,.55),rgba(0,0,0,.72))}
@@ -194,7 +194,7 @@ registerVariant('book', 'split', { label: 'Copy + contact details left, form rig
 registerVariant('book', 'overlay', {
   label: 'Form card floating over a full photo, contact details on a glass panel', needs: () => ({ contact: 1 }),
   html: M => { const b = bookParts(M);
-    return `<section id="book" class="section book-ov">${M.ph.contact ? `<div class="bgimg" aria-hidden="true"><img src="${M.ph.contact}" alt="" loading="lazy" width="1400" height="900"></div>` : ''}<div class="wrap book"><div class="book-copy reveal"><p class="eyebrow">${hh(b.eyebrow)}</p><h2>${headHTML(b.h2)}</h2><p>${hh(b.intro)}</p>${infoList(M)}${b.waBtn}</div>${b.form}</div></section>`; },
+    return `<section id="book" class="section book-ov">${M.ph.contact ? `<div class="bgimg" aria-hidden="true"><img src="${uattr(M.ph.contact)}" alt="" loading="lazy" width="1400" height="900"></div>` : ''}<div class="wrap book"><div class="book-copy reveal"><p class="eyebrow">${hh(b.eyebrow)}</p><h2>${headHTML(b.h2)}</h2><p>${hh(b.intro)}</p>${infoList(M)}${b.waBtn}</div>${b.form}</div></section>`; },
   css: M => `.site .book-ov{position:relative;isolation:isolate;background:var(--deep);color:#fff}
 .site .book-ov .bgimg{position:absolute;inset:0;z-index:-2}.site .book-ov .bgimg img{width:100%;height:100%;object-fit:cover}
 .site .book-ov::before{content:"";position:absolute;inset:0;z-index:-1;background:linear-gradient(90deg,rgba(6,8,12,.88),rgba(6,8,12,.55))}

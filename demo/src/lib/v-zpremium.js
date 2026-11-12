@@ -52,13 +52,13 @@ registerVariant('infobar', 'float', {
 /* ---------- 2. before / after (G1 / G2): client's own photo pairs only ---------- */
 function baSlider(M, p, i, big) {
   const t = p.t ? ': ' + p.t : '';
-  return `<div class="ba${big ? ' ba-big' : ''} ba-frame" data-ba style="--pos:50%"><img class="ba-a" src="${hh(p.a)}" alt="${hh(M.name + ', after' + t)}" loading="lazy" width="1200" height="900">
-<div class="ba-b"><img src="${hh(p.b)}" alt="${hh(M.name + ', before' + t)}" loading="lazy" width="1200" height="900"></div>
+  return `<div class="ba${big ? ' ba-big' : ''} ba-frame" data-ba style="--pos:50%"><img class="ba-a" src="${uattr(p.a)}" alt="${hh(M.name + ', after' + t)}" loading="lazy" width="1200" height="900">
+<div class="ba-b"><img src="${uattr(p.b)}" alt="${hh(M.name + ', before' + t)}" loading="lazy" width="1200" height="900"></div>
 <span class="ba-tag ba-tb">Before</span><span class="ba-tag ba-ta">After</span><span class="ba-h" aria-hidden="true"><i>${svgI('arrow')}</i></span>
 <input class="ba-r" type="range" min="0" max="100" value="50" aria-label="Drag to compare before and after${hh(t)}"></div>`;
 }
 const baNote = M => M.fam === 'dental' || M.fam === 'health' ? `Real results from ${M.name}. Every patient is different, and results vary.` : M.fam === 'beauty' ? `Real results from ${M.name}. Results vary from person to person.` : `Real work by ${M.name}.`;
-const baPicker = M => M.ba.length > 1 ? `<div class="ba-pick" role="group" aria-label="Choose a result">${M.ba.map((p, i) => `<button type="button" class="ba-p${i ? '' : ' is-on'}" aria-pressed="${i ? 'false' : 'true'}" data-b="${hh(p.b)}" data-a="${hh(p.a)}" data-t="${hh(p.t || 'Result ' + (i + 1))}"><img src="${hh(p.a)}" alt="" width="120" height="90" loading="lazy"><span>${hh(p.t || 'Result ' + (i + 1))}</span></button>`).join('')}</div>` : '';
+const baPicker = M => M.ba.length > 1 ? `<div class="ba-pick" role="group" aria-label="Choose a result">${M.ba.map((p, i) => `<button type="button" class="ba-p${i ? '' : ' is-on'}" aria-pressed="${i ? 'false' : 'true'}" data-b="${uattr(p.b)}" data-a="${uattr(p.a)}" data-t="${hh(p.t || 'Result ' + (i + 1))}"><img src="${uattr(p.a)}" alt="" width="120" height="90" loading="lazy"><span>${hh(p.t || 'Result ' + (i + 1))}</span></button>`).join('')}</div>` : '';
 const baCSS = M => `.site .ba{position:relative;overflow:hidden;border-radius:calc(var(--radius) + 6px);aspect-ratio:4/3;background:var(--soft);box-shadow:var(--shadow);user-select:none;touch-action:pan-y}
 .site .ba img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
 .site .ba-b{position:absolute;inset:0;clip-path:inset(0 calc(100% - var(--pos)) 0 0)}
@@ -129,7 +129,7 @@ registerVariant('services', 'feature', {
   html: M => { const n = M.services.length;
     const cards = M.services.map((s, i) => { const nm = svcName(s.name);
       const dur = svcDuration(s);
-      return `<article class="ft reveal${M.ph.services[i] ? '' : ' no-img'}">${M.ph.services[i] ? `<img src="${M.ph.services[i]}" alt="${hh(nm)}" loading="lazy" width="640" height="420">` : ''}<span class="ft-wm" aria-hidden="true">${svgI(s.icon)}</span>
+      return `<article class="ft reveal${M.ph.services[i] ? '' : ' no-img'}">${M.ph.services[i] ? `<img src="${uattr(M.ph.services[i])}" alt="${hh(nm)}" loading="lazy" width="640" height="420">` : ''}<span class="ft-wm" aria-hidden="true">${svgI(s.icon)}</span>
 <div class="ft-lab"><h3>${hh(nm)}</h3>${s.desc ? `<p>${hh(s.desc)}</p>` : ''}<div class="ft-f">${s.priceT ? `<span class="price">${hh(s.priceT)}</span>` : ''}${dur ? `<span class="dur">${hh(dur)}</span>` : ''}${svcLink(M, nm)}</div></div></article>`; }).join('');
     const one = M.U.svcLabel.toLowerCase();
     const cta = `<div class="ft ft-cta reveal"><h3>${headHTML(`Not sure which ${one} you *need?*`)}</h3><p>Tell us what's on your mind and we'll help you choose.</p>${btnPrimary(M, 'btn-light').replace('btn btn-primary btn-light', 'btn btn-light')}</div>`;
@@ -166,7 +166,7 @@ registerVariant('reviews', 'bento', {
   needs: () => ({ rv: 1 }),
   html: M => { const R = M.reviews.slice(0, 5);
     const card = (r, i) => `<blockquote class="rb rb${i} reveal"><span class="stars" aria-label="5 out of 5">★★★★★</span><p>${hh(r.q)}</p><footer><span class="av" aria-hidden="true">${hh(r.n.trim()[0] || '★')}</span><cite>${hh(r.n)}</cite></footer>${r.sample ? `<span class="sample-tag">${SAMPLE_REVIEW}</span>` : ''}</blockquote>`;
-    const photo = M.ph.rv ? `<div class="rb rb-ph reveal"><img src="${M.ph.rv}" alt="" loading="lazy" width="800" height="1000"><div><b>${hh(M.C.h2.cta.replace(/\*/g, ''))}</b>${btnPrimary(M).replace('btn btn-primary', 'btn btn-light')}</div></div>` : '';
+    const photo = M.ph.rv ? `<div class="rb rb-ph reveal"><img src="${uattr(M.ph.rv)}" alt="" loading="lazy" width="800" height="1000"><div><b>${hh(M.C.h2.cta.replace(/\*/g, ''))}</b>${btnPrimary(M).replace('btn btn-primary', 'btn btn-light')}</div></div>` : '';
     return `<section id="reviews" class="section alt"><div class="wrap">${head(M, 'reviews', R[0].sample ? '' : 'In their own words.')}<div class="rbento n${R.length}">${R.slice(0, 2).map(card).join('')}${photo}${R.slice(2).map((r, i) => card(r, i + 2)).join('')}</div></div></section>`; },
   css: M => `.site .rbento{display:grid;grid-template-columns:repeat(3,1fr);gap:1rem;grid-auto-flow:dense}
 .site .rb{margin:0;border-radius:calc(var(--radius) + 4px);padding:1.6rem;display:flex;flex-direction:column;gap:.9rem;background:var(--bg);border:1px solid var(--line);position:relative}

@@ -2,6 +2,13 @@
    Static order app + admin page are served from ./public (Workers static assets).
    This script handles: /api/*, /p/<id> (previews), /s/<slug> (live sites), /i/<id>/<key> (uploaded photos). */
 
+import {
+  APP_CSP, SITE_CSP, PREVIEW_CSP,
+  sanitizeSiteData, applyPrices, sniffImage, leadHasHoneypot,
+  adminHostAllowed, isAdminPath, withSecHeaders,
+  applyAssetHeaders, leadCorsHeaders
+} from './security.mjs';
+
 const DAY = 86400;
 const LIMITS = {
   newPerIpDay: 20,          // new requests per IP per day
@@ -20,7 +27,7 @@ const IMG_TYPES = new Set(['image/jpeg', 'image/png', 'image/webp']);
 
 /* ---------- helpers ---------- */
 const now = () => new Date().toISOString();
-const json = (obj, status = 200, extra = {}) => new Response(JSON.stringify(obj), { status, headers: { 'content-type': 'application/json; charset=utf-8', 'cache-control': 'no-store', ...extra } });
+const json = (obj, status = 200, extra = {}) => new Response(JSON.stringify(obj), { status, headers: withSecHeaders({ 'content-type': 'application/json; charset=utf-8', 'cache-control': 'no-store' }, extra) });
 const bad = (msg, status = 400) => json({ error: msg }, status);
 const esc = s => String(s == null ? '' : s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
 function rid(n) {
@@ -96,7 +103,10 @@ function plainPage(title, body, status = 200, extraHead = '') {
 <title>${esc(title)}</title><style>body{margin:0;min-height:100vh;display:grid;place-items:center;font:16px/1.6 system-ui,-apple-system,Segoe UI,Roboto,sans-serif;background:#f6f7fb;color:#1f2430}
 .c{max-width:480px;margin:24px;padding:36px 32px;background:#fff;border-radius:18px;box-shadow:0 10px 40px rgba(20,30,60,.08);text-align:center}h1{font-size:24px;margin:0 0 10px;letter-spacing:-.3px}p{color:#5a6273;margin:0 0 18px}
 a.b{display:inline-block;background:#1d4ed8;color:#fff;text-decoration:none;padding:12px 22px;border-radius:999px;font-weight:600}.ic{font-size:40px;margin-bottom:6px}</style></head>
-<body><div class="c">${body}</div></body></html>`, { status, headers: { 'content-type': 'text/html; charset=utf-8', 'x-robots-tag': 'noindex, nofollow', 'cache-control': 'no-store' } });
+<body><div class="c">${body}</div></body></html>`, { status, headers: withSecHeaders({
+    'content-type': 'text/html; charset=utf-8', 'x-robots-tag': 'noindex, nofollow', 'cache-control': 'no-store',
+    'content-security-policy': APP_CSP + "; frame-ancestors 'none'", 'x-frame-options': 'DENY'
+  }) });
 }
 const expiredPage = () => plainPage('Preview expired', `<div class="ic">⏳</div><h1>This preview has expired</h1><p>Website previews are kept for 14 days. You can build a new one in a couple of minutes.</p><a class="b" href="/">Build my website preview</a>`, 404);
 const offlinePage = () => plainPage('Website offline', `<div class="ic">🌙</div><h1>This website is offline right now</h1><p>Sorry, this page isn't available at the moment. Please check back soon.</p>`, 404);
@@ -126,8 +136,10 @@ async function apiImg(req, env, id) {
   if (s.img_count >= LIMITS.imgPerSub) return bad('Too many photos for this request', 429);
   const buf = await readBody(req, LIMITS.imgBytes);
   if (!buf.byteLength) return bad('Empty file');
+  const sniffed = sniffImage(buf);
+  if (!sniffed) return bad('Only JPG, PNG or WebP photos');
   const k = rid(10);
-  await env.KV.put(`img:${id}:${k}`, buf, { metadata: { type } });
+  await env.KV.put(`img:${id}:${k}`, buf, { metadata: { type: sniffed } });
   await env.DB.prepare('UPDATE submissions SET img_count=img_count+1 WHERE id=?').bind(id).run();
   return json({ url: `/i/${id}/${k}` });
 }
@@ -135,13 +147,13 @@ async function getImg(env, id, k) {
   if (!/^[A-Za-z0-9]{10,40}$/.test(id) || !/^[A-Za-z0-9]{6,20}$/.test(k)) return new Response('Not found', { status: 404 });
   const { value, metadata } = await env.KV.getWithMetadata(`img:${id}:${k}`, { type: 'stream', cacheTtl: 3600 });
   if (!value) return new Response('Not found', { status: 404 });
-  return new Response(value, { headers: { 'content-type': (metadata && metadata.type) || 'image/jpeg', 'cache-control': 'public, max-age=31536000, immutable', 'x-content-type-options': 'nosniff', 'access-control-allow-origin': '*' } });
+  return new Response(value, { headers: withSecHeaders({ 'content-type': (metadata && metadata.type) || 'image/jpeg', 'cache-control': 'public, max-age=31536000, immutable' }) });
 }
 async function apiSave(req, env, id) {
   const b = await readJSON(req, LIMITS.saveBytes);
   const s = await subWithToken(env, id, b.token);
   if (!await allow(env, 'save:' + id, LIMITS.savesPerSubDay, DAY)) return bad('Too many updates today for this website. Please try again tomorrow.', 429);
-  const d = b.data || {}, html = String(b.html || '');
+  const d = sanitizeSiteData(b.data || {}, { allowData: false }), html = String(b.html || '');
   if (!html.startsWith('<!DOCTYPE html>') || html.length > LIMITS.htmlBytes) return bad('Preview is missing or too large');
   if (/data:image\//.test(JSON.stringify(d))) return bad('Photos must be uploaded first');
   const days = +env.PREVIEW_DAYS || 14, applied = s.status !== 'previewing';
@@ -166,8 +178,9 @@ async function apiApply(req, env, id) {
   const b = await readJSON(req, 8192);
   const s = await subWithToken(env, id, b.token);
   if (!s.data_json) return bad('Please build your preview first');
-  const apply = { email: String(b.email || '').slice(0, 200), domain: b.domain === 'connect' ? 'connect own domain' : 'free address', dueToday: +b.dueToday || null,
-    currency: String(b.currency || '').slice(0, 4), setup: +b.setup || null, monthly: +b.monthly || null, version: +b.version || s.version, at: now(), ip: ip(req) };
+  const priced = applyPrices(b);
+  const apply = { email: String(b.email || '').slice(0, 200), domain: priced.domain, dueToday: priced.dueToday,
+    currency: priced.currency, setup: priced.setup, monthly: priced.monthly, version: +b.version || s.version, at: now(), ip: ip(req) };
   const t = now(), status = s.status === 'published' ? s.status : 'applied';
   await env.DB.prepare('UPDATE submissions SET status=?, apply_json=?, applied_at=?, updated_at=? WHERE id=?').bind(status, JSON.stringify(apply), t, t, id).run();
   // keep the preview while Abdul arranges payment
@@ -187,23 +200,27 @@ async function getPreview(env, id) {
   const html = await env.KV.get(`pv:${id}`, { cacheTtl: 60 });
   if (!html) return expiredPage();
   env.DB.prepare('UPDATE submissions SET preview_opens=preview_opens+1 WHERE id=?').bind(id).run().catch(() => {});
-  return new Response(html, { headers: {
-    'content-type': 'text/html; charset=utf-8', 'cache-control': 'private, max-age=30', 'x-robots-tag': 'noindex, nofollow', 'x-content-type-options': 'nosniff', 'referrer-policy': 'no-referrer',
+  return new Response(html, { headers: withSecHeaders({
+    'content-type': 'text/html; charset=utf-8', 'cache-control': 'private, max-age=30', 'x-robots-tag': 'noindex, nofollow',
+    'referrer-policy': 'no-referrer',
     // preview HTML is built in the visitor's browser, so it is untrusted: run it in an opaque-origin sandbox (no cookies, no same-origin API access)
-    'content-security-policy': "sandbox allow-scripts allow-popups allow-popups-to-escape-sandbox allow-forms; frame-ancestors 'self'" } });
+    'content-security-policy': PREVIEW_CSP }) });
 }
 async function getSite(env, slug) {
   if (!SLUG_RE.test(slug)) return offlinePage();
   const html = await env.KV.get(`site:${slug}`, { cacheTtl: 60 });
   if (!html) return offlinePage();
-  return new Response(html, { headers: { 'content-type': 'text/html; charset=utf-8', 'cache-control': 'public, max-age=60', 'x-content-type-options': 'nosniff', 'referrer-policy': 'strict-origin-when-cross-origin', 'x-frame-options': 'SAMEORIGIN' } });
+  return new Response(html, { headers: withSecHeaders({
+    'content-type': 'text/html; charset=utf-8', 'cache-control': 'public, max-age=60',
+    'content-security-policy': SITE_CSP, 'x-frame-options': 'SAMEORIGIN' }) });
 }
-const CORS = { 'access-control-allow-origin': '*', 'access-control-allow-methods': 'POST, OPTIONS', 'access-control-allow-headers': 'content-type' };
 async function apiLead(req, env, slug) {
-  if (req.method === 'OPTIONS') return new Response(null, { headers: CORS });
+  const CORS = leadCorsHeaders(req);
+  if (req.method === 'OPTIONS') return new Response(null, { status: CORS['access-control-allow-origin'] ? 204 : 404, headers: withSecHeaders(CORS) });
   if (!SLUG_RE.test(slug)) return bad('Not found', 404);
   if (!await allow(env, 'lead:' + ip(req), LIMITS.leadsPerIpDay, DAY)) return json({ error: 'Too many messages' }, 429, CORS);
   const b = await readJSON(req, LIMITS.leadBytes);
+  if (leadHasHoneypot(b)) return json({ ok: true }, 200, CORS);
   const s = await env.DB.prepare("SELECT id, name, email, data_json FROM submissions WHERE published_slug=? AND status='published'").bind(slug).first();
   if (!s) return json({ error: 'Not found' }, 404, CORS);
   const fields = {}; for (const [k, v] of Object.entries(b.fields || {}).slice(0, 30)) fields[String(k).slice(0, 40)] = String(v).slice(0, 2000);
@@ -274,7 +291,10 @@ export default {
     // workers.dev or the brand-preview hostname.
     if (url.hostname === 'www.webimade.com') {
       url.hostname = 'webimade.com';
-      return new Response(null, { status: 301, headers: { location: url.toString(), 'cache-control': 'public, max-age=3600' } });
+      return new Response(null, { status: 301, headers: withSecHeaders({ location: url.toString(), 'cache-control': 'public, max-age=3600' }) });
+    }
+    if (isAdminPath(p) && !adminHostAllowed(req, env)) {
+      return json({ error: 'Not found' }, 404);
     }
     try {
       let r;
@@ -300,7 +320,7 @@ export default {
       if ((m === 'GET' || m === 'HEAD') && (r = p.match(/^\/i\/([A-Za-z0-9]+)\/([A-Za-z0-9]+)$/))) return await getImg(env, r[1], r[2]);
       if (p.startsWith('/s/')) return offlinePage();
       if (p.startsWith('/p/')) return expiredPage();
-      return env.ASSETS.fetch(req);
+      return applyAssetHeaders(req, await env.ASSETS.fetch(req));
     } catch (e) {
       if (e instanceof HttpErr) return bad(e.message, e.status);
       console.error(e && e.stack || e);
