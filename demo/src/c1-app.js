@@ -1028,16 +1028,16 @@ function celebratePreview() {
 }
 
 function show(name) {
+  const leavingEditor = name !== 'editor' && document.body.classList.contains('ed-mode');
+  if (leavingEditor && typeof flushSiteEditor === 'function') flushSiteEditor();
   $$('.screen').forEach(s => s.classList.toggle('on', s.id === 'screen-' + name));
+  document.body.classList.toggle('ed-mode', name === 'editor');
   const idx = name === 'thanks' ? 3 : STEP_NAMES.indexOf(name);
   if (idx >= 0) updateSteps(name);
-  $('#stepsNav').style.visibility = name === 'admin' ? 'hidden' : 'visible';
+  $('#stepsNav').style.visibility = (name === 'admin' || name === 'editor') ? 'hidden' : 'visible';
   window.scrollTo(0, 0);
   if (name === 'preview') celebratePreview();
-  else if (typeof closeSiteEditor === 'function') {
-    if (typeof flushSiteEditor === 'function') flushSiteEditor();
-    closeSiteEditor({ silent: true });
-  }
+  else if (leavingEditor && typeof closeSiteEditor === 'function') closeSiteEditor({ silent: true });
 }
 
 const brandHome = $('#brandHome');
@@ -1057,6 +1057,7 @@ $('#stepsNav').addEventListener('keydown', ev => {
 });
 
 function route() {
+  if (typeof window.WOD_EDIT_ID !== 'undefined' && window.WOD_EDIT_ID) return; // editor boot takes over
   if (location.hash === '#admin' && API) { location.href = '/admin'; return; }
   if (location.hash === '#admin') { renderAdmin(); show('admin'); }
   else if (!$('.screen.on') || $('#screen-admin').classList.contains('on')) { show(current && previews ? 'preview' : 'form'); if (current && previews) renderPreview(); }

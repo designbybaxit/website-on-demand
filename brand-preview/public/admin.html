@@ -4553,10 +4553,105 @@ ${markup}
 
 function editHookScript() {
   const src = function () {
+    const LABELS = { headline: 'Headline', lead: 'Subtext', name: 'Business name', about: 'About', ctaLabel: 'Button', phone: 'Phone', email: 'Email', address: 'Address', hours: 'Hours', bookingUrl: 'Booking link' };
+    function labelFor(key) {
+      if (!key) return 'Edit';
+      if (key.indexOf('photo:') === 0) return 'Photo';
+      if (key.indexOf('svc-name-') === 0) return 'Service';
+      if (key.indexOf('svc-desc-') === 0) return 'Description';
+      if (key.indexOf('svc-price-') === 0) return 'Price';
+      if (key.indexOf('rv-q-') === 0) return 'Review';
+      if (key.indexOf('rv-n-') === 0) return 'Name';
+      return LABELS[key] || 'Edit';
+    }
+    function mark(el, key) {
+      if (!el || el.getAttribute('data-edit')) return;
+      el.setAttribute('data-edit', key);
+    }
+    function annotate() {
+      mark(document.querySelector('#hero-title, h1.hero-h1, .hero h1'), 'headline');
+      mark(document.querySelector('.hero p.lead, p.lead'), 'lead');
+      mark(document.querySelector('header.hdr a.brand, a.brand'), 'name');
+      const ctas = document.querySelectorAll('.hero-actions .btn-primary, .hdr-cta .btn-primary, .cta .btn-primary');
+      if (ctas[0]) mark(ctas[0], 'ctaLabel');
+      const aboutPs = document.querySelectorAll('#about .about-copy > p:not(.eyebrow)');
+      if (aboutPs[0]) mark(aboutPs[0], 'about');
+      document.querySelectorAll('#services h3').forEach((h, i) => {
+        mark(h, 'svc-name-' + i);
+        const block = h.closest('article, .yd-row, li, .srow') || h.parentElement;
+        if (block) {
+          mark(block.querySelector('p'), 'svc-desc-' + i);
+          mark(block.querySelector('.price, span.pr'), 'svc-price-' + i);
+          mark(block.querySelector('img'), 'photo:services:' + i);
+        }
+      });
+      document.querySelectorAll('#menu li.mi h4').forEach((h, i) => {
+        mark(h, 'svc-name-' + i);
+        const block = h.closest('li') || h.parentElement;
+        if (block) {
+          mark(block.querySelector('p'), 'svc-desc-' + i);
+          mark(block.querySelector('.pr, .price'), 'svc-price-' + i);
+          mark(block.querySelector('img'), 'photo:services:' + i);
+        }
+      });
+      document.querySelectorAll('#reviews .rv-card, #reviews article, #reviews blockquote').forEach((c, i) => {
+        mark(c.querySelector('p, q, .q'), 'rv-q-' + i);
+        mark(c.querySelector('cite, .n, footer, .who, .rv-n'), 'rv-n-' + i);
+      });
+      mark(document.querySelector('.hero img, .hero .bgimg img, .hero-img img, .arch img'), 'photo:hero');
+      mark(document.querySelector('#about .am-a img, #about figure:first-child img'), 'photo:about');
+      mark(document.querySelector('#about .am-b img'), 'photo:about2');
+      mark(document.querySelector('#why .split-media img, #why .frame img'), 'photo:split');
+      mark(document.querySelector('#book .book-bg img'), 'photo:contact');
+      document.querySelectorAll('#gallery img').forEach((img, i) => mark(img, 'photo:gallery:' + i));
+      document.querySelectorAll('ul.hours li').forEach(li => {
+        const lab = ((li.querySelector('span') || {}).textContent || '');
+        if (/phone/i.test(lab)) mark(li, 'phone');
+        else if (/email/i.test(lab)) mark(li, 'email');
+        else if (/address/i.test(lab)) mark(li, 'address');
+        else if (/book/i.test(lab)) mark(li, 'bookingUrl');
+        else if (/hours|mon|tue|wed|thu|fri|sat|sun|open/i.test(lab)) mark(li, 'hours');
+      });
+    }
+    const css = document.createElement('style');
+    css.textContent = '[data-edit]{cursor:pointer;outline:2px solid transparent;outline-offset:3px;transition:outline-color .15s ease,box-shadow .15s ease}'
+      + '[data-edit]:hover,[data-edit].is-ed-on{outline-color:#14A69A;box-shadow:0 0 0 4px rgba(20,166,154,.22);position:relative;z-index:2}'
+      + '#wod-ed-tip{position:absolute;z-index:2147483646;background:#0F5B59;color:#fff;font:700 11px/1.2 system-ui,sans-serif;letter-spacing:.06em;text-transform:uppercase;padding:5px 8px;border-radius:6px;pointer-events:none;transform:translateY(-100%);margin-top:-6px;box-shadow:0 6px 16px rgba(10,51,54,.28);white-space:nowrap}';
+    document.head.appendChild(css);
+    const tip = document.createElement('div');
+    tip.id = 'wod-ed-tip';
+    tip.hidden = true;
+    document.body.appendChild(tip);
+    let selected = null;
+    function setTip(el) {
+      const key = el && el.getAttribute('data-edit');
+      if (!el || !key) { tip.hidden = true; return; }
+      tip.textContent = labelFor(key);
+      tip.hidden = false;
+      const r = el.getBoundingClientRect();
+      tip.style.top = Math.max(0, r.top + window.scrollY) + 'px';
+      tip.style.left = (r.left + window.scrollX) + 'px';
+    }
+    function select(el) {
+      if (selected) selected.classList.remove('is-ed-on');
+      selected = el;
+      if (selected) { selected.classList.add('is-ed-on'); setTip(selected); }
+    }
+    annotate();
+    document.addEventListener('mouseover', function (e) {
+      const t = e.target && e.target.closest && e.target.closest('[data-edit]');
+      if (t) setTip(t);
+    });
+    document.addEventListener('mouseout', function (e) {
+      const t = e.target && e.target.closest && e.target.closest('[data-edit]');
+      if (t && (!e.relatedTarget || !t.contains(e.relatedTarget))) setTip(selected);
+    });
     document.addEventListener('click', function (e) {
       const t = e.target && e.target.closest && e.target.closest('[data-edit]');
       if (!t) return;
       e.preventDefault();
+      e.stopPropagation();
+      select(t);
       try { parent.postMessage({ wodEdit: t.getAttribute('data-edit') }, '*'); } catch (err) {}
     }, true);
   };

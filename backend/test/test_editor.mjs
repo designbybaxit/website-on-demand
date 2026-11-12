@@ -3,7 +3,8 @@
    prices stay server-set. */
 import { strict as assert } from 'node:assert';
 import {
-  sanitizeSiteData, sanitizeOpts, applyPrices, sniffImage, PRICES, FIELD_LIMITS
+  sanitizeSiteData, sanitizeOpts, applyPrices, sniffImage, PRICES, FIELD_LIMITS,
+  tokenFromCookie, ownerCookieHeader, ownerEditBarHtml, requestEditToken, isEditId
 } from '../src/security.mjs';
 
 let failed = 0;
@@ -49,6 +50,28 @@ check('image swap only accepts real JPEG/PNG/WebP bytes', () => {
   assert.equal(sniffImage(new Uint8Array([0xff, 0xd8, 0xff, 0xe0])), 'image/jpeg');
   assert.equal(sniffImage(new TextEncoder().encode('<svg xmlns="http://www.w3.org/2000/svg">')), null);
   assert.equal(FIELD_LIMITS.headline, 90);
+});
+
+
+check('owner cookie is HttpOnly and is parsed back from the Cookie header', () => {
+  const id = 'Abcdef1234567890ab', token = 'TokentokenToken12abcdefghijkl';
+  const header = ownerCookieHeader(id, token, 1209600);
+  assert.ok(header.includes('HttpOnly') && header.includes('Secure') && header.includes('SameSite=Lax'));
+  assert.ok(!header.includes('\n'));
+  const req = { headers: { get: k => k.toLowerCase() === 'cookie' ? 'other=1; ' + header.split(';')[0] + '; x=2' : null } };
+  assert.equal(tokenFromCookie(req, id), token);
+  assert.equal(tokenFromCookie(req, 'zzzzzzzzzzzzzzzzzz'), '');
+  const req2 = { headers: { get: k => k.toLowerCase() === 'x-token' ? token : null } };
+  assert.equal(requestEditToken(req2, id), token);
+});
+
+check('public edit bar and cookie helpers never include the token and reject bad ids', () => {
+  const id = 'Abcdef1234567890ab';
+  const bar = ownerEditBarHtml(id);
+  assert.ok(bar.includes('/edit/' + id));
+  assert.ok(!/Tokentoken/i.test(bar));
+  assert.equal(isEditId('../etc/passwd'), false);
+  assert.equal(ownerCookieHeader('bad', 'TokentokenToken12abcdefghijkl', 10), '');
 });
 
 if (failed) { console.log(failed + ' failed'); process.exit(1); }

@@ -261,3 +261,50 @@ export function leadCorsHeaders(req) {
   }
   return {};
 }
+
+
+/* Owner-only editor access. The raw token is stored in an HttpOnly cookie, never
+   in the public /p/ HTML. Public share-link viewers do not get the edit bar. */
+export const EDIT_ID_RE = /^[A-Za-z0-9]{10,40}$/;
+export const EDIT_TOKEN_RE = /^[A-Za-z0-9]{10,64}$/;
+export function isEditId(id) { return EDIT_ID_RE.test(id || ''); }
+export function editCookieName(id) { return isEditId(id) ? 'wod_ed_' + id : ''; }
+export function tokenFromCookie(req, id) {
+  if (!req || !isEditId(id)) return '';
+  const raw = (req.headers && req.headers.get && req.headers.get('cookie')) || '';
+  const name = editCookieName(id);
+  if (!name) return '';
+  for (const part of String(raw).split(';')) {
+    const i = part.indexOf('=');
+    if (i < 0) continue;
+    const k = part.slice(0, i).trim();
+    const v = part.slice(i + 1).trim();
+    if (k === name && EDIT_TOKEN_RE.test(v)) return v;
+  }
+  return '';
+}
+export function requestEditToken(req, id, bodyToken) {
+  const fromBody = typeof bodyToken === 'string' && EDIT_TOKEN_RE.test(bodyToken) ? bodyToken : '';
+  const fromHeader = (req && req.headers && req.headers.get && req.headers.get('x-token')) || '';
+  const headerTok = EDIT_TOKEN_RE.test(fromHeader) ? fromHeader : '';
+  return tokenFromCookie(req, id) || headerTok || fromBody || '';
+}
+export function ownerCookieHeader(id, token, maxAge) {
+  const name = editCookieName(id);
+  if (!name || !EDIT_TOKEN_RE.test(token || '')) return '';
+  const age = Math.max(0, Math.floor(+maxAge || 0));
+  return `${name}=${token}; Path=/; SameSite=Lax; Secure; HttpOnly; Max-Age=${age}`;
+}
+export function ownerEditBarHtml(id) {
+  if (!isEditId(id)) return '';
+  const href = '/edit/' + id;
+  return `<div id="wod-owner-bar" style="position:sticky;top:0;z-index:2147483000;display:flex;align-items:center;justify-content:center;gap:14px;padding:10px 16px;background:#0A3336;color:#fff;font:600 14px/1.3 system-ui,-apple-system,Segoe UI,Roboto,sans-serif;box-shadow:0 8px 24px rgba(10,51,54,.28)">
+  <span style="opacity:.85">You built this website.</span>
+  <a href="${href}" target="_blank" rel="noopener" style="background:#14A69A;color:#fff;text-decoration:none;font-weight:700;padding:8px 14px;border-radius:10px">Edit your site ↗</a>
+</div>`;
+}
+export function withOwnerEditBar(html, id) {
+  const bar = ownerEditBarHtml(id);
+  if (!bar || !html) return html;
+  return String(html).replace(/<body([^>]*)>/i, `<body$1>${bar}`);
+}
