@@ -12,6 +12,7 @@ const footerVariant = M => (variantDef('footer', M.V.footer) || variantDef('foot
 const SCHEMA_TYPE = { clinic: 'MedicalClinic', restaurant: 'Restaurant', home: 'HomeAndConstructionBusiness', realestate: 'RealEstateAgent', salon: 'BeautySalon', law: 'LegalService' };
 function buildSite(d, opts = {}, ai = null, mode = {}) {
   const M = siteModel(d, opts, ai);
+  if (mode.edit) M.edit = true;
   if (mode.live) {
     // LIVE MODE (published sites): sample reviews / sample figures are never published, stock-photo tags hidden,
     // forms post real enquiries to mode.leadUrl, page is indexable.
@@ -60,7 +61,25 @@ function fullSiteDoc(M, markup) {
 <body>
 <!-- BRAND SWAP: business "${hh(M.name)}". Design: kit ${hh(M.kit.id)}, hero ${hh(M.heroV)}, recipe ${hh(M.design.industry)} #${M.design.orderIx + 1}${M.opts.design ? ', reshuffle ' + (+M.opts.design) : ''}. Colours live in the .site token block at the top of the <style>. Built by ${STUDIO.name} (website-on-demand builder v2). -->
 ${markup}
-<script>(${siteRuntime.toString()})();</script>
+<script>(${siteRuntime.toString()})();</script>${M.edit ? editHookScript() : ''}
 </body>
 </html>`;
+}
+
+function editHookScript() {
+  const src = function () {
+    document.addEventListener('click', function (e) {
+      const t = e.target && e.target.closest && e.target.closest('[data-edit]');
+      if (!t) return;
+      e.preventDefault();
+      try { parent.postMessage({ wodEdit: t.getAttribute('data-edit') }, '*'); } catch (err) {}
+    }, true);
+  };
+  return '<script>(' + src.toString() + ')();<\/script>';
+}
+/* Hook is only attached to the in-app iframe, never to the stored /p/ or share document. */
+function withEditHook(doc) {
+  const hook = editHookScript();
+  if (!doc || String(doc).indexOf('wodEdit') !== -1) return doc;
+  return String(doc).includes('</body>') ? String(doc).replace('</body>', hook + '\n</body>') : String(doc) + hook;
 }

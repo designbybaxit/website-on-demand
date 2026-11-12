@@ -1,7 +1,7 @@
 import { strict as assert } from 'node:assert';
 import {
-  safeUrl, sanitizeSiteData, applyPrices, sniffImage, leadHasHoneypot,
-  adminHostAllowed, isAdminPath, PRICES
+  safeUrl, sanitizeSiteData, sanitizeOpts, applyPrices, sniffImage, leadHasHoneypot,
+  adminHostAllowed, isAdminPath, PRICES, stripHtml, clipText, FIELD_LIMITS
 } from '../src/security.mjs';
 
 let failed = 0;
@@ -83,6 +83,55 @@ check('admin host is optional and matches Host exactly', () => {
   assert.equal(isAdminPath('/api/admin/list'), true);
   assert.equal(isAdminPath('/api/new'), false);
   assert.equal(isAdminPath('/'), false);
+});
+
+check('stripHtml and clipText remove tags and honour length limits', () => {
+  assert.equal(stripHtml('Hi <script>alert(1)</script> there'), 'Hi alert(1) there');
+  assert.equal(clipText('  hello   world  ', 20), 'hello world');
+  assert.equal(clipText('x'.repeat(80), FIELD_LIMITS.name).length, 60);
+  assert.equal(clipText('Mon: 9-5\nTue: 9-5', 300, true), 'Mon: 9-5\nTue: 9-5');
+});
+
+check('sanitizeSiteData strips HTML, clips fields, and sanitizes services and booking links', () => {
+  const out = sanitizeSiteData({
+    name: '<b>Ada</b> Studio',
+    about: 'We are great.<img src=x onerror=alert(1)>',
+    phone: '0113 496 0000',
+    email: 'ada@example.com',
+    bookingUrl: 'javascript:alert(1)',
+    services: [
+      { name: '<i>Design</i>', desc: 'Nice <script>x</script> work', price: 'From $100' },
+      { name: '', desc: 'skip me', price: '1' },
+    ],
+    photoOverrides: {
+      hero: 'https://images.pexels.com/photos/1.jpg',
+      about: 'javascript:alert(1)',
+      'services:0': '/i/AbC123xyz0/Key456abcd',
+      evil: 'https://example.com/x.jpg',
+    },
+  });
+  assert.equal(out.name, 'Ada Studio');
+  assert.ok(!out.about.includes('<'));
+  assert.equal(out.bookingUrl, '');
+  assert.equal(out.services.length, 1);
+  assert.equal(out.services[0].name, 'Design');
+  assert.ok(!out.services[0].desc.includes('<'));
+  assert.equal(out.services[0].price, 'From $100');
+  assert.equal(out.photoOverrides.hero, 'https://images.pexels.com/photos/1.jpg');
+  assert.equal(out.photoOverrides['services:0'], '/i/AbC123xyz0/Key456abcd');
+  assert.ok(!out.photoOverrides.about);
+  assert.ok(!out.photoOverrides.evil);
+});
+
+check('sanitizeOpts keeps edited copy and drops unknown keys; does not set plan prices', () => {
+  const o = sanitizeOpts({ headline: '<em>Fresh</em> start', lead: 'A'.repeat(500), ctaLabel: 'Book now', design: 2, setup: 1, monthly: 1, __proto__: { x: 1 }, nested: { a: 1 } });
+  assert.equal(o.headline, 'Fresh start');
+  assert.equal(o.lead.length, FIELD_LIMITS.lead);
+  assert.equal(o.ctaLabel, 'Book now');
+  assert.equal(o.design, 2);
+  assert.equal(o.setup, undefined);
+  assert.equal(o.monthly, undefined);
+  assert.equal(o.nested, undefined);
 });
 
 if (failed) { console.log(failed + ' failed'); process.exit(1); }

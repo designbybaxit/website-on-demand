@@ -7,7 +7,7 @@ cd "$(dirname "$0")"
 SRC=../demo/src
 mkdir -p public
 BUILDER="$SRC/b1-config.js $SRC/b1b-industries.js $SRC/b1c-copy.js $SRC/b2-helpers.js $SRC/b3-model.js $SRC/b4-css.js $SRC/b5-hero.js $SRC/b6-sections.js $(ls $SRC/lib/*.js | sort) $SRC/b7-runtime.js $SRC/b8-assemble.js"
-{ echo 'window.WOD_API = 1;'; cat $SRC/a0-examples.js $BUILDER $SRC/c1-app.js; } > /tmp/wod-app.js
+{ echo 'window.WOD_API = 1;'; cat $SRC/a0-examples.js $BUILDER $SRC/c1-app.js $SRC/c1-editor.js; } > /tmp/wod-app.js
 cat $BUILDER app/admin.js > /tmp/wod-admin.js
 node --check /tmp/wod-app.js && node --check /tmp/wod-admin.js
 node -e '

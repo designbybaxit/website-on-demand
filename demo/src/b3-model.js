@@ -87,6 +87,10 @@ function siteModel(d, opts = {}, ai = null) {
   if (act === 'call' && d.phone) primary = { label: 'Call ' + d.phone, short: 'Call us', href: telHref(d.phone), kind: 'call' };
   else if (act === 'whatsapp' && wa) primary = { label: 'Message us on WhatsApp', short: 'WhatsApp us', href: waLink(`Hi ${name}, I found your website and I'd like to ask about…`), kind: 'wa' };
   else primary = { label: C.cta[ctaKey], short: C.cta[ctaKey], href: '#book', kind: 'form' };
+  if (opts.ctaLabel && String(opts.ctaLabel).trim()) {
+    const lab = String(opts.ctaLabel).trim();
+    primary = { ...primary, label: lab, short: lab };
+  }
   const place = d.city || '';
   const hasDental = /dent|teeth|tooth|smile|orthod|hygien/i.test(name + ' ' + plainNames.join(' '));
   const hours = parseHours(d.hours);
@@ -115,7 +119,8 @@ function siteModel(d, opts = {}, ai = null) {
   const pricesClear = fam !== 'food' && services.length > 0 && pricedN / services.length >= 0.6;
   const actLine = primary.kind === 'wa' ? 'Message us on WhatsApp any time.' : primary.kind === 'call' ? `Call ${d.phone} to talk it through.` :
     ({ book: 'Book online in under a minute.', reserve: 'Reserve your table online in seconds.', quote: U.actQuote })[ctaKey];
-  const lead = (ai && ai.lead) || [own.lead || (own.h1Pool.length ? '' : C.leadOpen), svcList ? `${svcList}${place ? ' in ' + place : ''}${pricesClear ? ', with clear prices up front' : ''}.` : '', actLine].filter(Boolean).join(' ');
+  let lead = (ai && ai.lead) || [own.lead || (own.h1Pool.length ? '' : C.leadOpen), svcList ? `${svcList}${place ? ' in ' + place : ''}${pricesClear ? ', with clear prices up front' : ''}.` : '', actLine].filter(Boolean).join(' ');
+  if (opts.lead && String(opts.lead).trim()) lead = String(opts.lead).trim();
 
   // Photos: client's own first, then the curated set for the REAL industry
   // section order: the recipe's rhythm, gated by what fits the real business
@@ -156,6 +161,7 @@ function siteModel(d, opts = {}, ai = null) {
   else if (!order.includes('services')) need.svcShown = services.map(() => false);
   if (!d.about) { need.about = 0; need.about2 = 0; }
   const ph = allocPhotos(prof, up, services, name, need, design.seed, [d.name, d.industryOther, d.about].join(' '), { designIx: +opts.design || 0, biz: `${String(name).toLowerCase()}|${prof.k}` });
+  applyPhotoOverrides(ph, d.photoOverrides);
   // Reviews and stats: real ones if given; otherwise visibly-tagged samples (preview only)
   const realReviews = parseReviews(d.reviews);
   const reviews = realReviews.length ? realReviews.map(r => ({ q: r[0], n: r[1], sample: false })) :

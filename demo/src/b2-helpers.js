@@ -85,17 +85,102 @@ function escSrcset(s) {
     return hh(url) + (bits[1] ? ' ' + bits.slice(1).join(' ') : '');
   }).filter(Boolean).join(', ');
 }
+const FIELD_LIMITS = {
+  name: 60, about: 900, phone: 30, email: 80, address: 120, hours: 300,
+  reviews: 1500, headline: 90, lead: 400, ctaLabel: 80, bookingUrl: 200,
+  serviceName: 80, serviceDesc: 400, servicePrice: 40, city: 80, areas: 120,
+  industryOther: 60, stats: 400, insurance: 400, whatsapp: 30, country: 10,
+};
+const MAX_SERVICES = 16;
+const MAX_SITE_PHOTOS = 12;
+function stripHtml(s) {
+  return String(s == null ? '' : s).replace(/<[^>]*>/g, '').replace(/\u0000/g, '');
+}
+function clipText(s, max, keepLines = false) {
+  let t = stripHtml(s);
+  if (keepLines) t = t.replace(/\r\n/g, '\n').replace(/\r/g, '\n').split('\n').map(l => l.replace(/[ \t]+/g, ' ').trimEnd()).join('\n').trim();
+  else t = t.replace(/\s+/g, ' ').trim();
+  if (typeof max === 'number' && t.length > max) t = t.slice(0, max);
+  return t;
+}
+function sanitizePhotoOverrides(raw, kind) {
+  if (!raw || typeof raw !== 'object' || Array.isArray(raw)) return undefined;
+  const out = {};
+  for (const [k, v] of Object.entries(raw)) {
+    if (!/^(hero|about|about2|split|contact|cta|rv|circle|services:\d+|gallery:\d+|heroExtra:\d+|steps:\d+)$/.test(k)) continue;
+    const url = safeUrl(v, kind);
+    if (url) out[k] = url;
+  }
+  return Object.keys(out).length ? out : undefined;
+}
 function sanitizeSiteData(d, opts = {}) {
   const kind = opts.allowData ? 'preview' : 'img';
   if (!d || typeof d !== 'object') return {};
   const out = { ...d };
+  out.name = clipText(d.name, FIELD_LIMITS.name);
+  out.about = clipText(d.about, FIELD_LIMITS.about, true);
+  out.phone = clipText(d.phone, FIELD_LIMITS.phone);
+  out.email = clipText(d.email, FIELD_LIMITS.email);
+  out.address = clipText(d.address, FIELD_LIMITS.address);
+  out.hours = clipText(d.hours, FIELD_LIMITS.hours, true);
+  out.reviews = clipText(d.reviews, FIELD_LIMITS.reviews, true);
+  out.city = clipText(d.city, FIELD_LIMITS.city);
+  out.areas = clipText(d.areas, FIELD_LIMITS.areas);
+  out.industryOther = clipText(d.industryOther, FIELD_LIMITS.industryOther);
+  out.stats = clipText(d.stats, FIELD_LIMITS.stats, true);
+  out.insurance = clipText(d.insurance, FIELD_LIMITS.insurance, true);
+  out.whatsapp = clipText(d.whatsapp, FIELD_LIMITS.whatsapp);
+  out.country = clipText(d.country, FIELD_LIMITS.country);
+  if (Array.isArray(d.services)) {
+    out.services = d.services.slice(0, MAX_SERVICES).map(s => s && typeof s === 'object' ? {
+      name: clipText(s.name, FIELD_LIMITS.serviceName),
+      desc: clipText(s.desc, FIELD_LIMITS.serviceDesc, true),
+      price: clipText(s.price, FIELD_LIMITS.servicePrice),
+    } : null).filter(s => s && s.name);
+  }
   out.logo = safeUrl(d.logo, kind);
-  out.photos = Array.isArray(d.photos) ? d.photos.map(p => safeUrl(p, kind)).filter(Boolean) : [];
+  out.photos = Array.isArray(d.photos) ? d.photos.map(p => safeUrl(p, kind)).filter(Boolean).slice(0, MAX_SITE_PHOTOS) : [];
   if (Array.isArray(d.ba)) out.ba = d.ba.map(p => p && typeof p === 'object' ? { ...p, b: safeUrl(p.b, kind), a: safeUrl(p.a, kind) } : p).filter(p => p && p.b && p.a);
   out.facebook = safeUrl(d.facebook, 'social');
   out.instagram = safeUrl(d.instagram, 'social');
   out.other = safeUrl(d.other, 'social');
+  out.bookingUrl = safeUrl(d.bookingUrl, 'social');
+  const ov = sanitizePhotoOverrides(d.photoOverrides, kind);
+  if (ov) out.photoOverrides = ov;
+  else delete out.photoOverrides;
   return out;
+}
+function sanitizeOpts(o) {
+  if (!o || typeof o !== 'object') return {};
+  const out = {};
+  if (o.style) out.style = clipText(o.style, 40);
+  if (o.accent) out.accent = clipText(o.accent, 20);
+  if (o.minimal) out.minimal = true;
+  if (o.white) out.white = true;
+  if (typeof o.dark === 'boolean') out.dark = o.dark;
+  if (o.headline) out.headline = clipText(o.headline, FIELD_LIMITS.headline);
+  if (o.lead) out.lead = clipText(o.lead, FIELD_LIMITS.lead, true);
+  if (o.ctaLabel) out.ctaLabel = clipText(o.ctaLabel, FIELD_LIMITS.ctaLabel);
+  if (+o.design > 0) out.design = Math.min(99, Math.floor(+o.design));
+  return out;
+}
+function applyPhotoOverrides(ph, ov) {
+  if (!ph || !ov || typeof ov !== 'object') return ph;
+  for (const [k, v] of Object.entries(ov)) {
+    const url = safeUrl(v, 'preview');
+    if (!url) continue;
+    const m = k.match(/^(services|gallery|heroExtra|steps):(\d+)$/);
+    if (m) {
+      const arr = Array.isArray(ph[m[1]]) ? ph[m[1]].slice() : [];
+      arr[+m[2]] = url;
+      ph[m[1]] = arr;
+      if (m[1] === 'gallery') ph.galleryStock = false;
+    } else if (['hero', 'about', 'about2', 'split', 'contact', 'cta', 'rv', 'circle'].includes(k)) {
+      ph[k] = url;
+      if (k === 'hero') ph.heroSet = '';
+    }
+  }
+  return ph;
 }
 
 const hashStr = s => { let h = 7; for (const c of String(s)) h = (h * 31 + c.charCodeAt(0)) >>> 0; return h; };

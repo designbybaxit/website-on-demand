@@ -3,7 +3,7 @@
    preview link can be demonstrated, without touching production D1/KV. */
 import {
   APP_CSP, PREVIEW_CSP,
-  sanitizeSiteData, sniffImage, adminHostAllowed, isAdminPath,
+  sanitizeSiteData, sanitizeOpts, sniffImage, adminHostAllowed, isAdminPath,
   withSecHeaders, applyAssetHeaders
 } from '../backend/src/security.mjs';
 
@@ -65,6 +65,8 @@ async function handle(req, env) {
     let b; try { b = await req.json(); } catch { return bad('Invalid JSON'); }
     if (rec.token !== b.token) return bad('Not found', 404);
     const data = sanitizeSiteData(b.data || {}, { allowData: false });
+    const opts = sanitizeOpts(b.opts || {});
+    rec.opts = opts;
     if (/data:image\//.test(JSON.stringify(data))) return bad('Photos must be uploaded first');
     const html = String(b.html || '');
     if (!html.startsWith('<!DOCTYPE html>') || html.length > 2_000_000) return bad('Preview is missing or too large');

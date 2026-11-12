@@ -562,7 +562,7 @@ const svgI = (k, cls = '') => `<svg class="i ${cls}" viewBox="0 0 24 24" aria-hi
 const WA_SVG = '<svg class="wa-ic" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M12 2a10 10 0 0 0-8.6 15l-1.4 5 5.2-1.4A10 10 0 1 0 12 2zm0 18.2c-1.5 0-3-.4-4.3-1.2l-.3-.2-3.1.8.8-3-.2-.3A8.2 8.2 0 1 1 12 20.2zm4.5-6.1c-.2-.1-1.5-.7-1.7-.8-.2-.1-.4-.1-.6.1l-.8 1c-.1.2-.3.2-.5.1a6.7 6.7 0 0 1-3.3-2.9c-.3-.4.3-.4.7-1.3.1-.2 0-.3 0-.4l-.8-1.8c-.2-.5-.4-.4-.6-.4h-.5a1 1 0 0 0-.7.3 3 3 0 0 0-.9 2.2 5.2 5.2 0 0 0 1.1 2.8 11.9 11.9 0 0 0 4.6 4c1.7.7 2.3.8 3.2.6.5-.1 1.5-.6 1.7-1.2.2-.6.2-1.1.2-1.2-.1-.1-.3-.2-.5-.3z"/></svg>';
 
 const hh = s => String(s ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
-/* URL allowlist (keep in sync with backend/src/security.js). Stored/published: https: or /i/<id>/<key>. */
+/* URL allowlist (keep in sync with backend/src/security.mjs). Stored/published: https: or /i/<id>/<key>. */
 const SAFE_UPLOAD = /^\/i\/[A-Za-z0-9]+\/[A-Za-z0-9]+$/;
 const SAFE_DATA_IMG = /^data:image\/(jpeg|png|webp);base64,[A-Za-z0-9+/]+=*$/i;
 function isHttpsUrl(s) {
@@ -596,17 +596,102 @@ function escSrcset(s) {
     return hh(url) + (bits[1] ? ' ' + bits.slice(1).join(' ') : '');
   }).filter(Boolean).join(', ');
 }
+const FIELD_LIMITS = {
+  name: 60, about: 900, phone: 30, email: 80, address: 120, hours: 300,
+  reviews: 1500, headline: 90, lead: 400, ctaLabel: 80, bookingUrl: 200,
+  serviceName: 80, serviceDesc: 400, servicePrice: 40, city: 80, areas: 120,
+  industryOther: 60, stats: 400, insurance: 400, whatsapp: 30, country: 10,
+};
+const MAX_SERVICES = 16;
+const MAX_SITE_PHOTOS = 12;
+function stripHtml(s) {
+  return String(s == null ? '' : s).replace(/<[^>]*>/g, '').replace(/\u0000/g, '');
+}
+function clipText(s, max, keepLines = false) {
+  let t = stripHtml(s);
+  if (keepLines) t = t.replace(/\r\n/g, '\n').replace(/\r/g, '\n').split('\n').map(l => l.replace(/[ \t]+/g, ' ').trimEnd()).join('\n').trim();
+  else t = t.replace(/\s+/g, ' ').trim();
+  if (typeof max === 'number' && t.length > max) t = t.slice(0, max);
+  return t;
+}
+function sanitizePhotoOverrides(raw, kind) {
+  if (!raw || typeof raw !== 'object' || Array.isArray(raw)) return undefined;
+  const out = {};
+  for (const [k, v] of Object.entries(raw)) {
+    if (!/^(hero|about|about2|split|contact|cta|rv|circle|services:\d+|gallery:\d+|heroExtra:\d+|steps:\d+)$/.test(k)) continue;
+    const url = safeUrl(v, kind);
+    if (url) out[k] = url;
+  }
+  return Object.keys(out).length ? out : undefined;
+}
 function sanitizeSiteData(d, opts = {}) {
   const kind = opts.allowData ? 'preview' : 'img';
   if (!d || typeof d !== 'object') return {};
   const out = { ...d };
+  out.name = clipText(d.name, FIELD_LIMITS.name);
+  out.about = clipText(d.about, FIELD_LIMITS.about, true);
+  out.phone = clipText(d.phone, FIELD_LIMITS.phone);
+  out.email = clipText(d.email, FIELD_LIMITS.email);
+  out.address = clipText(d.address, FIELD_LIMITS.address);
+  out.hours = clipText(d.hours, FIELD_LIMITS.hours, true);
+  out.reviews = clipText(d.reviews, FIELD_LIMITS.reviews, true);
+  out.city = clipText(d.city, FIELD_LIMITS.city);
+  out.areas = clipText(d.areas, FIELD_LIMITS.areas);
+  out.industryOther = clipText(d.industryOther, FIELD_LIMITS.industryOther);
+  out.stats = clipText(d.stats, FIELD_LIMITS.stats, true);
+  out.insurance = clipText(d.insurance, FIELD_LIMITS.insurance, true);
+  out.whatsapp = clipText(d.whatsapp, FIELD_LIMITS.whatsapp);
+  out.country = clipText(d.country, FIELD_LIMITS.country);
+  if (Array.isArray(d.services)) {
+    out.services = d.services.slice(0, MAX_SERVICES).map(s => s && typeof s === 'object' ? {
+      name: clipText(s.name, FIELD_LIMITS.serviceName),
+      desc: clipText(s.desc, FIELD_LIMITS.serviceDesc, true),
+      price: clipText(s.price, FIELD_LIMITS.servicePrice),
+    } : null).filter(s => s && s.name);
+  }
   out.logo = safeUrl(d.logo, kind);
-  out.photos = Array.isArray(d.photos) ? d.photos.map(p => safeUrl(p, kind)).filter(Boolean) : [];
+  out.photos = Array.isArray(d.photos) ? d.photos.map(p => safeUrl(p, kind)).filter(Boolean).slice(0, MAX_SITE_PHOTOS) : [];
   if (Array.isArray(d.ba)) out.ba = d.ba.map(p => p && typeof p === 'object' ? { ...p, b: safeUrl(p.b, kind), a: safeUrl(p.a, kind) } : p).filter(p => p && p.b && p.a);
   out.facebook = safeUrl(d.facebook, 'social');
   out.instagram = safeUrl(d.instagram, 'social');
   out.other = safeUrl(d.other, 'social');
+  out.bookingUrl = safeUrl(d.bookingUrl, 'social');
+  const ov = sanitizePhotoOverrides(d.photoOverrides, kind);
+  if (ov) out.photoOverrides = ov;
+  else delete out.photoOverrides;
   return out;
+}
+function sanitizeOpts(o) {
+  if (!o || typeof o !== 'object') return {};
+  const out = {};
+  if (o.style) out.style = clipText(o.style, 40);
+  if (o.accent) out.accent = clipText(o.accent, 20);
+  if (o.minimal) out.minimal = true;
+  if (o.white) out.white = true;
+  if (typeof o.dark === 'boolean') out.dark = o.dark;
+  if (o.headline) out.headline = clipText(o.headline, FIELD_LIMITS.headline);
+  if (o.lead) out.lead = clipText(o.lead, FIELD_LIMITS.lead, true);
+  if (o.ctaLabel) out.ctaLabel = clipText(o.ctaLabel, FIELD_LIMITS.ctaLabel);
+  if (+o.design > 0) out.design = Math.min(99, Math.floor(+o.design));
+  return out;
+}
+function applyPhotoOverrides(ph, ov) {
+  if (!ph || !ov || typeof ov !== 'object') return ph;
+  for (const [k, v] of Object.entries(ov)) {
+    const url = safeUrl(v, 'preview');
+    if (!url) continue;
+    const m = k.match(/^(services|gallery|heroExtra|steps):(\d+)$/);
+    if (m) {
+      const arr = Array.isArray(ph[m[1]]) ? ph[m[1]].slice() : [];
+      arr[+m[2]] = url;
+      ph[m[1]] = arr;
+      if (m[1] === 'gallery') ph.galleryStock = false;
+    } else if (['hero', 'about', 'about2', 'split', 'contact', 'cta', 'rv', 'circle'].includes(k)) {
+      ph[k] = url;
+      if (k === 'hero') ph.heroSet = '';
+    }
+  }
+  return ph;
 }
 
 const hashStr = s => { let h = 7; for (const c of String(s)) h = (h * 31 + c.charCodeAt(0)) >>> 0; return h; };
@@ -823,6 +908,10 @@ function siteModel(d, opts = {}, ai = null) {
   if (act === 'call' && d.phone) primary = { label: 'Call ' + d.phone, short: 'Call us', href: telHref(d.phone), kind: 'call' };
   else if (act === 'whatsapp' && wa) primary = { label: 'Message us on WhatsApp', short: 'WhatsApp us', href: waLink(`Hi ${name}, I found your website and I'd like to ask about…`), kind: 'wa' };
   else primary = { label: C.cta[ctaKey], short: C.cta[ctaKey], href: '#book', kind: 'form' };
+  if (opts.ctaLabel && String(opts.ctaLabel).trim()) {
+    const lab = String(opts.ctaLabel).trim();
+    primary = { ...primary, label: lab, short: lab };
+  }
   const place = d.city || '';
   const hasDental = /dent|teeth|tooth|smile|orthod|hygien/i.test(name + ' ' + plainNames.join(' '));
   const hours = parseHours(d.hours);
@@ -851,7 +940,8 @@ function siteModel(d, opts = {}, ai = null) {
   const pricesClear = fam !== 'food' && services.length > 0 && pricedN / services.length >= 0.6;
   const actLine = primary.kind === 'wa' ? 'Message us on WhatsApp any time.' : primary.kind === 'call' ? `Call ${d.phone} to talk it through.` :
     ({ book: 'Book online in under a minute.', reserve: 'Reserve your table online in seconds.', quote: U.actQuote })[ctaKey];
-  const lead = (ai && ai.lead) || [own.lead || (own.h1Pool.length ? '' : C.leadOpen), svcList ? `${svcList}${place ? ' in ' + place : ''}${pricesClear ? ', with clear prices up front' : ''}.` : '', actLine].filter(Boolean).join(' ');
+  let lead = (ai && ai.lead) || [own.lead || (own.h1Pool.length ? '' : C.leadOpen), svcList ? `${svcList}${place ? ' in ' + place : ''}${pricesClear ? ', with clear prices up front' : ''}.` : '', actLine].filter(Boolean).join(' ');
+  if (opts.lead && String(opts.lead).trim()) lead = String(opts.lead).trim();
 
   // Photos: client's own first, then the curated set for the REAL industry
   // section order: the recipe's rhythm, gated by what fits the real business
@@ -892,6 +982,7 @@ function siteModel(d, opts = {}, ai = null) {
   else if (!order.includes('services')) need.svcShown = services.map(() => false);
   if (!d.about) { need.about = 0; need.about2 = 0; }
   const ph = allocPhotos(prof, up, services, name, need, design.seed, [d.name, d.industryOther, d.about].join(' '), { designIx: +opts.design || 0, biz: `${String(name).toLowerCase()}|${prof.k}` });
+  applyPhotoOverrides(ph, d.photoOverrides);
   // Reviews and stats: real ones if given; otherwise visibly-tagged samples (preview only)
   const realReviews = parseReviews(d.reviews);
   const reviews = realReviews.length ? realReviews.map(r => ({ q: r[0], n: r[1], sample: false })) :
@@ -1526,9 +1617,9 @@ function heroCSS(M) {
 
 function heroParts(M) {
   const { ph } = M;
-  const h1 = `<h1 class="hero-h1" id="hero-title">${headHTML(M.h1, true)}</h1>`;
+  const h1 = `<h1 class="hero-h1" id="hero-title" data-edit="headline">${headHTML(M.h1, true)}</h1>`;
   const eyebrow = `<p class="eyebrow">${hh(M.eyebrow)}</p>`;
-  const lead = `<p class="lead">${hh(M.lead)}</p>`;
+  const lead = `<p class="lead" data-edit="lead">${hh(M.lead)}</p>`;
   const prim = btnPrimary(M, 'btn-lg');
   const sec = secondaryBtn(M, 'btn-lg');
   const actions = `<div class="hero-actions">${prim}${sec}</div>`;
@@ -1765,6 +1856,7 @@ function infoList(M) {
   if (M.d.address) rows.push(`<li><span>Address</span><b>${hh(M.d.address)}</b></li>`);
   if (M.d.phone) rows.push(`<li><span>Phone</span><b><a href="${telHref(M.d.phone)}">${hh(M.d.phone)}</a></b></li>`);
   if (M.d.email) rows.push(`<li><span>Email</span><b><a href="mailto:${hh(M.d.email)}">${hh(M.d.email)}</a></b></li>`);
+  if (M.d.bookingUrl) rows.push(`<li><span>Book online</span><b><a href="${safeHref(M.d.bookingUrl)}" target="_blank" rel="noopener">Open booking</a></b></li>`);
   return rows.length ? `<ul class="hours">${rows.join('')}</ul>` : '';
 }
 function bookParts(M) {
@@ -4405,6 +4497,7 @@ const footerVariant = M => (variantDef('footer', M.V.footer) || variantDef('foot
 const SCHEMA_TYPE = { clinic: 'MedicalClinic', restaurant: 'Restaurant', home: 'HomeAndConstructionBusiness', realestate: 'RealEstateAgent', salon: 'BeautySalon', law: 'LegalService' };
 function buildSite(d, opts = {}, ai = null, mode = {}) {
   const M = siteModel(d, opts, ai);
+  if (mode.edit) M.edit = true;
   if (mode.live) {
     // LIVE MODE (published sites): sample reviews / sample figures are never published, stock-photo tags hidden,
     // forms post real enquiries to mode.leadUrl, page is indexable.
@@ -4453,9 +4546,27 @@ function fullSiteDoc(M, markup) {
 <body>
 <\!-- BRAND SWAP: business "${hh(M.name)}". Design: kit ${hh(M.kit.id)}, hero ${hh(M.heroV)}, recipe ${hh(M.design.industry)} #${M.design.orderIx + 1}${M.opts.design ? ', reshuffle ' + (+M.opts.design) : ''}. Colours live in the .site token block at the top of the <style>. Built by ${STUDIO.name} (website-on-demand builder v2). -->
 ${markup}
-<script>(${siteRuntime.toString()})();<\/script>
+<script>(${siteRuntime.toString()})();<\/script>${M.edit ? editHookScript() : ''}
 </body>
 </html>`;
+}
+
+function editHookScript() {
+  const src = function () {
+    document.addEventListener('click', function (e) {
+      const t = e.target && e.target.closest && e.target.closest('[data-edit]');
+      if (!t) return;
+      e.preventDefault();
+      try { parent.postMessage({ wodEdit: t.getAttribute('data-edit') }, '*'); } catch (err) {}
+    }, true);
+  };
+  return '<script>(' + src.toString() + ')();<\/script>';
+}
+/* Hook is only attached to the in-app iframe, never to the stored /p/ or share document. */
+function withEditHook(doc) {
+  const hook = editHookScript();
+  if (!doc || String(doc).indexOf('wodEdit') !== -1) return doc;
+  return String(doc).includes('</body>') ? String(doc).replace('</body>', hook + '\n</body>') : String(doc) + hook;
 }
 /* Admin page logic. The site builder (b1–b8) is bundled above this script, so "Mark as paid & publish"
    rebuilds the site here in Abdul's own (trusted) browser in LIVE mode and uploads the finished HTML.

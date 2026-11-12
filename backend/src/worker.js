@@ -4,7 +4,7 @@
 
 import {
   APP_CSP, SITE_CSP, PREVIEW_CSP,
-  sanitizeSiteData, applyPrices, sniffImage, leadHasHoneypot,
+  sanitizeSiteData, sanitizeOpts, applyPrices, sniffImage, leadHasHoneypot,
   adminHostAllowed, isAdminPath, withSecHeaders,
   applyAssetHeaders, leadCorsHeaders
 } from './security.mjs';
@@ -12,7 +12,7 @@ import {
 const DAY = 86400;
 const LIMITS = {
   newPerIpDay: 20,          // new requests per IP per day
-  savesPerSubDay: 60,       // preview saves per request per day
+  savesPerSubDay: 240,      // preview saves per request per day (autosave from the content editor)
   imgPerSub: 30,            // photo uploads per request (lifetime)
   imgBytes: 1.5 * 1024 * 1024,
   saveBytes: 1.5 * 1024 * 1024,
@@ -153,7 +153,7 @@ async function apiSave(req, env, id) {
   const b = await readJSON(req, LIMITS.saveBytes);
   const s = await subWithToken(env, id, b.token);
   if (!await allow(env, 'save:' + id, LIMITS.savesPerSubDay, DAY)) return bad('Too many updates today for this website. Please try again tomorrow.', 429);
-  const d = sanitizeSiteData(b.data || {}, { allowData: false }), html = String(b.html || '');
+  const d = sanitizeSiteData(b.data || {}, { allowData: false }), opts = sanitizeOpts(b.opts || {}), html = String(b.html || '');
   if (!html.startsWith('<!DOCTYPE html>') || html.length > LIMITS.htmlBytes) return bad('Preview is missing or too large');
   if (/data:image\//.test(JSON.stringify(d))) return bad('Photos must be uploaded first');
   const days = +env.PREVIEW_DAYS || 14, applied = s.status !== 'previewing';
@@ -162,7 +162,7 @@ async function apiSave(req, env, id) {
   await env.DB.prepare(`UPDATE submissions SET updated_at=?, name=?, slug=?, email=?, phone=?, country=?, industry=?, data_json=?, opts_json=?, version=?, revisions_json=?, placeholders_json=?, style_key=?, preview_expires_at=? WHERE id=?`)
     .bind(t, String(d.name || '').slice(0, 120), slugify(d.name), String(d.email || '').slice(0, 200), String(d.phone || '').slice(0, 60), String(d.country || '').slice(0, 10),
       d.industry === 'other' ? 'other: ' + String(d.industryOther || '').slice(0, 60) : String(d.industry || '').slice(0, 60),
-      JSON.stringify(d), JSON.stringify(b.opts || {}), +b.version || 1, JSON.stringify(b.revisions || []), JSON.stringify(b.placeholders || []), String(b.styleKey || '').slice(0, 30), exp, id).run();
+      JSON.stringify(d), JSON.stringify(opts), +b.version || 1, JSON.stringify(b.revisions || []), JSON.stringify(b.placeholders || []), String(b.styleKey || '').slice(0, 30), exp, id).run();
   const origin = new URL(req.url).origin, url = `${origin}/p/${id}`;
   const first = !s.data_json;
   await event(env, id, first ? 'preview_saved' : 'preview_updated', { version: +b.version || 1, notes: (b.revisions || []).slice(-1)[0] || null });

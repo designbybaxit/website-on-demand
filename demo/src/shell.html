@@ -669,6 +669,77 @@ html.themes-on .theme-bar{display:flex}
  .trust span{text-align:center;padding:8px 10px}
  .card{padding:18px;margin:12px 0}
 }
+
+/* ---- Content editor (preview screen) ---- */
+#editSiteBtn.edit-site-btn{background:#0F5B59;color:#fff;border:0;box-shadow:0 8px 20px -10px rgba(15,91,89,.55);transition:background .2s var(--ease),transform .2s var(--ease),box-shadow .2s var(--ease)}
+#editSiteBtn.edit-site-btn:hover,#editSiteBtn.edit-site-btn:focus-visible{background:#0A3336;color:#fff;transform:translateY(-1px);box-shadow:0 12px 24px -10px rgba(15,91,89,.5)}
+#editSiteBtn.edit-site-btn:active{transform:none;background:#0A3336}
+#editSiteBtn.edit-site-btn[aria-expanded="true"]{background:#0A3336}
+.pv-edit-launch{display:flex;flex-direction:column;align-items:center;gap:6px;margin-top:8px}
+#screen-preview.editor-open{position:relative}
+#screen-preview.editor-open #stage{transition:margin .4s var(--ease)}
+@media (min-width: 980px){
+  #screen-preview.editor-open #stage{margin-right:min(400px,42vw)}
+}
+.ed-backdrop{display:none;position:fixed;inset:0;background:rgba(10,51,54,.28);z-index:40;opacity:0;transition:opacity .3s var(--ease)}
+#screen-preview.editor-open .ed-backdrop{display:block;opacity:1}
+@media (min-width: 980px){
+  #screen-preview.editor-open .ed-backdrop{display:none}
+}
+.site-editor{position:fixed;z-index:50;background:#fff;color:var(--ink);box-shadow:var(--shadow-lg);display:flex;flex-direction:column;transform:translateX(104%);transition:transform .4s var(--ease);outline:none}
+@media (min-width: 980px){
+  .site-editor{top:var(--editor-top, 0px);right:0;width:min(400px,42vw);height:calc(100vh - var(--editor-top, 0px));height:calc(100dvh - var(--editor-top, 0px));border-left:1px solid var(--line);border-radius:0}
+}
+@media (max-width: 979px){
+  .site-editor{left:0;right:0;bottom:0;max-height:min(86vh,760px);border-radius:20px 20px 0 0;transform:translateY(104%);box-shadow:0 -16px 50px -20px rgba(10,51,54,.35)}
+  #screen-preview.editor-open .site-editor{transform:translateY(0)}
+  .ed-sheet-handle{display:block;width:44px;height:5px;border-radius:99px;background:#CDE7E2;margin:10px auto 0}
+}
+@media (min-width: 980px){
+  .ed-sheet-handle{display:none}
+  #screen-preview.editor-open .site-editor{transform:translateX(0)}
+}
+.site-editor[hidden]{display:none}
+#screen-preview.editor-open .site-editor[hidden]{display:flex}
+.ed-head{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;padding:18px 18px 8px}
+.ed-kicker{margin:0;font-size:11px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:#0F5B59}
+.ed-head h2{margin:2px 0 0;font-family:var(--display);font-size:1.45rem;letter-spacing:-.03em}
+.ed-close{width:44px;height:44px;border:0;border-radius:12px;background:var(--brand-soft);color:var(--ink);font-size:24px;line-height:1;cursor:pointer;flex:none;transition:background .2s var(--ease),transform .2s var(--ease)}
+.ed-close:hover,.ed-close:focus-visible{background:#CDE7E2;transform:scale(1.04)}
+.ed-intro{margin:0 18px 8px;font-size:14px;color:var(--mut);line-height:1.45}
+.ed-status{margin:0 18px 8px;min-height:1.2em;font-size:12.5px;font-weight:600;color:#0F5B59}
+.ed-status.is-err{color:var(--bad)}
+.ed-status.is-muted{color:var(--mut);font-weight:500}
+.ed-body{flex:1;overflow:auto;padding:4px 18px 28px;overscroll-behavior:contain}
+.ed-acc{border:1px solid var(--line);border-radius:14px;margin:0 0 10px;background:#fff;overflow:hidden;transition:border-color .2s var(--ease),box-shadow .2s var(--ease)}
+.ed-acc[open]{border-color:#9AD5CC;box-shadow:0 8px 24px -18px rgba(15,91,89,.55)}
+.ed-acc summary{list-style:none;cursor:pointer;padding:12px 14px;font-weight:700;font-size:14.5px;display:flex;align-items:center;justify-content:space-between;gap:8px;min-height:44px}
+.ed-acc summary::-webkit-details-marker{display:none}
+.ed-acc summary::after{content:'';width:8px;height:8px;border-right:2px solid #0F5B59;border-bottom:2px solid #0F5B59;transform:rotate(45deg);transition:transform .2s var(--ease);margin-right:4px}
+.ed-acc[open] summary::after{transform:rotate(225deg)}
+.ed-acc .ed-fields{padding:0 14px 14px;display:grid;gap:10px}
+.ed-fields label{display:flex;flex-direction:column;gap:4px;font-size:12.5px;font-weight:600;color:var(--mut)}
+.ed-fields input,.ed-fields textarea{font:inherit;font-weight:500;color:var(--ink);border:1px solid var(--line);border-radius:10px;padding:10px 12px;min-height:44px;background:#F3FBF9;transition:border-color .15s var(--ease),box-shadow .15s var(--ease),background .15s var(--ease)}
+.ed-fields textarea{min-height:88px;resize:vertical}
+.ed-fields input:hover,.ed-fields textarea:hover{border-color:#9AD5CC}
+.ed-fields input:focus,.ed-fields textarea:focus{outline:none;border-color:#0F5B59;background:#fff;box-shadow:0 0 0 3px rgba(20,166,154,.22)}
+.ed-svc,.ed-rv,.ed-photo{border:1px dashed #CDE7E2;border-radius:12px;padding:10px;display:grid;gap:8px;background:#F3FBF9}
+.ed-svc-top,.ed-photo-top{display:flex;align-items:center;justify-content:space-between;gap:8px}
+.ed-svc-top span,.ed-photo-top span{font-size:12px;font-weight:700;color:#0F5B59}
+.ed-mini{appearance:none;border:0;background:transparent;color:#0F5B59;font:inherit;font-size:13px;font-weight:700;cursor:pointer;min-height:36px;padding:6px 8px;border-radius:8px}
+.ed-mini:hover,.ed-mini:focus-visible{background:#DFF6F1}
+.ed-mini.danger{color:var(--bad)}
+.ed-mini.danger:hover{background:var(--bad-soft)}
+.ed-add{width:100%;min-height:44px;border:1px dashed #9AD5CC;background:#fff;border-radius:12px;color:#0F5B59;font:inherit;font-weight:700;cursor:pointer;transition:background .15s var(--ease),transform .15s var(--ease)}
+.ed-add:hover,.ed-add:focus-visible{background:#DFF6F1;transform:translateY(-1px)}
+.ed-photo img{width:100%;height:88px;object-fit:cover;border-radius:8px;background:#CDE7E2}
+.ed-photo .ed-photo-actions{display:flex;gap:8px;flex-wrap:wrap}
+.ed-file{position:absolute;width:1px;height:1px;opacity:0;overflow:hidden}
+.ed-hint{margin:0;font-size:12px;color:var(--mut);font-weight:500;line-height:1.4}
+@media (prefers-reduced-motion:reduce){
+  .site-editor,#screen-preview.editor-open #stage,.ed-backdrop,#editSiteBtn.edit-site-btn,.ed-close,.ed-add,.ed-acc summary::after{transition:none;transform:none}
+  #editSiteBtn.edit-site-btn:hover{transform:none}
+}
 @media (prefers-reduced-motion:reduce){
   .screen.on,#screen-form.on .hero-a,#screen-form.on .card,#screen-form.on .form-step.on .card,.changes.on{animation:none}
   .orb,.hero-a h1 em,.mark,.btn::after{animation:none}
@@ -991,7 +1062,11 @@ html.themes-on .theme-bar{display:flex}
       <span class="pill b" id="dPos" aria-live="polite">Design 1 of 1</span>
       <button type="button" class="btn ghost sm" id="dNext">Show me another design →</button>
     </div>
-    <p class="note" id="dNote">Step back and forth through designs. The one showing when you press Apply is the one we keep.</p>
+    <p class="note" id="dNote">Step back and forth through designs. Your words, photos and prices stay. The one showing when you press Apply is the one we keep.</p>
+    <div class="pv-edit-launch">
+      <button type="button" class="btn edit-site-btn" id="editSiteBtn" aria-expanded="false" aria-controls="siteEditor">Edit your site</button>
+      <p class="note">Change words, photos and prices. The layout stays as it is.</p>
+    </div>
   </div>
   <div class="stage" id="stage"></div>
   <p class="note pv-hint" id="pvHint">This is your real website. Scroll and click inside the frame, or open it in a new tab. Forms send nothing in a preview.</p>
@@ -1023,6 +1098,20 @@ html.themes-on .theme-bar{display:flex}
     <p class="note" style="margin-top:10px">Style, colour and headline changes apply automatically, and words like "dark", "light", a colour name or a style name (clinic, restaurant, salon…) in your note are picked up. Other notes are saved for our team.</p>
   </div>
   <p class="note" style="text-align:center;margin:16px auto 0;max-width:760px">Your website goes live on your own address once you approve.</p>
+  <div class="ed-backdrop" id="edBackdrop" hidden></div>
+  <aside id="siteEditor" class="site-editor" hidden aria-labelledby="edTitle" role="dialog" aria-modal="true">
+    <div class="ed-sheet-handle" aria-hidden="true"></div>
+    <header class="ed-head">
+      <div>
+        <p class="ed-kicker">Customize</p>
+        <h2 id="edTitle">Edit your site</h2>
+      </div>
+      <button type="button" class="ed-close" id="edClose" aria-label="Close editor">&times;</button>
+    </header>
+    <p class="ed-intro">Change the words, photos and prices on this design. The layout stays locked.</p>
+    <p class="ed-status is-muted" id="edStatus" aria-live="polite"></p>
+    <div class="ed-body" id="edBody"></div>
+  </aside>
 </section>
 
 <!-- ========== STEP 4: APPROVE ========== -->

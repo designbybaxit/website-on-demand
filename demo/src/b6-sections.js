@@ -157,6 +157,7 @@ function infoList(M) {
   if (M.d.address) rows.push(`<li><span>Address</span><b>${hh(M.d.address)}</b></li>`);
   if (M.d.phone) rows.push(`<li><span>Phone</span><b><a href="${telHref(M.d.phone)}">${hh(M.d.phone)}</a></b></li>`);
   if (M.d.email) rows.push(`<li><span>Email</span><b><a href="mailto:${hh(M.d.email)}">${hh(M.d.email)}</a></b></li>`);
+  if (M.d.bookingUrl) rows.push(`<li><span>Book online</span><b><a href="${safeHref(M.d.bookingUrl)}" target="_blank" rel="noopener">Open booking</a></b></li>`);
   return rows.length ? `<ul class="hours">${rows.join('')}</ul>` : '';
 }
 function bookParts(M) {
